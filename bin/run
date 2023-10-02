@@ -1,0 +1,9 @@
+#!/bin/env python
+import sys
+
+sys.path.append("./rdf_service")
+
+from cli import go
+
+if __name__ == '__main__':
+    sys.exit(go())

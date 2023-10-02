@@ -1,0 +1,8 @@
+#!/bin/bash
+
+export JENA_HOME=apache-jena-4.9.0
+export FUSEKI_HOME=apache-jena-fuseki-4.9.0
+APACHE_JENA_BIN=apache-jena-4.9.0/bin
+JENA_FUSEKI_JAR=apache-jena-fuseki-4.9.0/fuseki-server.jar
+
+$APACHE_JENA_BIN/tdb2.xloader --loc=data/dataForTDB dblp.ttl
