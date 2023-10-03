@@ -1,60 +1,74 @@
+from pprint import pprint
 from SPARQLWrapper import SPARQLWrapper, JSON
 import json
 import xml.etree.ElementTree as ET
 import xml.dom.minidom
 
-sparql = SPARQLWrapper(
-    "http://localhost:3030/"
-    "ds"
-)
-sparql.setReturnFormat(JSON)
 
-# gets the first 3 geological ages
-# from a Geological Timescale database,
-# via a SPARQL endpoint
-sparql.setQuery("""
-    prefix xsd: <http://www.w3.org/2001/XMLSchema#>
-    prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-    prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    prefix owl: <http://www.w3.org/2002/07/owl#>
-    prefix bf: <http://id.loc.gov/ontologies/bibframe/>
-    prefix bibo: <http://purl.org/ontology/bibo/>
-    prefix bibtex: <http://purl.org/net/nknouf/ns/bibtex#>
-    prefix cito: <http://purl.org/spar/cito/>
-    prefix datacite: <http://purl.org/spar/datacite/>
-    prefix dbo: <http://dbpedia.org/ontology/>
-    prefix dc: <http://purl.org/dc/elements/1.1/>
-    prefix dct: <http://purl.org/dc/terms/>
-    prefix foaf: <http://xmlns.com/foaf/0.1/>
-    prefix litre: <http://purl.org/spar/literal/>
-    prefix locid: <http://id.loc.gov/vocabulary/identifiers/>
-    prefix locrel: <http://id.loc.gov/vocabulary/relators/>
-    prefix schema: <https://schema.org/>
-    prefix wd: <http://www.wikidata.org/entity/>
-    prefix wdt: <http://www.wikidata.org/prop/direct/>
-    prefix dblp: <https://dblp.org/rdf/schema#>
+def query_author(authorURI: str):
+    sparql = SPARQLWrapper(
+        "http://localhost:3030/"
+        "ds"
+    )
+    sparql.setReturnFormat(JSON)
 
-    SELECT ?pub ?pred ?obj
-    WHERE {
-      ?pub dblp:authoredBy <https://dblp.org/pid/m/AndrewMcCallum> .
-      ?pub ?pred ?obj
-    }
-    ORDER BY ?pub ?pred
-    """
-)
+    # sparql.setQuery("""
+    #     prefix dblp: <https://dblp.org/rdf/schema#>
 
-try:
-    ret = sparql.queryAndConvert()
+    #     SELECT ?pub ?pred ?obj ?bpred ?bobj
+    #     WHERE {
+    #       ?pub dblp:authoredBy """ f"<{authorURI}> ." """
+    #       {  ?pub ?pred [ ?bpred ?bobj ] }
+    #       UNION
+    #       { ?pub ?pred ?obj }
+    #     }
+    #     ORDER BY ?pub ?pred
+    #     """
+    # )
+    sparql.setQuery("""
+        prefix dblp: <https://dblp.org/rdf/schema#>
 
-    root = ET.Element('root')
-    for r in ret["results"]["bindings"]:
-        body = ET.SubElement(root, 'triple', )
-        pub = r["pub"]["value"]
-        pred = r["pred"]["value"]
-        obj = r["obj"]["value"]
-        print(f"{pub}  {pred} {obj}")
-except Exception as e:
-    print(e)
+        SELECT ?pub ?pred ?obj ?bpred ?bobj
+        WHERE {
+          ?pub dblp:authoredBy """ f"<{authorURI}> . " """
+          {
+            ?pub ?pred ?obj
+            FILTER (! isBlank(?obj) )
+          } UNION {
+            ?pub ?pred ?obj
+            FILTER (isBlank(?obj) ) .
+            ?obj ?bpred ?bobj .
+          }
+        }
+        """
+    )
+
+    def get_type_val(rec, key: str):
+        if key not in rec:
+            return None
+
+        subrec = rec[key]
+        t = subrec['type']
+        v = subrec['value']
+        return [t, v]
+
+    try:
+        ret = sparql.queryAndConvert()
+        # pprint(ret)
+
+        # root = ET.Element('root')
+        for r in ret["results"]["bindings"]:
+            # pprint(r)
+            # body = ET.SubElement(root, 'triple', )
+            pub = get_type_val(r, 'pub')
+            pred  =get_type_val(r, "pred")
+            obj   =get_type_val(r, "obj")
+            bpred =get_type_val(r, "bpred")
+            bobj  =get_type_val(r, "bobj")
+
+            print(f"{pub}  {pred} {obj} [ {bpred} {bobj} ]")
+    except Exception as e:
+        print(e)
 
 
 
@@ -91,3 +105,23 @@ except Exception as e:
 # # OUTPUT XML CONTENT TO FILE
 # with open('Output.xml','w') as f:
 #     f.write(pretty_xml)
+
+# prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+# prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+# prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+# prefix owl: <http://www.w3.org/2002/07/owl#>
+# prefix bf: <http://id.loc.gov/ontologies/bibframe/>
+# prefix bibo: <http://purl.org/ontology/bibo/>
+# prefix bibtex: <http://purl.org/net/nknouf/ns/bibtex#>
+# prefix cito: <http://purl.org/spar/cito/>
+# prefix datacite: <http://purl.org/spar/datacite/>
+# prefix dbo: <http://dbpedia.org/ontology/>
+# prefix dc: <http://purl.org/dc/elements/1.1/>
+# prefix dct: <http://purl.org/dc/terms/>
+# prefix foaf: <http://xmlns.com/foaf/0.1/>
+# prefix litre: <http://purl.org/spar/literal/>
+# prefix locid: <http://id.loc.gov/vocabulary/identifiers/>
+# prefix locrel: <http://id.loc.gov/vocabulary/relators/>
+# prefix schema: <https://schema.org/>
+# prefix wd: <http://www.wikidata.org/entity/>
+# prefix wdt: <http://www.wikidata.org/prop/direct/>

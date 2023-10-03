@@ -5,15 +5,16 @@ import click
 
 from pprint import pprint
 
+from rdf_service.author_query import query_author
+
 @click.command()
-@click.option("--env", type=click.Choice(["test", "dev", "prod"]), required=True, help="Check that config is valid")
-def config(env: str):
-    """Ensure config is valid"""
-    print(f"Checking env {env}")
+@click.option("--author-id", type=str, required=True, help="find papers for the given author")
+def get_authorship(authorId: str):
+    query_author(authorId)
 
 
 def go():
-    print("go!")
+    query_author("https://dblp.org/pid/m/AndrewMcCallum")
 
 
 if __name__ == "__main__":
