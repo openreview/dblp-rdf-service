@@ -1,80 +1,129 @@
-from pprint import pprint
-from SPARQLWrapper import SPARQLWrapper, JSON
-import json
+import bigtree as bt
+import typing as t
+from bigtree.node.node import Node
+from bigtree.tree.export import print_tree
+from bigtree.tree.construct import add_path_to_tree
+from rdf_service.queries import run_query
 import xml.etree.ElementTree as ET
 import xml.dom.minidom
 
+from rdf_service.trees import Tree, tree_get_str, tree_path_exists, tree_get_tree
+from rich import print
 
-def query_author(authorURI: str):
-    sparql = SPARQLWrapper(
-        "http://localhost:3030/"
-        "ds"
-    )
-    sparql.setReturnFormat(JSON)
 
-    # sparql.setQuery("""
-    #     prefix dblp: <https://dblp.org/rdf/schema#>
+def signature_to_xml(tree: Tree):
+    pass
 
-    #     SELECT ?pub ?pred ?obj ?bpred ?bobj
-    #     WHERE {
-    #       ?pub dblp:authoredBy """ f"<{authorURI}> ." """
-    #       {  ?pub ?pred [ ?bpred ?bobj ] }
-    #       UNION
-    #       { ?pub ?pred ?obj }
-    #     }
-    #     ORDER BY ?pub ?pred
-    #     """
-    # )
-    sparql.setQuery("""
-        prefix dblp: <https://dblp.org/rdf/schema#>
 
-        SELECT ?pub ?pred ?obj ?bpred ?bobj
-        WHERE {
-          ?pub dblp:authoredBy """ f"<{authorURI}> . " """
-          {
-            ?pub ?pred ?obj
-            FILTER (! isBlank(?obj) )
-          } UNION {
-            ?pub ?pred ?obj
-            FILTER (isBlank(?obj) ) .
-            ?obj ?bpred ?bobj .
-          }
-        }
-        """
-    )
+def uri_last_path(s: str) -> str:
+    if not s:
+        return ""
+    if s.startswith("http"):
+        sp = s.split("/")
+        return sp[-1]
+    return s
 
-    def get_type_val(rec, key: str):
-        if key not in rec:
+
+rdf_to_xml_mapping = {
+    "dblp": {
+        "publishedIn": "",
+        "publishedInJournal": "",
+        "publishedInJournalVolume": "",
+        "yearOfPublication": "",
+        "title": "",
+        "bibtexType": "",
+        "documentPage": "",
+        "primaryDocumentPage": "",
+    }
+}
+
+
+def reduce_tree_nodes(tree: Tree):
+    for maybe_key in tree.children:
+        # if child has 1 child, reduce to attr child.name=child.child.name
+        if len(maybe_key.children) == 1 and len(maybe_key.children[0].children) == 0:
+            key_node = maybe_key
+            value_node = maybe_key.children[0]
+            ## strip leading http://../..
+            attrvalue = uri_last_path(value_node.node_name) or value_node.node_name
+
+            key_node.set_attrs(dict([["type", "attr"], ["value", attrvalue]]))
+            value_node.parent = None # type: ignore
+
+
+def get_matching_attr(node: Tree, keypat: str) -> t.Optional[str]:
+    for attr_node in node.children:
+        if attr_node.get_attr("type") != "attr":
+            continue
+        attr_name = attr_node.node_name.lower()
+        if attr_name.endswith(keypat.lower()):
+            return attr_node.get_attr("value")
+
+
+def has_matching_attr(node: Tree, keypat: str, valpat: str) -> bool:
+    attr_value = get_matching_attr(node, keypat)
+    if not attr_value:
+        return False
+
+    return attr_value.lower().endswith(valpat.lower())
+
+
+def create_xml_root_elem(node: Tree):
+    if has_matching_attr(node, "bibtexType", "InProceedings"):
+        return ET.Element("inproceedings")
+
+    return ET.Element("article-todo")
+
+
+def add_xml_elems(xroot: ET.Element, node: Tree):
+    def year_elem():
+        attr = get_matching_attr(node, "yearOfPublication")
+        if not attr:
             return None
+        elem = ET.Element("year")
+        elem.text = attr
+        return elem
 
-        subrec = rec[key]
-        t = subrec['type']
-        v = subrec['value']
-        return [t, v]
+    year = year_elem()
+    if year is not None:
+        xroot.append(year)
+        print_xml(xroot)
 
-    try:
-        ret = sparql.queryAndConvert()
-        # pprint(ret)
 
-        # root = ET.Element('root')
-        for r in ret["results"]["bindings"]:
-            # pprint(r)
-            # body = ET.SubElement(root, 'triple', )
-            pub = get_type_val(r, 'pub')
-            pred  =get_type_val(r, "pred")
-            obj   =get_type_val(r, "obj")
-            bpred =get_type_val(r, "bpred")
-            bobj  =get_type_val(r, "bobj")
+def tree_to_xml(root: Tree):
+    for node in root.children:
+        reduce_tree_nodes(node)
+        xml_root = create_xml_root_elem(node)
+        add_xml_elems(xml_root, node)
+        print_tree(node, all_attrs=True)
+        print_xml(xml_root)
 
-            print(f"{pub}  {pred} {obj} [ {bpred} {bobj} ]")
-    except Exception as e:
-        print(e)
 
+def print_xml(root: ET.Element):
+    tree_out = ET.tostring(root, encoding="UTF-8")
+    newXML = xml.dom.minidom.parseString(tree_out.decode("UTF-8"))
+    pretty_xml = newXML.toprettyxml()
+    print(pretty_xml)
+
+
+def query_author(authorURI: str) -> Node:
+    sep = "|"
+    tuples = run_query(authorURI)
+    root: Tree = Node("root")
+    for tuple in tuples:
+        path = sep.join(["root"] + [p for p in tuple if p])
+        add_path_to_tree(root, path=path, sep=sep)
+
+    tree_to_xml(root)
+
+    return root
 
 
 # with open('BodyUniversal.json') as f:
 #     jsondata = json.load(f)
 
+# import xml.etree.ElementTree as ET
+# import xml.dom.minidom
 # INITIALIZING XML DOC AND PARENT TAGS
 # root = ET.Element('root')
 # body = ET.SubElement(root, 'Body')
@@ -90,21 +139,6 @@ def query_author(authorURI: str):
 # newXML = xml.dom.minidom.parseString(tree_out.decode('UTF-8'))
 # pretty_xml = newXML.toprettyxml()
 
-# print(pretty_xml)
-# # <?xml version="1.0" ?>
-# # <root>
-# #         <Body>
-# #                 <UniversalLiftSupport>
-# #                         1&quot;-9&quot; Extended Length
-# #                         10&quot;-14.5&quot; Extended Length
-# #                         15&quot;-19&quot; Extended Length
-# #                         20&quot; + Extended Length</UniversalLiftSupport>
-# #         </Body>
-# # </root>
-
-# # OUTPUT XML CONTENT TO FILE
-# with open('Output.xml','w') as f:
-#     f.write(pretty_xml)
 
 # prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 # prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
