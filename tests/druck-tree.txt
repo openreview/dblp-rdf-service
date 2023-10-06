@@ -1,0 +1,1027 @@
+root
+├── https://dblp.org/rec/conf/cikm/DruckM11
+│   ├── https://dblp.org/rdf/schema#doi
+│   │   ├── https://doi.org/10.1145/2063576.2063712
+│   │   └── http://dx.doi.org/10.1145/2063576.2063712
+│   ├── https://dblp.org/rdf/schema#publishedIn
+│   │   └── CIKM
+│   ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│   │   ├── https://dblp.org/rdf/schema#Inproceedings
+│   │   └── https://dblp.org/rdf/schema#Publication
+│   ├── http://www.w3.org/2002/07/owl#sameAs
+│   │   ├── https://doi.org/10.1145/2063576.2063712
+│   │   └── http://dx.doi.org/10.1145/2063576.2063712
+│   ├── https://dblp.org/rdf/schema#listedOnTocPage
+│   │   └── https://dblp.org/db/conf/cikm/cikm2011
+│   ├── https://dblp.org/rdf/schema#numberOfCreators
+│   │   └── 2
+│   ├── https://dblp.org/rdf/schema#publishedInBook
+│   │   └── CIKM
+│   ├── https://dblp.org/rdf/schema#pagination
+│   │   └── 947-956
+│   ├── https://dblp.org/rdf/schema#yearOfPublication
+│   │   └── 2011
+│   ├── https://dblp.org/rdf/schema#publishedAsPartOf
+│   │   └── https://dblp.org/rec/conf/cikm/2011
+│   ├── https://dblp.org/rdf/schema#authoredBy
+│   │   ├── https://dblp.org/pid/66/4867
+│   │   └── https://dblp.org/pid/m/AndrewMcCallum
+│   ├── https://dblp.org/rdf/schema#yearOfEvent
+│   │   └── 2011
+│   ├── https://dblp.org/rdf/schema#bibtexType
+│   │   └── http://purl.org/net/nknouf/ns/bibtex#Inproceedings
+│   ├── https://dblp.org/rdf/schema#title
+│   │   └── Toward interactive training and evaluation.
+│   ├── http://www.w3.org/2000/01/rdf-schema#label
+│   │   └── Gregory Druck and Andrew McCallum: Toward interactive training and evaluation. (2011)
+│   ├── https://dblp.org/rdf/schema#documentPage
+│   │   └── https://doi.org/10.1145/2063576.2063712
+│   ├── https://dblp.org/rdf/schema#primaryDocumentPage
+│   │   └── https://doi.org/10.1145/2063576.2063712
+│   ├── http://purl.org/spar/datacite/hasIdentifier
+│   │   ├── b0
+│   │   │   ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│   │   │   │   └── http://purl.org/spar/datacite/ResourceIdentifier
+│   │   │   ├── http://purl.org/spar/literal/hasLiteralValue
+│   │   │   │   └── conf/cikm/DruckM11
+│   │   │   └── http://purl.org/spar/datacite/usesIdentifierScheme
+│   │   │       └── http://purl.org/spar/datacite/dblp-record
+│   │   └── b1
+│   │       ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│   │       │   └── http://purl.org/spar/datacite/ResourceIdentifier
+│   │       ├── http://purl.org/spar/literal/hasLiteralValue
+│   │       │   └── 10.1145/2063576.2063712
+│   │       └── http://purl.org/spar/datacite/usesIdentifierScheme
+│   │           └── http://purl.org/spar/datacite/doi
+│   └── https://dblp.org/rdf/schema#hasSignature
+│       ├── b2
+│       │   ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│       │   │   └── https://dblp.org/rdf/schema#AuthorSignature
+│       │   ├── https://dblp.org/rdf/schema#signaturePublication
+│       │   │   └── https://dblp.org/rec/conf/cikm/DruckM11
+│       │   ├── https://dblp.org/rdf/schema#signatureDblpName
+│       │   │   └── Gregory Druck
+│       │   ├── https://dblp.org/rdf/schema#signatureCreator
+│       │   │   └── https://dblp.org/pid/66/4867
+│       │   └── https://dblp.org/rdf/schema#signatureOrdinal
+│       │       └── 1
+│       └── b3
+│           ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│           │   └── https://dblp.org/rdf/schema#AuthorSignature
+│           ├── https://dblp.org/rdf/schema#signaturePublication
+│           │   └── https://dblp.org/rec/conf/cikm/DruckM11
+│           ├── https://dblp.org/rdf/schema#signatureDblpName
+│           │   └── Andrew McCallum
+│           ├── https://dblp.org/rdf/schema#signatureCreator
+│           │   └── https://dblp.org/pid/m/AndrewMcCallum
+│           └── https://dblp.org/rdf/schema#signatureOrdinal
+│               └── 2
+├── https://dblp.org/rec/conf/acl/DruckP12
+│   ├── https://dblp.org/rdf/schema#publishedIn
+│   │   └── ACL (1)
+│   ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│   │   ├── https://dblp.org/rdf/schema#Inproceedings
+│   │   └── https://dblp.org/rdf/schema#Publication
+│   ├── https://dblp.org/rdf/schema#listedOnTocPage
+│   │   └── https://dblp.org/db/conf/acl/acl2012-1
+│   ├── https://dblp.org/rdf/schema#numberOfCreators
+│   │   └── 2
+│   ├── https://dblp.org/rdf/schema#publishedInBook
+│   │   └── ACL (1)
+│   ├── https://dblp.org/rdf/schema#pagination
+│   │   └── 545-553
+│   ├── https://dblp.org/rdf/schema#yearOfPublication
+│   │   └── 2012
+│   ├── https://dblp.org/rdf/schema#publishedAsPartOf
+│   │   └── https://dblp.org/rec/conf/acl/2012-1
+│   ├── https://dblp.org/rdf/schema#authoredBy
+│   │   ├── https://dblp.org/pid/16/6344
+│   │   └── https://dblp.org/pid/66/4867
+│   ├── https://dblp.org/rdf/schema#yearOfEvent
+│   │   └── 2012
+│   ├── https://dblp.org/rdf/schema#bibtexType
+│   │   └── http://purl.org/net/nknouf/ns/bibtex#Inproceedings
+│   ├── https://dblp.org/rdf/schema#title
+│   │   └── Spice it up? Mining Refinements to Online Instructions from User Generated Content.
+│   ├── http://www.w3.org/2000/01/rdf-schema#label
+│   │   └── Gregory Druck and Bo Pang: Spice it up? Mining Refinements to Online Instructions from User Generated Content. (2012)
+│   ├── https://dblp.org/rdf/schema#documentPage
+│   │   └── https://aclanthology.org/P12-1057/
+│   ├── https://dblp.org/rdf/schema#primaryDocumentPage
+│   │   └── https://aclanthology.org/P12-1057/
+│   ├── http://purl.org/spar/datacite/hasIdentifier
+│   │   └── b4
+│   │       ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│   │       │   └── http://purl.org/spar/datacite/ResourceIdentifier
+│   │       ├── http://purl.org/spar/literal/hasLiteralValue
+│   │       │   └── conf/acl/DruckP12
+│   │       └── http://purl.org/spar/datacite/usesIdentifierScheme
+│   │           └── http://purl.org/spar/datacite/dblp-record
+│   └── https://dblp.org/rdf/schema#hasSignature
+│       ├── b5
+│       │   ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│       │   │   └── https://dblp.org/rdf/schema#AuthorSignature
+│       │   ├── https://dblp.org/rdf/schema#signaturePublication
+│       │   │   └── https://dblp.org/rec/conf/acl/DruckP12
+│       │   ├── https://dblp.org/rdf/schema#signatureDblpName
+│       │   │   └── Gregory Druck
+│       │   ├── https://dblp.org/rdf/schema#signatureCreator
+│       │   │   └── https://dblp.org/pid/66/4867
+│       │   └── https://dblp.org/rdf/schema#signatureOrdinal
+│       │       └── 1
+│       └── b6
+│           ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│           │   └── https://dblp.org/rdf/schema#AuthorSignature
+│           ├── https://dblp.org/rdf/schema#signaturePublication
+│           │   └── https://dblp.org/rec/conf/acl/DruckP12
+│           ├── https://dblp.org/rdf/schema#signatureDblpName
+│           │   └── Bo Pang
+│           ├── https://dblp.org/rdf/schema#signatureCreator
+│           │   └── https://dblp.org/pid/16/6344
+│           └── https://dblp.org/rdf/schema#signatureOrdinal
+│               └── 2
+├── https://dblp.org/rec/conf/acl/DruckGG11
+│   ├── https://dblp.org/rdf/schema#publishedIn
+│   │   └── ACL (Tutorial Abstracts)
+│   ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│   │   ├── https://dblp.org/rdf/schema#Inproceedings
+│   │   └── https://dblp.org/rdf/schema#Publication
+│   ├── https://dblp.org/rdf/schema#listedOnTocPage
+│   │   └── https://dblp.org/db/conf/acl/acl2011t
+│   ├── https://dblp.org/rdf/schema#numberOfCreators
+│   │   └── 3
+│   ├── https://dblp.org/rdf/schema#publishedInBook
+│   │   └── ACL (Tutorial Abstracts)
+│   ├── https://dblp.org/rdf/schema#pagination
+│   │   └── 5
+│   ├── https://dblp.org/rdf/schema#yearOfPublication
+│   │   └── 2011
+│   ├── https://dblp.org/rdf/schema#publishedAsPartOf
+│   │   └── https://dblp.org/rec/conf/acl/2011t
+│   ├── https://dblp.org/rdf/schema#authoredBy
+│   │   ├── https://dblp.org/pid/99/2806
+│   │   ├── https://dblp.org/pid/66/4867
+│   │   └── https://dblp.org/pid/43/5339
+│   ├── https://dblp.org/rdf/schema#yearOfEvent
+│   │   └── 2011
+│   ├── https://dblp.org/rdf/schema#bibtexType
+│   │   └── http://purl.org/net/nknouf/ns/bibtex#Inproceedings
+│   ├── https://dblp.org/rdf/schema#title
+│   │   └── Rich Prior Knowledge in Learning for Natural Language Processing.
+│   ├── http://www.w3.org/2000/01/rdf-schema#label
+│   │   └── Gregory Druck et al.: Rich Prior Knowledge in Learning for Natural Language Processing. (2011)
+│   ├── https://dblp.org/rdf/schema#documentPage
+│   │   └── https://aclanthology.org/P11-5005/
+│   ├── https://dblp.org/rdf/schema#primaryDocumentPage
+│   │   └── https://aclanthology.org/P11-5005/
+│   ├── http://purl.org/spar/datacite/hasIdentifier
+│   │   └── b7
+│   │       ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│   │       │   └── http://purl.org/spar/datacite/ResourceIdentifier
+│   │       ├── http://purl.org/spar/literal/hasLiteralValue
+│   │       │   └── conf/acl/DruckGG11
+│   │       └── http://purl.org/spar/datacite/usesIdentifierScheme
+│   │           └── http://purl.org/spar/datacite/dblp-record
+│   └── https://dblp.org/rdf/schema#hasSignature
+│       ├── b8
+│       │   ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│       │   │   └── https://dblp.org/rdf/schema#AuthorSignature
+│       │   ├── https://dblp.org/rdf/schema#signaturePublication
+│       │   │   └── https://dblp.org/rec/conf/acl/DruckGG11
+│       │   ├── https://dblp.org/rdf/schema#signatureDblpName
+│       │   │   └── Gregory Druck
+│       │   ├── https://dblp.org/rdf/schema#signatureCreator
+│       │   │   └── https://dblp.org/pid/66/4867
+│       │   └── https://dblp.org/rdf/schema#signatureOrdinal
+│       │       └── 1
+│       ├── b9
+│       │   ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│       │   │   └── https://dblp.org/rdf/schema#AuthorSignature
+│       │   ├── https://dblp.org/rdf/schema#signaturePublication
+│       │   │   └── https://dblp.org/rec/conf/acl/DruckGG11
+│       │   ├── https://dblp.org/rdf/schema#signatureDblpName
+│       │   │   └── Kuzman Ganchev
+│       │   ├── https://dblp.org/rdf/schema#signatureCreator
+│       │   │   └── https://dblp.org/pid/43/5339
+│       │   └── https://dblp.org/rdf/schema#signatureOrdinal
+│       │       └── 2
+│       └── b10
+│           ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│           │   └── https://dblp.org/rdf/schema#AuthorSignature
+│           ├── https://dblp.org/rdf/schema#signaturePublication
+│           │   └── https://dblp.org/rec/conf/acl/DruckGG11
+│           ├── https://dblp.org/rdf/schema#signatureDblpName
+│           │   └── João Graça
+│           ├── https://dblp.org/rdf/schema#signatureCreator
+│           │   └── https://dblp.org/pid/99/2806
+│           └── https://dblp.org/rdf/schema#signatureOrdinal
+│               └── 3
+├── https://dblp.org/rec/conf/aaai/McCallumPDW06
+│   ├── https://dblp.org/rdf/schema#publishedIn
+│   │   └── AAAI
+│   ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│   │   ├── https://dblp.org/rdf/schema#Inproceedings
+│   │   └── https://dblp.org/rdf/schema#Publication
+│   ├── https://dblp.org/rdf/schema#archivedWebpage
+│   │   └── http://www.aaai.org/Library/AAAI/2006/aaai06-069.php
+│   ├── https://dblp.org/rdf/schema#listedOnTocPage
+│   │   └── https://dblp.org/db/conf/aaai/aaai2006
+│   ├── https://dblp.org/rdf/schema#numberOfCreators
+│   │   └── 4
+│   ├── https://dblp.org/rdf/schema#publishedInBook
+│   │   └── AAAI
+│   ├── https://dblp.org/rdf/schema#pagination
+│   │   └── 433-439
+│   ├── https://dblp.org/rdf/schema#yearOfPublication
+│   │   └── 2006
+│   ├── https://dblp.org/rdf/schema#publishedAsPartOf
+│   │   └── https://dblp.org/rec/conf/aaai/2006
+│   ├── https://dblp.org/rdf/schema#authoredBy
+│   │   ├── https://dblp.org/pid/66/4867
+│   │   ├── https://dblp.org/pid/37/2862
+│   │   ├── https://dblp.org/pid/45/1217
+│   │   └── https://dblp.org/pid/m/AndrewMcCallum
+│   ├── https://dblp.org/rdf/schema#yearOfEvent
+│   │   └── 2006
+│   ├── https://dblp.org/rdf/schema#bibtexType
+│   │   └── http://purl.org/net/nknouf/ns/bibtex#Inproceedings
+│   ├── https://dblp.org/rdf/schema#title
+│   │   └── Multi-Conditional Learning: Generative/Discriminative Training for Clustering and Classification.
+│   ├── http://www.w3.org/2000/01/rdf-schema#label
+│   │   └── Andrew McCallum et al.: Multi-Conditional Learning: Generative/Discriminative Training for Clustering and Classification. (2006)
+│   ├── http://purl.org/spar/datacite/hasIdentifier
+│   │   └── b11
+│   │       ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│   │       │   └── http://purl.org/spar/datacite/ResourceIdentifier
+│   │       ├── http://purl.org/spar/literal/hasLiteralValue
+│   │       │   └── conf/aaai/McCallumPDW06
+│   │       └── http://purl.org/spar/datacite/usesIdentifierScheme
+│   │           └── http://purl.org/spar/datacite/dblp-record
+│   └── https://dblp.org/rdf/schema#hasSignature
+│       ├── b12
+│       │   ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│       │   │   └── https://dblp.org/rdf/schema#AuthorSignature
+│       │   ├── https://dblp.org/rdf/schema#signaturePublication
+│       │   │   └── https://dblp.org/rec/conf/aaai/McCallumPDW06
+│       │   ├── https://dblp.org/rdf/schema#signatureDblpName
+│       │   │   └── Andrew McCallum
+│       │   ├── https://dblp.org/rdf/schema#signatureCreator
+│       │   │   └── https://dblp.org/pid/m/AndrewMcCallum
+│       │   └── https://dblp.org/rdf/schema#signatureOrdinal
+│       │       └── 1
+│       ├── b13
+│       │   ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│       │   │   └── https://dblp.org/rdf/schema#AuthorSignature
+│       │   ├── https://dblp.org/rdf/schema#signaturePublication
+│       │   │   └── https://dblp.org/rec/conf/aaai/McCallumPDW06
+│       │   ├── https://dblp.org/rdf/schema#signatureDblpName
+│       │   │   └── Chris Pal
+│       │   ├── https://dblp.org/rdf/schema#signatureCreator
+│       │   │   └── https://dblp.org/pid/45/1217
+│       │   └── https://dblp.org/rdf/schema#signatureOrdinal
+│       │       └── 2
+│       ├── b14
+│       │   ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│       │   │   └── https://dblp.org/rdf/schema#AuthorSignature
+│       │   ├── https://dblp.org/rdf/schema#signaturePublication
+│       │   │   └── https://dblp.org/rec/conf/aaai/McCallumPDW06
+│       │   ├── https://dblp.org/rdf/schema#signatureDblpName
+│       │   │   └── Gregory Druck
+│       │   ├── https://dblp.org/rdf/schema#signatureCreator
+│       │   │   └── https://dblp.org/pid/66/4867
+│       │   └── https://dblp.org/rdf/schema#signatureOrdinal
+│       │       └── 3
+│       └── b15
+│           ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│           │   └── https://dblp.org/rdf/schema#AuthorSignature
+│           ├── https://dblp.org/rdf/schema#signaturePublication
+│           │   └── https://dblp.org/rec/conf/aaai/McCallumPDW06
+│           ├── https://dblp.org/rdf/schema#signatureDblpName
+│           │   └── Xuerui Wang
+│           ├── https://dblp.org/rdf/schema#signatureCreator
+│           │   └── https://dblp.org/pid/37/2862
+│           └── https://dblp.org/rdf/schema#signatureOrdinal
+│               └── 4
+├── https://dblp.org/rec/journals/corr/abs-1205-2660
+│   ├── https://dblp.org/rdf/schema#publishedIn
+│   │   └── CoRR
+│   ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│   │   ├── https://dblp.org/rdf/schema#Publication
+│   │   └── https://dblp.org/rdf/schema#Informal
+│   ├── https://dblp.org/rdf/schema#listedOnTocPage
+│   │   └── https://dblp.org/db/journals/corr/corr1205
+│   ├── https://dblp.org/rdf/schema#numberOfCreators
+│   │   └── 3
+│   ├── https://dblp.org/rdf/schema#publishedInJournal
+│   │   └── CoRR
+│   ├── https://dblp.org/rdf/schema#yearOfPublication
+│   │   └── 2012
+│   ├── https://dblp.org/rdf/schema#authoredBy
+│   │   ├── https://dblp.org/pid/42/5376
+│   │   ├── https://dblp.org/pid/66/4867
+│   │   └── https://dblp.org/pid/m/AndrewMcCallum
+│   ├── https://dblp.org/rdf/schema#publishedInJournalVolume
+│   │   └── abs/1205.2660
+│   ├── https://dblp.org/rdf/schema#bibtexType
+│   │   └── http://purl.org/net/nknouf/ns/bibtex#Article
+│   ├── https://dblp.org/rdf/schema#title
+│   │   └── Alternating Projections for Learning with Expectation Constraints
+│   ├── http://www.w3.org/2000/01/rdf-schema#label
+│   │   └── Kedar Bellare et al.: Alternating Projections for Learning with Expectation Constraints (2012)
+│   ├── https://dblp.org/rdf/schema#documentPage
+│   │   └── http://arxiv.org/abs/1205.2660
+│   ├── https://dblp.org/rdf/schema#primaryDocumentPage
+│   │   └── http://arxiv.org/abs/1205.2660
+│   ├── http://purl.org/spar/datacite/hasIdentifier
+│   │   ├── b16
+│   │   │   ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│   │   │   │   └── http://purl.org/spar/datacite/ResourceIdentifier
+│   │   │   ├── http://purl.org/spar/literal/hasLiteralValue
+│   │   │   │   └── journals/corr/abs-1205-2660
+│   │   │   └── http://purl.org/spar/datacite/usesIdentifierScheme
+│   │   │       └── http://purl.org/spar/datacite/dblp-record
+│   │   └── b17
+│   │       ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│   │       │   └── http://purl.org/spar/datacite/ResourceIdentifier
+│   │       ├── http://purl.org/spar/literal/hasLiteralValue
+│   │       │   └── 1205.2660
+│   │       └── http://purl.org/spar/datacite/usesIdentifierScheme
+│   │           └── http://purl.org/spar/datacite/arxiv
+│   └── https://dblp.org/rdf/schema#hasSignature
+│       ├── b18
+│       │   ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│       │   │   └── https://dblp.org/rdf/schema#AuthorSignature
+│       │   ├── https://dblp.org/rdf/schema#signaturePublication
+│       │   │   └── https://dblp.org/rec/journals/corr/abs-1205-2660
+│       │   ├── https://dblp.org/rdf/schema#signatureDblpName
+│       │   │   └── Kedar Bellare
+│       │   ├── https://dblp.org/rdf/schema#signatureCreator
+│       │   │   └── https://dblp.org/pid/42/5376
+│       │   └── https://dblp.org/rdf/schema#signatureOrdinal
+│       │       └── 1
+│       ├── b19
+│       │   ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│       │   │   └── https://dblp.org/rdf/schema#AuthorSignature
+│       │   ├── https://dblp.org/rdf/schema#signaturePublication
+│       │   │   └── https://dblp.org/rec/journals/corr/abs-1205-2660
+│       │   ├── https://dblp.org/rdf/schema#signatureDblpName
+│       │   │   └── Gregory Druck
+│       │   ├── https://dblp.org/rdf/schema#signatureCreator
+│       │   │   └── https://dblp.org/pid/66/4867
+│       │   └── https://dblp.org/rdf/schema#signatureOrdinal
+│       │       └── 2
+│       └── b20
+│           ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│           │   └── https://dblp.org/rdf/schema#AuthorSignature
+│           ├── https://dblp.org/rdf/schema#signaturePublication
+│           │   └── https://dblp.org/rec/journals/corr/abs-1205-2660
+│           ├── https://dblp.org/rdf/schema#signatureDblpName
+│           │   └── Andrew McCallum
+│           ├── https://dblp.org/rdf/schema#signatureCreator
+│           │   └── https://dblp.org/pid/m/AndrewMcCallum
+│           └── https://dblp.org/rdf/schema#signatureOrdinal
+│               └── 3
+├── https://dblp.org/rec/conf/ntcir/YasukawaDDT14
+│   ├── https://dblp.org/rdf/schema#publishedIn
+│   │   └── NTCIR
+│   ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│   │   ├── https://dblp.org/rdf/schema#Inproceedings
+│   │   └── https://dblp.org/rdf/schema#Publication
+│   ├── https://dblp.org/rdf/schema#listedOnTocPage
+│   │   └── https://dblp.org/db/conf/ntcir/ntcir2014
+│   ├── https://dblp.org/rdf/schema#numberOfCreators
+│   │   └── 4
+│   ├── https://dblp.org/rdf/schema#publishedInBook
+│   │   └── NTCIR
+│   ├── https://dblp.org/rdf/schema#yearOfPublication
+│   │   └── 2014
+│   ├── https://dblp.org/rdf/schema#publishedAsPartOf
+│   │   └── https://dblp.org/rec/conf/ntcir/2014
+│   ├── https://dblp.org/rdf/schema#authoredBy
+│   │   ├── https://dblp.org/pid/38/2451-1
+│   │   ├── https://dblp.org/pid/162/8213
+│   │   ├── https://dblp.org/pid/66/4867
+│   │   └── https://dblp.org/pid/98/1282
+│   ├── https://dblp.org/rdf/schema#yearOfEvent
+│   │   └── 2014
+│   ├── https://dblp.org/rdf/schema#bibtexType
+│   │   └── http://purl.org/net/nknouf/ns/bibtex#Inproceedings
+│   ├── https://dblp.org/rdf/schema#title
+│   │   └── Overview of the NTCIR-11 Cooking Recipe Search Task.
+│   ├── http://www.w3.org/2000/01/rdf-schema#label
+│   │   └── Michiko Yasukawa et al.: Overview of the NTCIR-11 Cooking Recipe Search Task. (2014)
+│   ├── https://dblp.org/rdf/schema#documentPage
+│   │   └── http://research.nii.ac.jp/ntcir/workshop/OnlineProceedings11/pdf/NTCIR/OVERVIEW/01-NTCIR11-OV-RecipeSearch-YasukawaM.pdf
+│   ├── https://dblp.org/rdf/schema#primaryDocumentPage
+│   │   └── http://research.nii.ac.jp/ntcir/workshop/OnlineProceedings11/pdf/NTCIR/OVERVIEW/01-NTCIR11-OV-RecipeSearch-YasukawaM.pdf
+│   ├── http://purl.org/spar/datacite/hasIdentifier
+│   │   └── b21
+│   │       ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│   │       │   └── http://purl.org/spar/datacite/ResourceIdentifier
+│   │       ├── http://purl.org/spar/literal/hasLiteralValue
+│   │       │   └── conf/ntcir/YasukawaDDT14
+│   │       └── http://purl.org/spar/datacite/usesIdentifierScheme
+│   │           └── http://purl.org/spar/datacite/dblp-record
+│   └── https://dblp.org/rdf/schema#hasSignature
+│       ├── b22
+│       │   ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│       │   │   └── https://dblp.org/rdf/schema#AuthorSignature
+│       │   ├── https://dblp.org/rdf/schema#signaturePublication
+│       │   │   └── https://dblp.org/rec/conf/ntcir/YasukawaDDT14
+│       │   ├── https://dblp.org/rdf/schema#signatureDblpName
+│       │   │   └── Michiko Yasukawa
+│       │   ├── https://dblp.org/rdf/schema#signatureCreator
+│       │   │   └── https://dblp.org/pid/98/1282
+│       │   └── https://dblp.org/rdf/schema#signatureOrdinal
+│       │       └── 1
+│       ├── b23
+│       │   ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│       │   │   └── https://dblp.org/rdf/schema#AuthorSignature
+│       │   ├── https://dblp.org/rdf/schema#signaturePublication
+│       │   │   └── https://dblp.org/rec/conf/ntcir/YasukawaDDT14
+│       │   ├── https://dblp.org/rdf/schema#signatureDblpName
+│       │   │   └── Fernando Diaz 0001
+│       │   ├── https://dblp.org/rdf/schema#signatureCreator
+│       │   │   └── https://dblp.org/pid/38/2451-1
+│       │   └── https://dblp.org/rdf/schema#signatureOrdinal
+│       │       └── 2
+│       ├── b24
+│       │   ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│       │   │   └── https://dblp.org/rdf/schema#AuthorSignature
+│       │   ├── https://dblp.org/rdf/schema#signaturePublication
+│       │   │   └── https://dblp.org/rec/conf/ntcir/YasukawaDDT14
+│       │   ├── https://dblp.org/rdf/schema#signatureDblpName
+│       │   │   └── Gregory Druck
+│       │   ├── https://dblp.org/rdf/schema#signatureCreator
+│       │   │   └── https://dblp.org/pid/66/4867
+│       │   └── https://dblp.org/rdf/schema#signatureOrdinal
+│       │       └── 3
+│       └── b25
+│           ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│           │   └── https://dblp.org/rdf/schema#AuthorSignature
+│           ├── https://dblp.org/rdf/schema#signaturePublication
+│           │   └── https://dblp.org/rec/conf/ntcir/YasukawaDDT14
+│           ├── https://dblp.org/rdf/schema#signatureDblpName
+│           │   └── Nobu Tsukada
+│           ├── https://dblp.org/rdf/schema#signatureCreator
+│           │   └── https://dblp.org/pid/162/8213
+│           └── https://dblp.org/rdf/schema#signatureOrdinal
+│               └── 4
+├── https://dblp.org/rec/conf/icml/DruckM10
+│   ├── https://dblp.org/rdf/schema#publishedIn
+│   │   └── ICML
+│   ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│   │   ├── https://dblp.org/rdf/schema#Inproceedings
+│   │   └── https://dblp.org/rdf/schema#Publication
+│   ├── https://dblp.org/rdf/schema#listedOnTocPage
+│   │   └── https://dblp.org/db/conf/icml/icml2010
+│   ├── https://dblp.org/rdf/schema#numberOfCreators
+│   │   └── 2
+│   ├── https://dblp.org/rdf/schema#publishedInBook
+│   │   └── ICML
+│   ├── https://dblp.org/rdf/schema#pagination
+│   │   └── 319-326
+│   ├── https://dblp.org/rdf/schema#yearOfPublication
+│   │   └── 2010
+│   ├── https://dblp.org/rdf/schema#publishedAsPartOf
+│   │   └── https://dblp.org/rec/conf/icml/2010
+│   ├── https://dblp.org/rdf/schema#authoredBy
+│   │   ├── https://dblp.org/pid/66/4867
+│   │   └── https://dblp.org/pid/m/AndrewMcCallum
+│   ├── https://dblp.org/rdf/schema#yearOfEvent
+│   │   └── 2010
+│   ├── https://dblp.org/rdf/schema#bibtexType
+│   │   └── http://purl.org/net/nknouf/ns/bibtex#Inproceedings
+│   ├── https://dblp.org/rdf/schema#title
+│   │   └── High-Performance Semi-Supervised Learning using Discriminatively Constrained Generative Models.
+│   ├── http://www.w3.org/2000/01/rdf-schema#label
+│   │   └── Gregory Druck and Andrew McCallum: High-Performance Semi-Supervised Learning using Discriminatively Constrained Generative Models. (2010)
+│   ├── https://dblp.org/rdf/schema#documentPage
+│   │   └── https://icml.cc/Conferences/2010/papers/643.pdf
+│   ├── https://dblp.org/rdf/schema#primaryDocumentPage
+│   │   └── https://icml.cc/Conferences/2010/papers/643.pdf
+│   ├── http://purl.org/spar/datacite/hasIdentifier
+│   │   └── b26
+│   │       ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│   │       │   └── http://purl.org/spar/datacite/ResourceIdentifier
+│   │       ├── http://purl.org/spar/literal/hasLiteralValue
+│   │       │   └── conf/icml/DruckM10
+│   │       └── http://purl.org/spar/datacite/usesIdentifierScheme
+│   │           └── http://purl.org/spar/datacite/dblp-record
+│   └── https://dblp.org/rdf/schema#hasSignature
+│       ├── b27
+│       │   ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│       │   │   └── https://dblp.org/rdf/schema#AuthorSignature
+│       │   ├── https://dblp.org/rdf/schema#signaturePublication
+│       │   │   └── https://dblp.org/rec/conf/icml/DruckM10
+│       │   ├── https://dblp.org/rdf/schema#signatureDblpName
+│       │   │   └── Gregory Druck
+│       │   ├── https://dblp.org/rdf/schema#signatureCreator
+│       │   │   └── https://dblp.org/pid/66/4867
+│       │   └── https://dblp.org/rdf/schema#signatureOrdinal
+│       │       └── 1
+│       └── b28
+│           ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│           │   └── https://dblp.org/rdf/schema#AuthorSignature
+│           ├── https://dblp.org/rdf/schema#signaturePublication
+│           │   └── https://dblp.org/rec/conf/icml/DruckM10
+│           ├── https://dblp.org/rdf/schema#signatureDblpName
+│           │   └── Andrew McCallum
+│           ├── https://dblp.org/rdf/schema#signatureCreator
+│           │   └── https://dblp.org/pid/m/AndrewMcCallum
+│           └── https://dblp.org/rdf/schema#signatureOrdinal
+│               └── 2
+├── https://dblp.org/rec/conf/kdd/DruckPMZ07
+│   ├── https://dblp.org/rdf/schema#doi
+│   │   ├── http://dx.doi.org/10.1145/1281192.1281225
+│   │   └── https://doi.org/10.1145/1281192.1281225
+│   ├── https://dblp.org/rdf/schema#publishedIn
+│   │   └── KDD
+│   ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│   │   ├── https://dblp.org/rdf/schema#Inproceedings
+│   │   └── https://dblp.org/rdf/schema#Publication
+│   ├── http://www.w3.org/2002/07/owl#sameAs
+│   │   ├── http://dx.doi.org/10.1145/1281192.1281225
+│   │   └── https://doi.org/10.1145/1281192.1281225
+│   ├── https://dblp.org/rdf/schema#listedOnTocPage
+│   │   └── https://dblp.org/db/conf/kdd/kdd2007
+│   ├── https://dblp.org/rdf/schema#numberOfCreators
+│   │   └── 4
+│   ├── https://dblp.org/rdf/schema#publishedInBook
+│   │   └── KDD
+│   ├── https://dblp.org/rdf/schema#pagination
+│   │   └── 280-289
+│   ├── https://dblp.org/rdf/schema#yearOfPublication
+│   │   └── 2007
+│   ├── https://dblp.org/rdf/schema#publishedAsPartOf
+│   │   └── https://dblp.org/rec/conf/kdd/2007
+│   ├── https://dblp.org/rdf/schema#authoredBy
+│   │   ├── https://dblp.org/pid/66/4867
+│   │   ├── https://dblp.org/pid/z/XiaojinZhu
+│   │   ├── https://dblp.org/pid/45/1217
+│   │   └── https://dblp.org/pid/m/AndrewMcCallum
+│   ├── https://dblp.org/rdf/schema#yearOfEvent
+│   │   └── 2007
+│   ├── https://dblp.org/rdf/schema#bibtexType
+│   │   └── http://purl.org/net/nknouf/ns/bibtex#Inproceedings
+│   ├── https://dblp.org/rdf/schema#title
+│   │   └── Semi-supervised classification with hybrid generative/discriminative methods.
+│   ├── http://www.w3.org/2000/01/rdf-schema#label
+│   │   └── Gregory Druck et al.: Semi-supervised classification with hybrid generative/discriminative methods. (2007)
+│   ├── https://dblp.org/rdf/schema#documentPage
+│   │   └── https://doi.org/10.1145/1281192.1281225
+│   ├── https://dblp.org/rdf/schema#primaryDocumentPage
+│   │   └── https://doi.org/10.1145/1281192.1281225
+│   ├── http://purl.org/spar/datacite/hasIdentifier
+│   │   ├── b29
+│   │   │   ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│   │   │   │   └── http://purl.org/spar/datacite/ResourceIdentifier
+│   │   │   ├── http://purl.org/spar/literal/hasLiteralValue
+│   │   │   │   └── conf/kdd/DruckPMZ07
+│   │   │   └── http://purl.org/spar/datacite/usesIdentifierScheme
+│   │   │       └── http://purl.org/spar/datacite/dblp-record
+│   │   └── b30
+│   │       ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│   │       │   └── http://purl.org/spar/datacite/ResourceIdentifier
+│   │       ├── http://purl.org/spar/literal/hasLiteralValue
+│   │       │   └── 10.1145/1281192.1281225
+│   │       └── http://purl.org/spar/datacite/usesIdentifierScheme
+│   │           └── http://purl.org/spar/datacite/doi
+│   └── https://dblp.org/rdf/schema#hasSignature
+│       ├── b31
+│       │   ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│       │   │   └── https://dblp.org/rdf/schema#AuthorSignature
+│       │   ├── https://dblp.org/rdf/schema#signaturePublication
+│       │   │   └── https://dblp.org/rec/conf/kdd/DruckPMZ07
+│       │   ├── https://dblp.org/rdf/schema#signatureDblpName
+│       │   │   └── Gregory Druck
+│       │   ├── https://dblp.org/rdf/schema#signatureCreator
+│       │   │   └── https://dblp.org/pid/66/4867
+│       │   └── https://dblp.org/rdf/schema#signatureOrdinal
+│       │       └── 1
+│       ├── b32
+│       │   ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│       │   │   └── https://dblp.org/rdf/schema#AuthorSignature
+│       │   ├── https://dblp.org/rdf/schema#signaturePublication
+│       │   │   └── https://dblp.org/rec/conf/kdd/DruckPMZ07
+│       │   ├── https://dblp.org/rdf/schema#signatureDblpName
+│       │   │   └── Chris Pal
+│       │   ├── https://dblp.org/rdf/schema#signatureCreator
+│       │   │   └── https://dblp.org/pid/45/1217
+│       │   └── https://dblp.org/rdf/schema#signatureOrdinal
+│       │       └── 2
+│       ├── b33
+│       │   ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│       │   │   └── https://dblp.org/rdf/schema#AuthorSignature
+│       │   ├── https://dblp.org/rdf/schema#signaturePublication
+│       │   │   └── https://dblp.org/rec/conf/kdd/DruckPMZ07
+│       │   ├── https://dblp.org/rdf/schema#signatureDblpName
+│       │   │   └── Andrew McCallum
+│       │   ├── https://dblp.org/rdf/schema#signatureCreator
+│       │   │   └── https://dblp.org/pid/m/AndrewMcCallum
+│       │   └── https://dblp.org/rdf/schema#signatureOrdinal
+│       │       └── 3
+│       └── b34
+│           ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│           │   └── https://dblp.org/rdf/schema#AuthorSignature
+│           ├── https://dblp.org/rdf/schema#signaturePublication
+│           │   └── https://dblp.org/rec/conf/kdd/DruckPMZ07
+│           ├── https://dblp.org/rdf/schema#signatureDblpName
+│           │   └── Xiaojin Zhu 0001
+│           ├── https://dblp.org/rdf/schema#signatureCreator
+│           │   └── https://dblp.org/pid/z/XiaojinZhu
+│           └── https://dblp.org/rdf/schema#signatureOrdinal
+│               └── 4
+├── https://dblp.org/rec/journals/jmlr/DruckNV07
+│   ├── https://dblp.org/rdf/schema#publishedIn
+│   │   └── AISTATS
+│   ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│   │   ├── https://dblp.org/rdf/schema#Inproceedings
+│   │   └── https://dblp.org/rdf/schema#Publication
+│   ├── https://dblp.org/rdf/schema#listedOnTocPage
+│   │   └── https://dblp.org/db/journals/jmlr/jmlrp2
+│   ├── https://dblp.org/rdf/schema#numberOfCreators
+│   │   └── 3
+│   ├── https://dblp.org/rdf/schema#publishedInBook
+│   │   └── AISTATS
+│   ├── https://dblp.org/rdf/schema#pagination
+│   │   └── 99-106
+│   ├── https://dblp.org/rdf/schema#yearOfPublication
+│   │   └── 2007
+│   ├── https://dblp.org/rdf/schema#publishedAsPartOf
+│   │   └── https://dblp.org/rec/conf/aistats/2007
+│   ├── https://dblp.org/rdf/schema#authoredBy
+│   │   ├── https://dblp.org/pid/66/4867
+│   │   ├── https://dblp.org/pid/v/PaulAViola
+│   │   └── https://dblp.org/pid/08/6887
+│   ├── https://dblp.org/rdf/schema#yearOfEvent
+│   │   └── 2007
+│   ├── https://dblp.org/rdf/schema#bibtexType
+│   │   └── http://purl.org/net/nknouf/ns/bibtex#Inproceedings
+│   ├── https://dblp.org/rdf/schema#title
+│   │   └── Learning A* underestimates: Using inference to guide inference.
+│   ├── http://www.w3.org/2000/01/rdf-schema#label
+│   │   └── Gregory Druck et al.: Learning A* underestimates: Using inference to guide inference. (2007)
+│   ├── https://dblp.org/rdf/schema#documentPage
+│   │   └── http://proceedings.mlr.press/v2/druck07a.html
+│   ├── https://dblp.org/rdf/schema#primaryDocumentPage
+│   │   └── http://proceedings.mlr.press/v2/druck07a.html
+│   ├── http://purl.org/spar/datacite/hasIdentifier
+│   │   └── b35
+│   │       ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│   │       │   └── http://purl.org/spar/datacite/ResourceIdentifier
+│   │       ├── http://purl.org/spar/literal/hasLiteralValue
+│   │       │   └── journals/jmlr/DruckNV07
+│   │       └── http://purl.org/spar/datacite/usesIdentifierScheme
+│   │           └── http://purl.org/spar/datacite/dblp-record
+│   └── https://dblp.org/rdf/schema#hasSignature
+│       ├── b36
+│       │   ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│       │   │   └── https://dblp.org/rdf/schema#AuthorSignature
+│       │   ├── https://dblp.org/rdf/schema#signaturePublication
+│       │   │   └── https://dblp.org/rec/journals/jmlr/DruckNV07
+│       │   ├── https://dblp.org/rdf/schema#signatureDblpName
+│       │   │   └── Gregory Druck
+│       │   ├── https://dblp.org/rdf/schema#signatureCreator
+│       │   │   └── https://dblp.org/pid/66/4867
+│       │   └── https://dblp.org/rdf/schema#signatureOrdinal
+│       │       └── 1
+│       ├── b37
+│       │   ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│       │   │   └── https://dblp.org/rdf/schema#AuthorSignature
+│       │   ├── https://dblp.org/rdf/schema#signaturePublication
+│       │   │   └── https://dblp.org/rec/journals/jmlr/DruckNV07
+│       │   ├── https://dblp.org/rdf/schema#signatureDblpName
+│       │   │   └── Mukund Narasimhan
+│       │   ├── https://dblp.org/rdf/schema#signatureCreator
+│       │   │   └── https://dblp.org/pid/08/6887
+│       │   └── https://dblp.org/rdf/schema#signatureOrdinal
+│       │       └── 2
+│       └── b38
+│           ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│           │   └── https://dblp.org/rdf/schema#AuthorSignature
+│           ├── https://dblp.org/rdf/schema#signaturePublication
+│           │   └── https://dblp.org/rec/journals/jmlr/DruckNV07
+│           ├── https://dblp.org/rdf/schema#signatureDblpName
+│           │   └── Paul A. Viola
+│           ├── https://dblp.org/rdf/schema#signatureCreator
+│           │   └── https://dblp.org/pid/v/PaulAViola
+│           └── https://dblp.org/rdf/schema#signatureOrdinal
+│               └── 3
+├── https://dblp.org/rec/conf/sigir/DruckMM08
+│   ├── https://dblp.org/rdf/schema#doi
+│   │   ├── https://doi.org/10.1145/1390334.1390436
+│   │   └── http://dx.doi.org/10.1145/1390334.1390436
+│   ├── https://dblp.org/rdf/schema#publishedIn
+│   │   └── SIGIR
+│   ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│   │   ├── https://dblp.org/rdf/schema#Inproceedings
+│   │   └── https://dblp.org/rdf/schema#Publication
+│   ├── http://www.w3.org/2002/07/owl#sameAs
+│   │   ├── https://doi.org/10.1145/1390334.1390436
+│   │   └── http://dx.doi.org/10.1145/1390334.1390436
+│   ├── https://dblp.org/rdf/schema#listedOnTocPage
+│   │   └── https://dblp.org/db/conf/sigir/sigir2008
+│   ├── https://dblp.org/rdf/schema#numberOfCreators
+│   │   └── 3
+│   ├── https://dblp.org/rdf/schema#publishedInBook
+│   │   └── SIGIR
+│   ├── https://dblp.org/rdf/schema#pagination
+│   │   └── 595-602
+│   ├── https://dblp.org/rdf/schema#yearOfPublication
+│   │   └── 2008
+│   ├── https://dblp.org/rdf/schema#publishedAsPartOf
+│   │   └── https://dblp.org/rec/conf/sigir/2008
+│   ├── https://dblp.org/rdf/schema#authoredBy
+│   │   ├── https://dblp.org/pid/m/GideonSMann
+│   │   ├── https://dblp.org/pid/66/4867
+│   │   └── https://dblp.org/pid/m/AndrewMcCallum
+│   ├── https://dblp.org/rdf/schema#yearOfEvent
+│   │   └── 2008
+│   ├── https://dblp.org/rdf/schema#bibtexType
+│   │   └── http://purl.org/net/nknouf/ns/bibtex#Inproceedings
+│   ├── https://dblp.org/rdf/schema#title
+│   │   └── Learning from labeled features using generalized expectation criteria.
+│   ├── http://www.w3.org/2000/01/rdf-schema#label
+│   │   └── Gregory Druck et al.: Learning from labeled features using generalized expectation criteria. (2008)
+│   ├── https://dblp.org/rdf/schema#documentPage
+│   │   └── https://doi.org/10.1145/1390334.1390436
+│   ├── https://dblp.org/rdf/schema#primaryDocumentPage
+│   │   └── https://doi.org/10.1145/1390334.1390436
+│   ├── http://purl.org/spar/datacite/hasIdentifier
+│   │   ├── b39
+│   │   │   ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│   │   │   │   └── http://purl.org/spar/datacite/ResourceIdentifier
+│   │   │   ├── http://purl.org/spar/literal/hasLiteralValue
+│   │   │   │   └── conf/sigir/DruckMM08
+│   │   │   └── http://purl.org/spar/datacite/usesIdentifierScheme
+│   │   │       └── http://purl.org/spar/datacite/dblp-record
+│   │   └── b40
+│   │       ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│   │       │   └── http://purl.org/spar/datacite/ResourceIdentifier
+│   │       ├── http://purl.org/spar/literal/hasLiteralValue
+│   │       │   └── 10.1145/1390334.1390436
+│   │       └── http://purl.org/spar/datacite/usesIdentifierScheme
+│   │           └── http://purl.org/spar/datacite/doi
+│   └── https://dblp.org/rdf/schema#hasSignature
+│       ├── b41
+│       │   ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│       │   │   └── https://dblp.org/rdf/schema#AuthorSignature
+│       │   ├── https://dblp.org/rdf/schema#signaturePublication
+│       │   │   └── https://dblp.org/rec/conf/sigir/DruckMM08
+│       │   ├── https://dblp.org/rdf/schema#signatureDblpName
+│       │   │   └── Gregory Druck
+│       │   ├── https://dblp.org/rdf/schema#signatureCreator
+│       │   │   └── https://dblp.org/pid/66/4867
+│       │   └── https://dblp.org/rdf/schema#signatureOrdinal
+│       │       └── 1
+│       ├── b42
+│       │   ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│       │   │   └── https://dblp.org/rdf/schema#AuthorSignature
+│       │   ├── https://dblp.org/rdf/schema#signaturePublication
+│       │   │   └── https://dblp.org/rec/conf/sigir/DruckMM08
+│       │   ├── https://dblp.org/rdf/schema#signatureDblpName
+│       │   │   └── Gideon S. Mann
+│       │   ├── https://dblp.org/rdf/schema#signatureCreator
+│       │   │   └── https://dblp.org/pid/m/GideonSMann
+│       │   └── https://dblp.org/rdf/schema#signatureOrdinal
+│       │       └── 2
+│       └── b43
+│           ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│           │   └── https://dblp.org/rdf/schema#AuthorSignature
+│           ├── https://dblp.org/rdf/schema#signaturePublication
+│           │   └── https://dblp.org/rec/conf/sigir/DruckMM08
+│           ├── https://dblp.org/rdf/schema#signatureDblpName
+│           │   └── Andrew McCallum
+│           ├── https://dblp.org/rdf/schema#signatureCreator
+│           │   └── https://dblp.org/pid/m/AndrewMcCallum
+│           └── https://dblp.org/rdf/schema#signatureOrdinal
+│               └── 3
+├── https://dblp.org/rec/conf/uai/BellareDM09
+│   ├── https://dblp.org/rdf/schema#publishedIn
+│   │   └── UAI
+│   ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│   │   ├── https://dblp.org/rdf/schema#Inproceedings
+│   │   └── https://dblp.org/rdf/schema#Publication
+│   ├── https://dblp.org/rdf/schema#listedOnTocPage
+│   │   └── https://dblp.org/db/conf/uai/uai2009
+│   ├── https://dblp.org/rdf/schema#numberOfCreators
+│   │   └── 3
+│   ├── https://dblp.org/rdf/schema#publishedInBook
+│   │   └── UAI
+│   ├── https://dblp.org/rdf/schema#pagination
+│   │   └── 43-50
+│   ├── https://dblp.org/rdf/schema#yearOfPublication
+│   │   └── 2009
+│   ├── https://dblp.org/rdf/schema#publishedAsPartOf
+│   │   └── https://dblp.org/rec/conf/uai/2009
+│   ├── https://dblp.org/rdf/schema#authoredBy
+│   │   ├── https://dblp.org/pid/42/5376
+│   │   ├── https://dblp.org/pid/66/4867
+│   │   └── https://dblp.org/pid/m/AndrewMcCallum
+│   ├── https://dblp.org/rdf/schema#yearOfEvent
+│   │   └── 2009
+│   ├── https://dblp.org/rdf/schema#bibtexType
+│   │   └── http://purl.org/net/nknouf/ns/bibtex#Inproceedings
+│   ├── https://dblp.org/rdf/schema#title
+│   │   └── Alternating Projections for Learning with Expectation Constraints.
+│   ├── http://www.w3.org/2000/01/rdf-schema#label
+│   │   └── Kedar Bellare et al.: Alternating Projections for Learning with Expectation Constraints. (2009)
+│   ├── https://dblp.org/rdf/schema#documentPage
+│   │   └── https://www.auai.org/uai2009/papers/UAI2009_0221_c70ee5bd115ada1d08bc3190f729c44d.pdf
+│   ├── https://dblp.org/rdf/schema#primaryDocumentPage
+│   │   └── https://www.auai.org/uai2009/papers/UAI2009_0221_c70ee5bd115ada1d08bc3190f729c44d.pdf
+│   ├── http://purl.org/spar/datacite/hasIdentifier
+│   │   └── b44
+│   │       ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│   │       │   └── http://purl.org/spar/datacite/ResourceIdentifier
+│   │       ├── http://purl.org/spar/literal/hasLiteralValue
+│   │       │   └── conf/uai/BellareDM09
+│   │       └── http://purl.org/spar/datacite/usesIdentifierScheme
+│   │           └── http://purl.org/spar/datacite/dblp-record
+│   └── https://dblp.org/rdf/schema#hasSignature
+│       ├── b45
+│       │   ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│       │   │   └── https://dblp.org/rdf/schema#AuthorSignature
+│       │   ├── https://dblp.org/rdf/schema#signaturePublication
+│       │   │   └── https://dblp.org/rec/conf/uai/BellareDM09
+│       │   ├── https://dblp.org/rdf/schema#signatureDblpName
+│       │   │   └── Kedar Bellare
+│       │   ├── https://dblp.org/rdf/schema#signatureCreator
+│       │   │   └── https://dblp.org/pid/42/5376
+│       │   └── https://dblp.org/rdf/schema#signatureOrdinal
+│       │       └── 1
+│       ├── b46
+│       │   ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│       │   │   └── https://dblp.org/rdf/schema#AuthorSignature
+│       │   ├── https://dblp.org/rdf/schema#signaturePublication
+│       │   │   └── https://dblp.org/rec/conf/uai/BellareDM09
+│       │   ├── https://dblp.org/rdf/schema#signatureDblpName
+│       │   │   └── Gregory Druck
+│       │   ├── https://dblp.org/rdf/schema#signatureCreator
+│       │   │   └── https://dblp.org/pid/66/4867
+│       │   └── https://dblp.org/rdf/schema#signatureOrdinal
+│       │       └── 2
+│       └── b47
+│           ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│           │   └── https://dblp.org/rdf/schema#AuthorSignature
+│           ├── https://dblp.org/rdf/schema#signaturePublication
+│           │   └── https://dblp.org/rec/conf/uai/BellareDM09
+│           ├── https://dblp.org/rdf/schema#signatureDblpName
+│           │   └── Andrew McCallum
+│           ├── https://dblp.org/rdf/schema#signatureCreator
+│           │   └── https://dblp.org/pid/m/AndrewMcCallum
+│           └── https://dblp.org/rdf/schema#signatureOrdinal
+│               └── 3
+├── https://dblp.org/rec/conf/acl/DruckMM09
+│   ├── https://dblp.org/rdf/schema#publishedIn
+│   │   └── ACL/IJCNLP
+│   ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│   │   ├── https://dblp.org/rdf/schema#Inproceedings
+│   │   └── https://dblp.org/rdf/schema#Publication
+│   ├── https://dblp.org/rdf/schema#listedOnTocPage
+│   │   └── https://dblp.org/db/conf/acl/acl2009
+│   ├── https://dblp.org/rdf/schema#numberOfCreators
+│   │   └── 3
+│   ├── https://dblp.org/rdf/schema#publishedInBook
+│   │   └── ACL/IJCNLP
+│   ├── https://dblp.org/rdf/schema#pagination
+│   │   └── 360-368
+│   ├── https://dblp.org/rdf/schema#yearOfPublication
+│   │   └── 2009
+│   ├── https://dblp.org/rdf/schema#publishedAsPartOf
+│   │   └── https://dblp.org/rec/conf/acl/2009
+│   ├── https://dblp.org/rdf/schema#authoredBy
+│   │   ├── https://dblp.org/pid/m/GideonSMann
+│   │   ├── https://dblp.org/pid/66/4867
+│   │   └── https://dblp.org/pid/m/AndrewMcCallum
+│   ├── https://dblp.org/rdf/schema#yearOfEvent
+│   │   └── 2009
+│   ├── https://dblp.org/rdf/schema#bibtexType
+│   │   └── http://purl.org/net/nknouf/ns/bibtex#Inproceedings
+│   ├── https://dblp.org/rdf/schema#title
+│   │   └── Semi-supervised Learning of Dependency Parsers using Generalized Expectation Criteria.
+│   ├── http://www.w3.org/2000/01/rdf-schema#label
+│   │   └── Gregory Druck et al.: Semi-supervised Learning of Dependency Parsers using Generalized Expectation Criteria. (2009)
+│   ├── https://dblp.org/rdf/schema#documentPage
+│   │   └── https://aclanthology.org/P09-1041/
+│   ├── https://dblp.org/rdf/schema#primaryDocumentPage
+│   │   └── https://aclanthology.org/P09-1041/
+│   ├── http://purl.org/spar/datacite/hasIdentifier
+│   │   └── b48
+│   │       ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│   │       │   └── http://purl.org/spar/datacite/ResourceIdentifier
+│   │       ├── http://purl.org/spar/literal/hasLiteralValue
+│   │       │   └── conf/acl/DruckMM09
+│   │       └── http://purl.org/spar/datacite/usesIdentifierScheme
+│   │           └── http://purl.org/spar/datacite/dblp-record
+│   └── https://dblp.org/rdf/schema#hasSignature
+│       ├── b49
+│       │   ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│       │   │   └── https://dblp.org/rdf/schema#AuthorSignature
+│       │   ├── https://dblp.org/rdf/schema#signaturePublication
+│       │   │   └── https://dblp.org/rec/conf/acl/DruckMM09
+│       │   ├── https://dblp.org/rdf/schema#signatureDblpName
+│       │   │   └── Gregory Druck
+│       │   ├── https://dblp.org/rdf/schema#signatureCreator
+│       │   │   └── https://dblp.org/pid/66/4867
+│       │   └── https://dblp.org/rdf/schema#signatureOrdinal
+│       │       └── 1
+│       ├── b50
+│       │   ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│       │   │   └── https://dblp.org/rdf/schema#AuthorSignature
+│       │   ├── https://dblp.org/rdf/schema#signaturePublication
+│       │   │   └── https://dblp.org/rec/conf/acl/DruckMM09
+│       │   ├── https://dblp.org/rdf/schema#signatureDblpName
+│       │   │   └── Gideon S. Mann
+│       │   ├── https://dblp.org/rdf/schema#signatureCreator
+│       │   │   └── https://dblp.org/pid/m/GideonSMann
+│       │   └── https://dblp.org/rdf/schema#signatureOrdinal
+│       │       └── 2
+│       └── b51
+│           ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│           │   └── https://dblp.org/rdf/schema#AuthorSignature
+│           ├── https://dblp.org/rdf/schema#signaturePublication
+│           │   └── https://dblp.org/rec/conf/acl/DruckMM09
+│           ├── https://dblp.org/rdf/schema#signatureDblpName
+│           │   └── Andrew McCallum
+│           ├── https://dblp.org/rdf/schema#signatureCreator
+│           │   └── https://dblp.org/pid/m/AndrewMcCallum
+│           └── https://dblp.org/rdf/schema#signatureOrdinal
+│               └── 3
+└── https://dblp.org/rec/conf/emnlp/DruckSM09
+    ├── https://dblp.org/rdf/schema#publishedIn
+    │   └── EMNLP
+    ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+    │   ├── https://dblp.org/rdf/schema#Inproceedings
+    │   └── https://dblp.org/rdf/schema#Publication
+    ├── https://dblp.org/rdf/schema#listedOnTocPage
+    │   └── https://dblp.org/db/conf/emnlp/emnlp2009
+    ├── https://dblp.org/rdf/schema#numberOfCreators
+    │   └── 3
+    ├── https://dblp.org/rdf/schema#publishedInBook
+    │   └── EMNLP
+    ├── https://dblp.org/rdf/schema#pagination
+    │   └── 81-90
+    ├── https://dblp.org/rdf/schema#yearOfPublication
+    │   └── 2009
+    ├── https://dblp.org/rdf/schema#publishedAsPartOf
+    │   └── https://dblp.org/rec/conf/emnlp/2009
+    ├── https://dblp.org/rdf/schema#authoredBy
+    │   ├── https://dblp.org/pid/62/3903
+    │   ├── https://dblp.org/pid/66/4867
+    │   └── https://dblp.org/pid/m/AndrewMcCallum
+    ├── https://dblp.org/rdf/schema#yearOfEvent
+    │   └── 2009
+    ├── https://dblp.org/rdf/schema#bibtexType
+    │   └── http://purl.org/net/nknouf/ns/bibtex#Inproceedings
+    ├── https://dblp.org/rdf/schema#title
+    │   └── Active Learning by Labeling Features.
+    ├── http://www.w3.org/2000/01/rdf-schema#label
+    │   └── Gregory Druck et al.: Active Learning by Labeling Features. (2009)
+    ├── https://dblp.org/rdf/schema#documentPage
+    │   └── https://aclanthology.org/D09-1009/
+    ├── https://dblp.org/rdf/schema#primaryDocumentPage
+    │   └── https://aclanthology.org/D09-1009/
+    ├── http://purl.org/spar/datacite/hasIdentifier
+    │   └── b52
+    │       ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+    │       │   └── http://purl.org/spar/datacite/ResourceIdentifier
+    │       ├── http://purl.org/spar/literal/hasLiteralValue
+    │       │   └── conf/emnlp/DruckSM09
+    │       └── http://purl.org/spar/datacite/usesIdentifierScheme
+    │           └── http://purl.org/spar/datacite/dblp-record
+    └── https://dblp.org/rdf/schema#hasSignature
+        ├── b53
+        │   ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+        │   │   └── https://dblp.org/rdf/schema#AuthorSignature
+        │   ├── https://dblp.org/rdf/schema#signaturePublication
+        │   │   └── https://dblp.org/rec/conf/emnlp/DruckSM09
+        │   ├── https://dblp.org/rdf/schema#signatureDblpName
+        │   │   └── Gregory Druck
+        │   ├── https://dblp.org/rdf/schema#signatureCreator
+        │   │   └── https://dblp.org/pid/66/4867
+        │   └── https://dblp.org/rdf/schema#signatureOrdinal
+        │       └── 1
+        ├── b54
+        │   ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+        │   │   └── https://dblp.org/rdf/schema#AuthorSignature
+        │   ├── https://dblp.org/rdf/schema#signaturePublication
+        │   │   └── https://dblp.org/rec/conf/emnlp/DruckSM09
+        │   ├── https://dblp.org/rdf/schema#signatureDblpName
+        │   │   └── Burr Settles
+        │   ├── https://dblp.org/rdf/schema#signatureCreator
+        │   │   └── https://dblp.org/pid/62/3903
+        │   └── https://dblp.org/rdf/schema#signatureOrdinal
+        │       └── 2
+        └── b55
+            ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+            │   └── https://dblp.org/rdf/schema#AuthorSignature
+            ├── https://dblp.org/rdf/schema#signaturePublication
+            │   └── https://dblp.org/rec/conf/emnlp/DruckSM09
+            ├── https://dblp.org/rdf/schema#signatureDblpName
+            │   └── Andrew McCallum
+            ├── https://dblp.org/rdf/schema#signatureCreator
+            │   └── https://dblp.org/pid/m/AndrewMcCallum
+            └── https://dblp.org/rdf/schema#signatureOrdinal
+                └── 3

@@ -1,11 +1,18 @@
-from collections import namedtuple
 from SPARQLWrapper import SPARQLWrapper, JSON
 import typing as t
 
-AuthorTuple = namedtuple("AuthorTuple", ["sub", "pred", "obj", "bpred", "bobj"])
+from bigtree import Node, add_path_to_tree  # type: ignore
 
 
-def run_query(authorURI: str) -> t.List[AuthorTuple]:
+class AuthorTuple(t.NamedTuple):
+    sub: str
+    pred: str
+    obj: str
+    bpred: t.Optional[str] = None
+    bobj: t.Optional[str] = None
+
+
+def run_author_publication_query(authorURI: str) -> t.List[AuthorTuple]:
     sparql = SPARQLWrapper("http://localhost:3030/" "ds")
     sparql.setReturnFormat(JSON)
 
@@ -43,13 +50,48 @@ def run_query(authorURI: str) -> t.List[AuthorTuple]:
             tuples.append(AuthorTuple(sub, pred, obj, bpred, bobj))
 
     except Exception as e:
-        print('error')
+        print("error")
         print(e)
 
     return tuples
 
 
-def get_type_val(rec, key: str) -> str:
+def get_author_publication_tree(authorURI: str) -> Node:
+    tuples = run_author_publication_query(authorURI)
+    return create_tree_from_tuples(tuples)
+
+
+def create_tree_from_tuples(tuples: t.List[AuthorTuple]) -> Node:
+    sep = "|"
+    root: Node = Node("root")
+    for tuple in tuples:
+        path = sep.join(["root"] + [p for p in tuple if p])
+        add_path_to_tree(root, path=path, sep=sep)
+
+    return root
+
+
+def abbreviate_author_tuples(tuples: t.List[AuthorTuple]) -> t.List[str]:
+    abbrevs: t.List[str] = []
+
+    def trim(s: t.Optional[str]) -> str:
+        if not s:
+            return ""
+        if s.startswith("http"):
+            sp = s.split("/")
+            return sp[-1]
+
+        return s
+
+    for tuple in tuples:
+        trimmed = [trim(t) for t in tuple if t]
+        x = ", ".join(trimmed)
+        abbrevs.append(x)
+
+    return abbrevs
+
+
+def get_type_val(rec: t.Dict[str, t.Any], key: str) -> str:
     if key not in rec:
         raise Exception("key must be in rec")
 
@@ -58,11 +100,10 @@ def get_type_val(rec, key: str) -> str:
     return v
 
 
-def opt_type_val(rec, key: str) -> t.Optional[str]:
+def opt_type_val(rec: t.Dict[str, t.Any], key: str) -> t.Optional[str]:
     if key not in rec:
         return None
 
     subrec = rec[key]
-    t = subrec["type"]
     v = subrec["value"]
     return v

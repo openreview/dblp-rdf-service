@@ -1,0 +1,66 @@
+https://dblp.org/rec/conf/acl/DruckP12
+├── https://dblp.org/rdf/schema#publishedIn
+│   └── ACL (1)
+├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│   ├── https://dblp.org/rdf/schema#Inproceedings
+│   └── https://dblp.org/rdf/schema#Publication
+├── https://dblp.org/rdf/schema#listedOnTocPage
+│   └── https://dblp.org/db/conf/acl/acl2012-1
+├── https://dblp.org/rdf/schema#numberOfCreators
+│   └── 2
+├── https://dblp.org/rdf/schema#publishedInBook
+│   └── ACL (1)
+├── https://dblp.org/rdf/schema#pagination
+│   └── 545-553
+├── https://dblp.org/rdf/schema#yearOfPublication
+│   └── 2012
+├── https://dblp.org/rdf/schema#publishedAsPartOf
+│   └── https://dblp.org/rec/conf/acl/2012-1
+├── https://dblp.org/rdf/schema#authoredBy
+│   ├── https://dblp.org/pid/16/6344
+│   └── https://dblp.org/pid/66/4867
+├── https://dblp.org/rdf/schema#yearOfEvent
+│   └── 2012
+├── https://dblp.org/rdf/schema#bibtexType
+│   └── http://purl.org/net/nknouf/ns/bibtex#Inproceedings
+├── https://dblp.org/rdf/schema#title
+│   └── Spice it up? Mining Refinements to Online Instructions from User Generated Content.
+├── http://www.w3.org/2000/01/rdf-schema#label
+│   └── Gregory Druck and Bo Pang: Spice it up? Mining Refinements to Online Instructions from User Generated Content. (2012)
+├── https://dblp.org/rdf/schema#documentPage
+│   └── https://aclanthology.org/P12-1057/
+├── https://dblp.org/rdf/schema#primaryDocumentPage
+│   └── https://aclanthology.org/P12-1057/
+├── http://purl.org/spar/datacite/hasIdentifier
+│   └── b4
+│       ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+│       │   └── http://purl.org/spar/datacite/ResourceIdentifier
+│       ├── http://purl.org/spar/literal/hasLiteralValue
+│       │   └── conf/acl/DruckP12
+│       └── http://purl.org/spar/datacite/usesIdentifierScheme
+│           └── http://purl.org/spar/datacite/dblp-record
+└── https://dblp.org/rdf/schema#hasSignature
+    ├── b5
+    │   ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+    │   │   └── https://dblp.org/rdf/schema#AuthorSignature
+    │   ├── https://dblp.org/rdf/schema#signaturePublication
+    │   │   └── https://dblp.org/rec/conf/acl/DruckP12
+    │   ├── https://dblp.org/rdf/schema#signatureDblpName
+    │   │   └── Gregory Druck
+    │   ├── https://dblp.org/rdf/schema#signatureCreator
+    │   │   └── https://dblp.org/pid/66/4867
+    │   └── https://dblp.org/rdf/schema#signatureOrdinal
+    │       └── 1
+    └── b6
+        ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+        │   └── https://dblp.org/rdf/schema#AuthorSignature
+        ├── https://dblp.org/rdf/schema#signaturePublication
+        │   └── https://dblp.org/rec/conf/acl/DruckP12
+        ├── https://dblp.org/rdf/schema#signatureDblpName
+        │   └── Bo Pang
+        ├── https://dblp.org/rdf/schema#signatureCreator
+        │   └── https://dblp.org/pid/16/6344
+        └── https://dblp.org/rdf/schema#signatureOrdinal
+            └── 2
+
+

@@ -1,50 +1,60 @@
-from collections import defaultdict
 import typing as t
-from bigtree.node.node import Node
-from bigtree.tree.search import find_child
-import re
+from bigtree import Node  # type: ignore
+import xml.etree.ElementTree as ET
 
 
-# Tree = t.Dict[str, t.Optional["Tree"]]
-Tree = Node
+def ends_with(s1: str, s2: str) -> bool:
+    return s1.lower().endswith(s2.lower())
 
 
-def node():
-    return defaultdict(node)
+def match_attr_node(node: Node, pat: str) -> bool:
+    return ends_with(node.node_name, pat)
 
 
-def tree_get(tree: Tree, path: t.List[str]) -> t.Optional[str]:
-    pass
-    # node: Tree = tree
-    # for p in path:
-    #     v = node.get(p)
-    #     if not v:
-    #         return
-    #     node = v
+def is_tree_attr_node(node: Node):
+    return len(node.children) == 1 and len(node.children[0].children) == 0
 
 
-def tree_get_str(tree: Tree, path: t.List[str]) -> t.Optional[str]:
-    if not path:
-        if len(tree.children) == 0:
-            return None
+def get_tree_attr(node: Node, keypat: str) -> t.Optional[str]:
+    for chnode in node.children:
+        if is_tree_attr_node(chnode) and match_attr_node(chnode, keypat):
+            return chnode.children[0].node_name
 
-        value = tree.children[0].node_name
-        return value
+def get_attr_value(node: Node) -> t.Optional[str]:
+    assert is_tree_attr_node(node)
+    return node.children[0].node_name
 
-    path0 = path[0]
+def match_attr_value(node: Node, keypat: str, valpat: str) -> bool:
+    # assert is_tree_attr_node(node)
+    matched = get_tree_attr(node, keypat)
+    if matched is None:
+        return False
 
-    def match_node(n: Node) -> bool:
-        return n.node_name.endswith(path0)
+    return ends_with(matched, valpat)
 
-    child = find_child(tree, match_node)
-    if not child:
-        return None
-    return tree_get_str(child, path[1:])
-
-
-def tree_get_tree(tree: Tree, path: t.List[str]) -> t.Optional[Tree]:
-    pass
+# def get_matching_attr(node: Node, keypat: str) -> t.Optional[str]:
+#     for attr_node in node.children:
+#         if attr_node.get_attr("type") != "attr":
+#             continue
+#         if match_attr_node(attr_node, keypat):
+#             return attr_node.get_attr("value")
 
 
-def tree_path_exists(tree: Tree, path: t.List[str]) -> bool:
-    return False
+# def has_matching_attr(node: Node, keypat: str, valpat: str) -> bool:
+#     attr_value = get_matching_attr(node, keypat)
+#     if not attr_value:
+#         return False
+
+#     return attr_value.lower().endswith(valpat.lower())
+
+
+def get_elem(n: Node) -> t.Optional[ET.Element]:
+    return n.get_attr("element")
+
+
+def set_elem(n: Node, elem: ET.Element) -> None:
+    n.set_attrs(dict(element=elem))
+
+
+def has_elem(n: Node) -> bool:
+    return get_elem(n) is not None
