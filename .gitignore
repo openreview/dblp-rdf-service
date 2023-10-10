@@ -78,3 +78,5 @@ jspm_packages/
 *.d/
 
 .idea
+config**.json
+submodules/**

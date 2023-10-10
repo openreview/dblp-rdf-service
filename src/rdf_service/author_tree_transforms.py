@@ -1,14 +1,34 @@
+"""One-line summary .
+
+One blank line. General description.
+
+Typical usage example:
+
+  foo = ClassFoo()
+  bar = foo.FunctionBar()
+"""
+
+
+
 import xml.etree.ElementTree as ET
-import xml.dom.minidom
 from bigtree import Node  # type: ignore
 from bigtree.utils.iterators import preorder_iter
 
-from rich import print
-
-from rdf_service.trees import get_attr_value, get_elem, get_tree_attr, has_elem, is_tree_attr_node, match_attr_node, match_attr_value, set_elem
+from rdf_service.trees import (
+    get_attr_value,
+    get_elem,
+    get_tree_attr,
+    has_elem,
+    is_tree_attr_node,
+    match_attr_node,
+    match_attr_value,
+    set_elem,
+)
 
 
 def authorship_tree_to_xml(root: Node) -> ET.Element:
+    """
+    """
     for n in preorder_iter(root, has_elem):
         if n.depth == 1:
             continue
@@ -22,7 +42,7 @@ def authorship_tree_to_xml(root: Node) -> ET.Element:
         assert nearest_elem is not None
         nearest_elem.append(elem)
 
-    rootelem = get_elem(root);
+    rootelem = get_elem(root)
     assert rootelem is not None
     return rootelem
 
@@ -31,6 +51,7 @@ def rewrite_publication_node(node: Node):
     set_elem(node, create_xml_root_elem(node))
     rewrite_attr_nodes(node)
     rewrite_hasSignature_nodes(node)
+
 
 def rewrite_authorship_tree(root: Node):
     set_elem(root, ET.Element("dblpperson"))
@@ -66,7 +87,7 @@ def rewrite_attr_nodes(tree: Node):
         rewrite_attr_node(attr_node)
 
 
-rdf_to_xml_mapping2 = {
+rdf_to_xml_mapping = {
     "yearOfPublication": "year",
     "title": "title",
     "pagination": "pages",
@@ -80,13 +101,12 @@ rdf_to_xml_mapping2 = {
 
 
 def rewrite_attr_node(tree: Node):
-    for attr_name, elem_name in rdf_to_xml_mapping2.items():
+    for attr_name, elem_name in rdf_to_xml_mapping.items():
         if match_attr_node(tree, attr_name):
             elem = ET.Element(elem_name)
             text = get_attr_value(tree)
             elem.text = text
             tree.set_attrs(dict(element=elem))
-
 
 
 def uri_last_path(s: str) -> str:
@@ -103,30 +123,3 @@ def create_xml_root_elem(node: Node):
         return ET.Element("inproceedings")
 
     return ET.Element("article-todo")
-
-def print_xml(root: ET.Element):
-    tree_out = ET.tostring(root, encoding="UTF-8")
-    newXML = xml.dom.minidom.parseString(tree_out.decode("UTF-8"))
-    pretty_xml = newXML.toprettyxml()
-    print(pretty_xml)
-
-# rdf_to_xml_mapping = {
-#     "year": ["yearOfPublication"],
-#     "title": ["title"],
-#     "pages": ["pagination"],
-#     "booktitle": ["publishedIn", "publishedInBook"],
-#     "journal": ["publishedInJournal"],
-#     "volume": ["publishedInJournalVolume"],
-#     # "bibtexType": "",
-#     # "primaryDocumentPage": "",
-# }
-# def add_xml_elems(xroot: ET.Element, node: Node):
-#     for elem_name, attr_names in rdf_to_xml_mapping.items():
-#         potential_attrs = [att for att in [get_matching_attr(node, n) for n in attr_names] if att is not None]
-
-#         if len(potential_attrs) == 0:
-#             continue
-#         attr = potential_attrs[0]
-#         elem = ET.Element(elem_name)
-#         elem.text = attr
-#         xroot.append(elem)

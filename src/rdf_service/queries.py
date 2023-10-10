@@ -57,6 +57,25 @@ def run_author_publication_query(authorURI: str) -> t.List[AuthorTuple]:
 
 
 def get_author_publication_tree(authorURI: str) -> Node:
+    """Create a tree representing an authors publications.
+
+    Args:
+        authorURI: format is https://dblp.org/pid/m/auth-uniq-id
+
+    Returns:
+        Tree representation of authorship, which mirrors the data
+        provided in RDF format.
+
+        A tree snippet might look like:
+
+        https://dblp.org/rec/conf/cikm/DruckM11
+        ├── https://dblp.org/rdf/schema#doi
+        │   ├── https://doi.org/10.1145/2063576.2063712
+        │   └── http://dx.doi.org/10.1145/2063576.2063712
+        ├── https://dblp.org/rdf/schema#publishedIn
+        │   └── CIKM
+
+    """
     tuples = run_author_publication_query(authorURI)
     return create_tree_from_tuples(tuples)
 

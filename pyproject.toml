@@ -19,6 +19,10 @@ pylint = "^3.0.0"
 flake8 = "^6.1.0"
 mypy = "^1.5.1"
 black = "^23.9.1"
+requests-futures = "^1.0.1"
+bibtexparser = "^1.4.1"
+marshmallow = "^3.20.1"
+email-validator = "^2.0.0.post2"
 
 
 [build-system]
@@ -32,6 +36,9 @@ line-length = 120
 [tool.pyright]
 useLibraryCodeForTypes = true
 typeCheckingMode = "strict" # strict/none
+exclude = [
+    "submodules/**"
+]
 
 ### https://github.com/microsoft/pyright/blob/main/docs/configuration.md#diagnostic-rule-defaults
 reportMissingImports = "error" #[boolean or string, optional]

@@ -1,3 +1,14 @@
+"""Create and manipulate authorship tree structures.
+
+
+
+Typical usage example:
+
+    foo = ClassFoo()
+bar = foo.FunctionBar()
+"""
+
+
 import typing as t
 from bigtree import Node  # type: ignore
 import xml.etree.ElementTree as ET
