@@ -1,8 +1,0 @@
-#!/bin/env python
-import sys
-
-sys.path.append("./src")
-from src.rdf_service.cli import cli
-
-if __name__ == "__main__":
-    sys.exit(cli())
