@@ -19,7 +19,7 @@ The table is built as follows:
    `{content.dblp: 'https://dblp.org/pid/m/SebastianThrun'}`
 - Normalize the value of content.dblp
   - A GET is performed on the content.dblp URL, following any redirects, until
-    the final URL is reached, and is the normalized dblp author URL.
+    the final URL is reached, which is the normalized dblp author URL.
 - Derive the authorPID from authorURL, e.g., /m/SebastianThrun
 
 - Populate the table
