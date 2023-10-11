@@ -1,5 +1,5 @@
 
-# Goal Overview
+# Goal
 For every person/author profile in OpenReview, supplement their set of authored
 papers by identifying them in DBLP and uploading any dblp records (as new notes)
 that are not already recorded present. As dblp.org updates their database with
@@ -72,16 +72,18 @@ the original note
     per the examples below.
   - Given that /search is based on title, if a paper is inserted for, say,
     author#1, then author#2 will not be able to find that same record and insert
-    their id into authorids field.
+    their id into authorids field. As a result, the same dblp entry may be
+    created multiple times, once for each of its authors.
 
 - Should note _bibtex field be populated (or any other content fields that can
   be derived from dblp)?
   - if so, just in newly created notes, or backfill any missing in old notes?
 
-- Current system seems to only upload new papers if there are no papers of any
-  kind for that author. Is this still the desired behavior?
+- The current system seems to only create new dblp notes if there are no papers
+  available for the profile author. Is there any circumstance where this is
+  still the desired behavior?
 
-- Author's dblp URL is normalized through repeated GETs to dblp.org. The
+- The author's dblp URL is normalized through repeated GETs to dblp.org. The
   final URL is not POSTed back to OpenReview, however. Should the normalized
   URL be recorded, to avoid future requests to dblp.org?
 
@@ -102,8 +104,10 @@ modifications:
 
 
 
-### Examples
+## Examples
+
 The structure of a note that is newly created when a new dblp entry is found:
+
 ```
   note: {
     content: {
@@ -116,7 +120,9 @@ The structure of a note that is newly created when a new dblp entry is found:
   },
 ```
 
-The structure of the /reference that is used to update a note
+The  structure  of  the  /reference  that   is  used  to  update  a  note  (only
+content.authorids is updated)
+
 ```
 
   let updateNoteObject = {
