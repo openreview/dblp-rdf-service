@@ -76,6 +76,7 @@ def profiles(slice: Slice):
 @click.argument("id", type=str)
 def profile(id: str):
     """Fetch (by id) and display a user profile from OpenReview"""
+
     setenv('dev')
     profile = fetch_profile(id)
     if profile:
