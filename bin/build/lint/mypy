@@ -1,0 +1,8 @@
+#!/bin/bash
+
+mypy src/
+
+
+write a bash script that does the following:
+- finds all executable files in the same directory as itself
+- executes each file (other than itself) that is finds

@@ -6,14 +6,12 @@
 from pprint import pprint
 from marshmallow import fields
 from dataclasses import dataclass
-
 from typing import Any, List, Optional, cast
-
 from marshmallow.decorators import post_load, pre_load
-from lib.open_exchange.utils import clean_int_data, clean_string_data, set_data_defaults
-from lib.predef.schemas import PartialSchema
 
-from lib.predef.schemas import OptBoolField, OptStringField, StrField
+from .utils import clean_int_data, clean_string_data, set_data_defaults
+from ..predef.schemas import PartialSchema
+from ..predef.schemas import OptBoolField, OptStringField, StrField
 
 StartField = fields.Int(allow_none=True)
 EndField = fields.Int(allow_none=True)

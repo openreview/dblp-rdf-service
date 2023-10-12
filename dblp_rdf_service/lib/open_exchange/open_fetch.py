@@ -8,14 +8,15 @@ import requests
 from requests import Response
 
 import openreview as op
+
 # from requests.sessions import Session
 from requests_futures.sessions import FuturesSession
 
-from lib.predef.config import get_config
-from lib.predef.iterget import IterGet
-from lib.predef.listops import ListOps
-from lib.predef.typedefs import Slice
-from lib.predef.utils import is_valid_email
+from ..predef.config import get_config
+from ..predef.iterget import IterGet
+from ..predef.listops import ListOps
+from ..predef.typedefs import Slice
+from ..predef.utils import is_valid_email
 
 from . import logger
 
@@ -25,6 +26,7 @@ from .note_schemas import Note, load_notes
 
 Session = FuturesSession
 cached_client: Optional[op.Client] = None
+
 
 def get_client() -> op.Client:
     global cached_client
@@ -40,6 +42,7 @@ def get_client() -> op.Client:
 
 cached_session: Optional[Session] = None
 
+
 def get_session() -> Session:
     client = get_client()
     session = FuturesSession()
@@ -52,6 +55,7 @@ def get_session() -> Session:
     #     # cached_session = requests.Session()
     #     cached_session.headers.update(client.headers)
     # return cached_session
+
 
 def resolve_api_url(urlpath: str) -> str:
     config = get_config()
@@ -84,7 +88,7 @@ def list_to_optional(ts: List[T]) -> Optional[T]:
     if len(tail) > 0:
         logger.warn(f"Expected 0 or 1 items, got {len(ts)}")
         for t in ts:
-            pprint(asdict(t)) # type: ignore
+            pprint(asdict(t))  # type: ignore
 
     return head
 
@@ -94,7 +98,7 @@ QueryParms = Any
 
 def _note_fetcher(**params: QueryParms) -> List[Note]:
     with get_session() as s:
-        future: Future[Response] = cast(Future[Response], s.get(notes_url(), params=params)) # type: ignore
+        future: Future[Response] = cast(Future[Response], s.get(notes_url(), params=params))  # type: ignore
         rawresponse = future.result()
         response = _handle_response(rawresponse)
         notes = load_notes(response.json())
@@ -131,10 +135,9 @@ def fetch_notes_for_author(authorid: str, invitation: Optional[str] = None) -> I
     return _fetch_notes(slice=None, **{"content.authorids": authorid})
 
 
-
 def profile_fetcher(**params: QueryParms) -> List[Profile]:
     with get_session() as s:
-        future: Future[Response] = cast(Future[Response], s.get(profiles_url(), params=params)) # type: ignore
+        future: Future[Response] = cast(Future[Response], s.get(profiles_url(), params=params))  # type: ignore
         rawresponse: Response = future.result()
         response = _handle_response(rawresponse)
         profiles = [load_profile(p) for p in response.json()["profiles"]]

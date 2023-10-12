@@ -9,12 +9,11 @@ Typical usage example:
 """
 
 
-
 import xml.etree.ElementTree as ET
 from bigtree import Node  # type: ignore
 from bigtree.utils.iterators import preorder_iter
 
-from rdf_service.trees import (
+from .trees import (
     get_attr_value,
     get_elem,
     get_tree_attr,
@@ -27,8 +26,7 @@ from rdf_service.trees import (
 
 
 def authorship_tree_to_xml(root: Node) -> ET.Element:
-    """
-    """
+    """ """
     for n in preorder_iter(root, has_elem):
         if n.depth == 1:
             continue

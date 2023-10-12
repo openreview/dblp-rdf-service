@@ -93,7 +93,6 @@ def separateOOBs(oobs: List[OneOrBoth[T]]) -> Tuple[Left[List[T]], Right[List[T]
 
 
 if __name__ == "__main__":
-
     l0 = Left.of(0)
     la = Left.of("a")
     ra = Right.of("qwerty")

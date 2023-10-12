@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# Get the directory of the current script
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+THIS_FILE=$(basename "${BASH_SOURCE[0]}")
+
+# Loop through all files in the directory
+for file in "$DIR"/*; do
+    filename="$(basename $file)"
+    # echo "filename=$file"
+    # echo "file.basename=$(basename $file)"
+    # echo "this_file=$THIS_FILE"
+    # echo "BASH_SOURCE.basename=$(basename $THIS_FILE)"
+    # Check if the file is executable and is not the current script
+    if [[ -x "$file" && "$filename" != "$THIS_FILE" ]]; then
+        echo "> Running $filename ================"
+        "$file"
+        echo "/> Done running $filename ================"
+    fi
+done

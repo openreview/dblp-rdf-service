@@ -1,7 +1,6 @@
 import re
-from typing import Any, Optional, List, Union
+from typing import Any, Optional, List, Union, Dict
 from bibtexparser.bibdatabase import BibDatabase
-from typing import Any, List, Optional, Dict
 
 from . import logger as log
 
@@ -87,7 +86,7 @@ def to_int(value: Optional[Union[str, int]], coerceWarning: str) -> Optional[int
 
     try:
         return int(value)
-    except:
+    except Exception:
         log.warn(coerceWarning)
         return None
 

@@ -1,7 +1,7 @@
-### A Zipper is a list-like data structure which has a current location, or 'focus'
-### It supports movement to the next/previous item
-### The helper class HasFocus is used as a marker trait, when converting the Zipper to a List,
-###     pairing each value with a flag indicating whether it is the focused element
+# A Zipper is a list-like data structure which has a current location, or 'focus'
+# It supports movement to the next/previous item
+# The helper class HasFocus is used as a marker trait, when converting the Zipper to a List,
+#     pairing each value with a flag indicating whether it is the focused element
 
 
 from dataclasses import dataclass

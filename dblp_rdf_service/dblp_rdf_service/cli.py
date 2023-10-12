@@ -2,19 +2,20 @@
 
 from dataclasses import asdict
 import click
-from lib.open_exchange.open_fetch import fetch_profile, fetch_profiles
-from lib.predef.typedefs import Slice
-from rdf_service.xml_utils import print_xml
-from rdf_service.author_tree_transforms import authorship_tree_to_xml, rewrite_authorship_tree
-from bigtree.tree.export import print_tree
 import typing as t
 from rich.pretty import pprint
+from bigtree.tree.export import print_tree
 
-from rdf_service.queries import (
+from ..lib.open_exchange.open_fetch import fetch_profile, fetch_profiles
+from ..lib.predef.typedefs import Slice
+from ..lib.predef.config import setenv
+
+from .xml_utils import print_xml
+from .author_tree_transforms import authorship_tree_to_xml, rewrite_authorship_tree
+from .queries import (
     get_author_publication_tree,
     run_author_publication_query,
 )
-from src.lib.predef.config import setenv
 
 
 @click.group()
@@ -55,17 +56,21 @@ def show_authorship_tuples(author_uri: str, abbrev: bool):
     #     for a in abbrevs:
     #         print(a)
 
-def validate_slice(ctx: click.Context, param: click.Parameter, value: t.Optional[t.Tuple[int, int]]) -> t.Optional[Slice]:
+
+def validate_slice(
+    ctx: click.Context, param: click.Parameter, value: t.Optional[t.Tuple[int, int]]
+) -> t.Optional[Slice]:
     if value is None:
         return None
     return Slice(start=value[0], length=value[1])
+
 
 @cli.command()
 @click.option("--slice", type=(int, int), callback=validate_slice)
 def profiles(slice: Slice):
     """Fetch and display a list of user profiles from OpenReview"""
 
-    setenv('dev')
+    setenv("dev")
     profiles = fetch_profiles(slice=slice)
     for p in profiles:
         names = p.content.names
@@ -77,7 +82,7 @@ def profiles(slice: Slice):
 def profile(id: str):
     """Fetch (by id) and display a user profile from OpenReview"""
 
-    setenv('dev')
+    setenv("dev")
     profile = fetch_profile(id)
     if profile:
         pprint(asdict(profile))

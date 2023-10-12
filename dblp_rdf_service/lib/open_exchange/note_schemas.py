@@ -8,16 +8,13 @@
 #    into formats for local storage and use in the inference engine
 
 
-from array import array
-from pprint import pprint
 from typing import Any, List, Optional, cast
 from dataclasses import dataclass
 
 from marshmallow import fields
 from marshmallow.decorators import post_load, pre_load
 
-from lib.predef.schemas import IntField, OptIntField, OptStringField, PartialSchema, StrField
-from . import logger as log
+from ..predef.schemas import IntField, OptIntField, OptStringField, PartialSchema, StrField
 
 
 @dataclass
@@ -88,7 +85,7 @@ class Note:
     invitation: str
     number: Optional[int]
     signatures: List[str]
-    ## The Following fields are contained in the Note record, but currently not used
+    # The Following fields are contained in the Note record, but currently not used
     # nonreaders: []
     # original: None
     # readers: [everyone]

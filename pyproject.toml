@@ -4,20 +4,23 @@ name = "rdf-service"
 version = "0.1.0"
 description = ""
 authors = ["Adam C. Saunders <saunders@cs.umass.edu>"]
-readme = "README.md"
-packages = [{include = "rdf_service"}]
+readme = "readme.md"
+packages = [
+         {include = "src/rdf_service"},
+         {include = "src/lib"}
+]
 
 [tool.poetry.dependencies]
 python = "^3.11"
 sparqlwrapper = "^2.0.0"
 pytest = "^7.4.2"
-pyright = "^1.1.329"
+pyright = "^1.1.331"
 click = "^8.1.7"
 rich = "^13.6.0"
 bigtree = "^0.13.0"
-pylint = "^3.0.0"
+pylint = "^3.0.1"
 flake8 = "^6.1.0"
-mypy = "^1.5.1"
+mypy = "^1.6.0"
 black = "^23.9.1"
 requests-futures = "^1.0.1"
 bibtexparser = "^1.4.1"
@@ -32,6 +35,8 @@ build-backend = "poetry.core.masonry.api"
 [tool.black]
 line-length = 120
 
+[tool.flake8]
+max-line-length = 120
 
 [tool.pyright]
 useLibraryCodeForTypes = true

@@ -1,6 +1,6 @@
 from typing import Any, Callable, Dict, Generic, List, Optional, TypeVar
 
-from lib.predef.typedefs import Slice
+from .typedefs import Slice
 
 T = TypeVar("T")
 

@@ -1,4 +1,5 @@
 from typing import Generator
+from email_validator import validate_email, EmailNotValidError  # type: ignore
 
 
 def nextnums(init: int = 0) -> Generator[int, None, None]:
@@ -8,12 +9,9 @@ def nextnums(init: int = 0) -> Generator[int, None, None]:
         i = i + 1
 
 
-from email_validator import validate_email, EmailNotValidError  # type: ignore
-
-
 def is_valid_email(s: str) -> bool:
     try:
-        validate_email(s).email # type: ignore
+        validate_email(s).email  # type: ignore
         return True
     except EmailNotValidError:
         return False

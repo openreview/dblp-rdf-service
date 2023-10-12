@@ -31,9 +31,11 @@ def get_tree_attr(node: Node, keypat: str) -> t.Optional[str]:
         if is_tree_attr_node(chnode) and match_attr_node(chnode, keypat):
             return chnode.children[0].node_name
 
+
 def get_attr_value(node: Node) -> t.Optional[str]:
     assert is_tree_attr_node(node)
     return node.children[0].node_name
+
 
 def match_attr_value(node: Node, keypat: str, valpat: str) -> bool:
     # assert is_tree_attr_node(node)
@@ -42,6 +44,7 @@ def match_attr_value(node: Node, keypat: str, valpat: str) -> bool:
         return False
 
     return ends_with(matched, valpat)
+
 
 # def get_matching_attr(node: Node, keypat: str) -> t.Optional[str]:
 #     for attr_node in node.children:

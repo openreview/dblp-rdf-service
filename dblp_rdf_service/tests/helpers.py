@@ -4,8 +4,8 @@ from bigtree.node.node import Node
 import typing as t
 
 from bigtree.tree.export import print_tree
-from rdf_service.author_tree_transforms import rewrite_authorship_tree
-from rdf_service.queries import AuthorTuple, create_tree_from_tuples
+from dblp_rdf_service.author_tree_transforms import rewrite_authorship_tree
+from dblp_rdf_service.queries import AuthorTuple, create_tree_from_tuples
 
 
 def create_tree_from_tuplestrs(strs: t.List[str]) -> Node:
