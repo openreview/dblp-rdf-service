@@ -66,6 +66,8 @@ def resolve_api_url(urlpath: str) -> str:
 def profiles_url() -> str:
     return resolve_api_url("profiles")
 
+def profiles_search_url() -> str:
+    return resolve_api_url("profiles/search")
 
 def notes_url() -> str:
     return resolve_api_url("notes")
@@ -137,7 +139,7 @@ def fetch_notes_for_author(authorid: str, invitation: Optional[str] = None) -> I
 
 def profile_fetcher(**params: QueryParms) -> List[Profile]:
     with get_session() as s:
-        future: Future[Response] = cast(Future[Response], s.get(profiles_url(), params=params))  # type: ignore
+        future: Future[Response] = cast(Future[Response], s.get(profiles_search_url(), params=params))  # type: ignore
         rawresponse: Response = future.result()
         response = _handle_response(rawresponse)
         profiles = [load_profile(p) for p in response.json()["profiles"]]
@@ -155,7 +157,8 @@ def fetch_profiles(*, slice: Optional[Slice]) -> Iterator[Profile]:
     def _fetcher(**params: QueryParms) -> List[Profile]:
         return profile_fetcher(**params)
 
-    params = {"invitation": "~/-/profiles"}
+    # params = {"invitation": "~/-/profiles"}
+    params = {"term": "mccallum", "es": True}
     iter = IterGet(_fetcher, **params)
     if slice:
         iter = iter.withSlice(slice)
