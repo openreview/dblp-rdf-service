@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+OPENREVIEW_PY_ROOT="submodules/openreview-py"
+
+active_python=$(which python)
+
+echo "Installing openreview.py in $active_python"
+
+cd "$OPENREVIEW_PY_ROOT" || exit
+
+echo "In dir $(pwd)"
+pip3 --require-virtualenv install -e .

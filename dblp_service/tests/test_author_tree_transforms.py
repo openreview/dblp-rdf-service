@@ -17,15 +17,15 @@
 
 
 from bigtree.tree.export import print_tree
-from ..dblp_rdf_service.author_tree_transforms import (
+from ..rdf_io.author_tree_transforms import (
     create_xml_root_elem,
     rewrite_authorship_tree,
     rewrite_hasSignature_node,
 )
 
-from ..dblp_rdf_service.xml_utils import print_xml
+from ..rdf_io.xml_utils import print_xml
 
-# from dblp_rdf_service.author_tree_transforms import  print_xml
+# from rdf_io.author_tree_transforms import  print_xml
 from tests.helpers import get_author_tree, get_author_tree_from_string
 
 

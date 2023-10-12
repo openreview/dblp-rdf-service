@@ -6,13 +6,13 @@ import typing as t
 from rich.pretty import pprint
 from bigtree.tree.export import print_tree
 
-from ..lib.open_exchange.open_fetch import fetch_profile, fetch_profiles
-from ..lib.predef.typedefs import Slice
-from ..lib.predef.config import setenv
+from lib.open_exchange.open_fetch import fetch_profile, fetch_profiles
+from lib.predef.typedefs import Slice
+from lib.predef.config import setenv
 
-from .xml_utils import print_xml
-from .author_tree_transforms import authorship_tree_to_xml, rewrite_authorship_tree
-from .queries import (
+from rdf_io.xml_utils import print_xml
+from rdf_io.author_tree_transforms import authorship_tree_to_xml, rewrite_authorship_tree
+from rdf_io.queries import (
     get_author_publication_tree,
     run_author_publication_query,
 )

@@ -1,14 +1,11 @@
 
 [tool.poetry]
-name = "rdf-service"
+name = "dblp-service"
 version = "0.1.0"
 description = ""
 authors = ["Adam C. Saunders <saunders@cs.umass.edu>"]
 readme = "readme.md"
-packages = [
-         {include = "src/rdf_service"},
-         {include = "src/lib"}
-]
+packages = [{include = "dblp_service"},]
 
 [tool.poetry.dependencies]
 python = "^3.11"
@@ -26,6 +23,7 @@ requests-futures = "^1.0.1"
 bibtexparser = "^1.4.1"
 marshmallow = "^3.20.1"
 email-validator = "^2.0.0.post2"
+flake8-pyproject = "^1.2.3"
 
 
 [build-system]
