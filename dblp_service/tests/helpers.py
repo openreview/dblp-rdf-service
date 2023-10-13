@@ -4,8 +4,8 @@ from bigtree.node.node import Node
 import typing as t
 
 from bigtree.tree.export import print_tree
-from rdf_io.author_tree_transforms import rewrite_authorship_tree
-from rdf_io.queries import AuthorTuple, create_tree_from_tuples
+from dblp_service.rdf_io.queries import AuthorTuple, create_tree_from_tuples
+from dblp_service.rdf_io.xml_transform import rewrite_authorship_tree
 
 
 def create_tree_from_tuplestrs(strs: t.List[str]) -> Node:
@@ -17,8 +17,7 @@ def get_author_tree(strs: t.List[str]) -> Node:
     tree = create_tree_from_tuplestrs(strs)
     assert len(tree.children) == 1
     atree = tree.children[0]
-    print_tree(atree)
-    rewrite_authorship_tree(atree)
+    # rewrite_authorship_tree(atree)
     return atree
 
 

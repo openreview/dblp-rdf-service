@@ -1,10 +1,15 @@
-#!/bin/env python
-import sys
+#!/bin/bash
 
-sys.path.append("dblp_service")
 
-from dlbp_service.main import cli
-# from dblp_service.rdf_io.cli import cli
+python ./dblp_service/main.py "$@"
 
-if __name__ == '__main__':
-    sys.exit(cli())
+# #!/bin/env python
+# import sys
+
+# sys.path.append("dblp_service")
+
+# from dlbp_service.main import cli
+# # from dblp_service.rdf_io.cli import cli
+
+# if __name__ == '__main__':
+#     sys.exit(cli())

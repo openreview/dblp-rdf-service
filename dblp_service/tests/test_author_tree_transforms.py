@@ -17,16 +17,19 @@
 
 
 from bigtree.tree.export import print_tree
-from ..rdf_io.author_tree_transforms import (
+
+from dblp_service.rdf_io.xml_transform import (
     create_xml_root_elem,
     rewrite_authorship_tree,
     rewrite_hasSignature_node,
 )
 
-from ..rdf_io.xml_utils import print_xml
+from dblp_service.rdf_io.xml_utils import (
+    print_xml
+)
 
 # from rdf_io.author_tree_transforms import  print_xml
-from tests.helpers import get_author_tree, get_author_tree_from_string
+from .helpers import get_author_tree, get_author_tree_from_string
 
 
 def test_root_elem_creation():

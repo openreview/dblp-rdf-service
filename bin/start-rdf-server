@@ -1,0 +1,6 @@
+#!/bin/bash
+
+cd ./jena-runtime.d || exit 1
+
+export JVM_ARGS="-Xmx8G"
+apache-jena-fuseki-4.9.0/fuseki-server --loc data/dataForTDB /ds

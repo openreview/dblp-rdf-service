@@ -1,17 +1,12 @@
-"""One-line summary .
-
-One blank line. General description.
-
-Typical usage example:
-
-  foo = ClassFoo()
-  bar = foo.FunctionBar()
+"""Create an XML representation from an RDF-derived tree.
 """
 
 
 import xml.etree.ElementTree as ET
 from bigtree import Node  # type: ignore
 from bigtree.utils.iterators import preorder_iter
+
+from dblp_service.rdf_io.authorship_trees import is_hasSignature_node
 
 from .trees import (
     get_attr_value,
@@ -26,7 +21,6 @@ from .trees import (
 
 
 def authorship_tree_to_xml(root: Node) -> ET.Element:
-    """ """
     for n in preorder_iter(root, has_elem):
         if n.depth == 1:
             continue
@@ -55,10 +49,6 @@ def rewrite_authorship_tree(root: Node):
     set_elem(root, ET.Element("dblpperson"))
     for node in root.children:
         rewrite_publication_node(node)
-
-
-def is_hasSignature_node(node: Node) -> bool:
-    return match_attr_node(node, "hasSignature")
 
 
 def rewrite_hasSignature_nodes(tree: Node):

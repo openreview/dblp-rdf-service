@@ -136,3 +136,313 @@ content.authorids is updated)
       authorids: authorIds
     }
 ```
+
+
+
+
+@article          // An article from a journal or magazine.
+@book             // A book with an explicit publisher.
+@booklet          // A work that is printed and bound, but without a named publisher or sponsoring institution.
+@conference       // The same as inproceedings.
+@inbook           // A part of a book, which may be a chapter (or section or whatever) and/or a range of pages.
+@incollection     // A part of a book having its own title.
+@inproceedings    // An article in a conference proceedings.
+@manual           // Technical documentation.
+@mastersthesis    // A Master's thesis.
+@misc             // Use this type when nothing else fits.
+@phdthesis        // A PhD thesis.
+@proceedings      // The proceedings of a conference.
+@techreport       // A report published by a school or other institution, usually numbered within a series.
+@unpublished      // A document having an author and title, but not formally published.
+
+address      // For journals, books, etc. usually the address of publisher or other institution. For proceedings, often location of the event	If field contains a comma the text after the last comma is taken as vcard:Country, everything before the comma as vcard:Locality
+annote       // An annotation. It is not used by the standard bibliography styles, but may be used by others that produce an annotated bibliography.	The content in this field is not cleared from special TeX formatting, but left unchanged
+author       // The name(s) of the author(s), in the format described in the LaTeX book.	Authors are listed as element of an rdf:Seq. For each author a resource with the properties vcard:FN and vcard:N are created. the vcard:N resource gets the properties vcard:Family, and vcard:Given, vcard:Others, vcard:Prefix and vcard:Suffix, if these parts appear in the name.
+booktitle    // Title of a book (or other collection), part of which is being cited.	Booktitles are handled as collections. If the entry is of type inproceedings, the representing resource is typed bibtex:Proceedings
+chapter      // A chapter (or section or whatever) number.	default mapping. The LaTeX commands commonly used in bibtex files (e.g. accents) are handled
+crossref     // The database key of the entry being cross referenced. Any fields that are missing from the current record are inherited from the field being cross referenced.	A reference to the resource created for the crossref'd entry is created
+edition      // The edition of a book---for example, ``Second''.	default mapping
+editor       // Name(s) of editor(s), typed as indicated in the LaTeX book. If there is also an author field, then the editor field gives the editor of the book or collection in which the reference appears.	the editor is added to the collection resource, as author.
+howpublished // How something strange has been published.	default mapping
+institution  // The sponsoring institution of a technical report.	This field is handled as organization
+journal      // A journal name.	Journals are handled as collections. Resources representing Journals are typed bibtex:Journal.
+key          // Used for alphabetizing, cross referencing, and creating a label when the ``author'' information is missing.	default mapping
+location     // A location associated with the entry, such as the city in which a conference took place.	handled as address
+month        // The month in which the work was published or, for an unpublished work, in which it was written.	the month field is merged with the year field to form the dc:date property
+note         // Any additional information that can help the reader.	The content in this field is not cleared from special TeX formatting, but left unchanged
+number       // The number of a journal, magazine, technical report, or of a work in a series.	default mapping. This information is added to the collection resource
+organization // The organization that sponsors a conference or that publishes a manual.	This field is handled as organization
+pages        // One or more page numbers or range of numbers, such as 42--111 or 7,41,73--97 or 43+	Consecutive hyphen chars are transformed to exactly one hyphen.
+publisher    // The publisher's name.	This field is handled as organization
+school       // The name of the school where a thesis was written.	This field is handled as organization
+series       // The name of a series or set of books.	this field is handled as collection
+title        // The work's title, typed as explained in the LaTeX book.	default mapping
+type         // The type of a technical report---for example, ``Research Note''.	default mapping
+url          // The WWW Universal Resource Locator that points to the item being referenced	default mapping
+volume       // The volume of a journal or multi-volume book.	default mapping. This information is added to the collection resource
+year         // The year of publication or, for an unpublished work, the year it was written.	In W3CDTF format. If the month field is available, month and year information are merged.
+
+
+ <inproceedings key="conf/acl/ChangSRM23" mdate="2023-08-10">
+   <author pid="130/1022">Haw-Shiuan Chang</author>
+   <author pid="301/6251">Ruei-Yao Sun</author>
+   <author pid="331/1034">Kathryn Ricci</author>
+   <author pid="m/AndrewMcCallum">Andrew McCallum</author>
+   <title>Multi-CLS BERT: An Efficient Alternative to Traditional Ensembling.</title>
+   <pages>821-854</pages>
+   <year>2023</year>
+   <booktitle>ACL (1)</booktitle>
+   <ee type="oa">https://doi.org/10.18653/v1/2023.acl-long.48</ee>
+   <ee type="oa">https://aclanthology.org/2023.acl-long.48</ee>
+   <crossref>conf/acl/2023-1</crossref>
+   <url>db/conf/acl/acl2023-1.html#ChangSRM23</url>
+ </inproceedings>
+
+@inproceedings{DBLP:conf/acl/ChangSRM23,
+  author       = {Haw{-}Shiuan Chang and
+                  Ruei{-}Yao Sun and
+                  Kathryn Ricci and
+                  Andrew McCallum},
+  editor       = {Anna Rogers and
+                  Jordan L. Boyd{-}Graber and
+                  Naoaki Okazaki},
+  title        = {Multi-CLS {BERT:} An Efficient Alternative to Traditional Ensembling},
+  booktitle    = {Proceedings of the 61st Annual Meeting of the Association for Computational
+                  Linguistics (Volume 1: Long Papers), {ACL} 2023, Toronto, Canada,
+                  July 9-14, 2023},
+  pages        = {821--854},
+  publisher    = {Association for Computational Linguistics},
+  year         = {2023},
+  url          = {https://doi.org/10.18653/v1/2023.acl-long.48},
+  doi          = {10.18653/v1/2023.acl-long.48},
+  timestamp    = {Thu, 10 Aug 2023 12:35:53 +0200},
+  biburl       = {https://dblp.org/rec/conf/acl/ChangSRM23.bib},
+  bibsource    = {dblp computer science bibliography, https://dblp.org}
+}
+
+
+
+# https://bibtex2rdf.sourceforge.net/
+
+# BibTeX type <-> RDF Type Comment
+BIBTEXT_RDF_TYPE_MAPPING = """
+    @article       , bibtex:Article
+    @book          , bibtex:Book
+    @booklet       , bibtex:Booklet
+    @conference    , bibtex:InProceedings
+    @inbook        , bibtex:InBook
+    @incollection  , bibtex:InCollection
+    @inproceedings , bibtex:InProceedings
+    @manual        , bibtex:Manual
+    @mastersthesis , bibtex:MastersThesis
+    @misc          , bibtex:Misc
+    @phdthesis     , bibtex:PhDThesis
+    @proceedings   , bibtex:Proceedings
+    @techreport    , bibtex:TechReport
+    @unpublished   , bibtex:Unpublished
+"""
+# Part of dblp.dtd but not in bibtex standard format
+#   ? data
+#   ? person
+#   ? www
+
+# Type elem keys:
+#    key CDATA #REQUIRED
+#    mdate CDATA #IMPLIED
+
+BIBTEX_RDF_FIELD_MAPPING = """
+    address      , vcard:Locality, vcard:Country
+    annote       , bibtex:annote
+    author       , dc:creator
+    booktitle    , dct:isPartOf
+    chapter      , bibtex:chapter
+    crossref     , dct:isPartOf
+    edition      , bibtex:edition
+    editor       , dc:creator
+    howpublished , bibtex:howpublished
+    institution  , bibtex:institution
+    journal      , dct:isPartOf
+    key          , dc:identifier
+    location     , vcard:Locality, vcard:Country
+    month        , dc:date
+    note         , bibtex:note
+    number       , bibtex:number
+    organization , bibtex:organization
+    pages        , bibtex:pages
+    publisher    , dc:publisher
+    school       , bibtex:school
+    series       , dc:isPartOf
+    title        , dc:title
+    type         , bibtex:type
+    url          , dc:identifier
+    volume       , bibtex:volume
+    year         , dc:date
+"""
+
+# Part of dblp.dtd but not in bibtex standard format
+#   cdrom
+#   cite
+#   ee
+#   isbn
+#   month
+#   publnr
+#   rel
+#   stream
+
+## Classes Derived from dblp/schema.rdf
+# "Entity"
+#   A general, identifiable entity in dblp.
+# "Creator"
+#   A creator of a publication.
+# "AmbiguousCreator"
+#   Not an actual creator, but an ambiguous proxy for an unknown number of unrelated actual creators. Associated publications do not have their true creators determined yet.
+# "Person"
+#   An actual person, who is a creator of a publication.
+# "Group"
+#   A creator alias used by a group or consortium of persons.
+# "Signature"
+#   The information that links a publication to a creator.
+# "AuthorSignature"
+#   The information that links a publication to an author.
+# "EditorSignature"
+#   The information that links a publication to an editor.
+# "Publication"
+#   A publication.
+# "Book"
+#   A book or a thesis.
+# "Article"
+#   A journal article.
+# "Inproceedings"
+#   A conference or workshop paper.
+# "Incollection"
+#   A part/chapter in a book or a collection.
+# "Editorship"
+#   An edited publication.
+# "Reference"
+#   A reference work entry.
+# "Data"
+#   Research data or artifacts.
+# "Informal"
+#   An informal or other publication.
+# "Withdrawn"
+#   A withdrawn publication item.
+
+
+## Properties Derived from dblp/schema.rdf
+# "identifier"
+#   An abstract identifier.
+# "wikidata"
+#   A wikidata item.
+# "webpage"
+#   The URL of a web page about this item.
+# "archivedWebpage"
+#   The URL of an archived web page about this item, which may no longer be available in the web.
+# "wikipedia"
+#   The URL of an (English) Wikipedia article about this item.
+# "orcid"
+#   An Open Researcher and Contributor ID.
+# "creatorName"
+#   The full name of the creator.
+# "primaryCreatorName"
+#   The primary full name of the creator.
+# "creatorNote"
+#   An additional note about the creator.
+# "affiliation"
+#   A (past or present) affiliation of the creator. (Remark: This property currently just gives literal xsd:string values until institutions are modelled as proper entities.)
+# "primaryAffiliation"
+#   The primary affiliation of the creator. (Remark: This property currently just gives literal xsd:string values until institutions are modelled as proper entities.)
+# "awardWebpage"
+#   The URL of a web page about an award received by this creator.
+# "homepage"
+#   The URL of an academic homepage of this creator.
+# "primaryHomepage"
+#   The primary URL of an academic homepage of this creator.
+# "creatorOf"
+#   The creator of the publication.
+# "authorOf"
+#   The creator is the author of the publication.
+# "editorOf"
+#   The creator is the editor of the publication.
+# "coCreatorWith"
+#   The creator is co-creator with the other creator.
+# "coAuthorWith"
+#   The creator is co-author with the other creator.
+# "coEditorWith"
+#   The creator is co-editor with the other creator.
+# "homonymousCreator"
+#   This creator shares a homonymous name with the other creator.
+# "possibleActualCreator"
+#   This ambiguous creator may be (or may be not) just a disambiguation proxy for the other creator. Further actual creator candidates are possible.
+# "proxyAmbiguousCreator"
+#   This creator (and any of her fellow homonymous creators) is also represented by the given ambiguous creator in cases where the authorship of a publication is undetermined.
+# "signatureCreator"
+#   A linked creator of the publication.
+# "signatureDblpName"
+#   A dblp name (including any possible trailing homonym number) that links the publication to a creator.
+# "signatureOrcid"
+#   An ORCID that links the publication to a creator.
+# "signatureOrdinal"
+#   The ordinal number of this signature for the publication, starting with 1.
+# "signaturePublication"
+#   The publication of this signature.
+# "doi"
+#   A Digital Object Identifier.
+# "isbn"
+#   An International Standard Book Number.
+# "title"
+#   The title of the publication.
+# "bibtexType"
+#   The bibtex type of the publication, e.g. book, inproceedings, etc.
+# "createdBy"
+#   The publication is created by the creator.
+# "authoredBy"
+#   The publication is authored by the creator.
+# "editedBy"
+#   The publication is edited by the creator.
+# "numberOfCreators"
+#   The number of creators who created this publication.
+# "hasSignature"
+#   A signature that links this publication to an creator.
+# "documentPage"
+#   The URL of the electronic edition of the publication.
+# "primarydocumentPage"
+#   The primary URL of the electronic edition of the publication.
+# "listedOnTocPage"
+#   The url of the dblp table of contents page listing this publication.
+# "publishedIn"
+#   The name of the series, the journal, or the book in which the publication has been published. (Remark: This property currently just gives literal xsd:string values until journals and conference series are modelled as proper entities.)
+# "publishedInSeries"
+#   The name of the series in which the publication has been published. (Remark: This is currently an intermediate property that will be removed once journals and conference series are modelled as proper entities.)
+# "publishedInSeriesVolume"
+#   The volume of the series in which the publication has been published. (Remark: This is currently an intermediate property that will be removed once journals and conference series are modelled as proper entities.)
+# "publishedInJournal"
+#   The name of the journal in which the publication has been published. (Remark: This is currently an intermediate property that will be removed once journals and conference series are modelled as proper entities.)
+# "publishedInJournalVolume"
+#   The volume of the journal in which the publication has been published. (Remark: This is currently an intermediate property that will be removed once journals and conference series are modelled as proper entities.)
+# "publishedInJournalVolumeIssue"
+#   The issue of the journal in which the publication has been published. (Remark: This is currently an intermediate property that will be removed once journals and conference series are modelled as proper entities.)
+# "publishedInBook"
+#   The name of the book in which the publication has been published. (Remark: This is currently an intermediate property that will be removed once journals and conference series are modelled as proper entities.)
+# "publishedInBookChapter"
+#   The chapter of the book in which the publication has been published. (Remark: This is currently an intermediate property that will be removed once journals and conference series are modelled as proper entities.)
+# "pagination"
+#   The page numbers where the publication can be found.
+# "yearOfEvent"
+#   The year the conference or workshop contribution has been presented.
+# "yearOfPublication"
+#   The year the publication's issue or volume has been published.
+# "monthOfPublication"
+#   The month the publication has been published.
+# "publishedBy"
+#   The publisher of the publication. (Remark: This property currently just gives literal xsd:string values until publishers are modelled as proper entities.)
+# "publishersAddress"
+#   The address of the publisher. (Remark: This is currently an intermediate property that will be removed once publishers are modelled as proper entities.)
+# "thesisAcceptedBySchool"
+#   The school where the publication (typically a thesis) has been accepted. (Remark: This property currently just gives literal xsd:string values until institutions are modelled as proper entities.)
+# "publicationNote"
+#   An additional note to the publication.
+# "publishedAsPartOf"
+#   The publication has been published as a part of the other publication.
+
+
+
