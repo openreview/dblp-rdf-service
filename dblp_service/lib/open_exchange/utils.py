@@ -1,7 +1,8 @@
 import re
 from typing import Any, Optional, List, Union, Dict
-from bibtexparser.bibdatabase import BibDatabase
+from bibtexparser import Library
 
+# from bibtexparser
 from . import logger as log
 
 TILDE_ID_RE = re.compile("^~.+\\d$")
@@ -11,7 +12,7 @@ def is_tildeid(id: str) -> bool:
     return TILDE_ID_RE.match(id) is not None
 
 
-def opt_entry(key: str, content: Any, bibdb: Optional[BibDatabase]) -> Optional[Any]:
+def opt_entry(key: str, content: Any, bibdb: Optional[Library]) -> Optional[Any]:
     if key in content:
         return content[key]
 
@@ -21,7 +22,7 @@ def opt_entry(key: str, content: Any, bibdb: Optional[BibDatabase]) -> Optional[
     return None
 
 
-def req_entry(key: str, content: Any, bibdb: Optional[BibDatabase]) -> Any:
+def req_entry(key: str, content: Any, bibdb: Optional[Library]) -> Any:
     value = opt_entry(key, content, bibdb)
     if value is None:
         raise Exception(f"Required field {key} missing")
@@ -29,19 +30,19 @@ def req_entry(key: str, content: Any, bibdb: Optional[BibDatabase]) -> Any:
     return value
 
 
-def optstr_entry(key: str, content: Any, bibdb: Optional[BibDatabase] = None) -> Optional[str]:
+def optstr_entry(key: str, content: Any, bibdb: Optional[Library] = None) -> Optional[str]:
     return opt_entry(key, content, bibdb)
 
 
-def optint_entry(key: str, content: Any, bibdb: Optional[BibDatabase]) -> Optional[int]:
+def optint_entry(key: str, content: Any, bibdb: Optional[Library]) -> Optional[int]:
     return opt_entry(key, content, bibdb)
 
 
-def str_entry(key: str, content: Any, bibdb: Optional[BibDatabase]) -> str:
+def str_entry(key: str, content: Any, bibdb: Optional[Library]) -> str:
     return req_entry(key, content, bibdb)
 
 
-def list_entry(key: str, content: Any, bibdb: Optional[BibDatabase] = None) -> List[str]:
+def list_entry(key: str, content: Any, bibdb: Optional[Library] = None) -> List[str]:
     return req_entry(key, content, bibdb)
 
 

@@ -48,7 +48,7 @@ class Zipper(Generic[T]):
         return Zipper(pre=newpre, focus=newfocus, post=newpost)
 
     def find(self, f: Callable[[T], bool]) -> "Optional[Zipper[T]]":
-        curr = self
+        curr: Optional[Zipper[T]] = self
         while curr is not None:
             if f(curr.focus):
                 return curr

@@ -25,11 +25,13 @@ def cli():
 
 @cli.command()
 @click.argument("author-uri", type=str)
-@click.option("--rewrite", is_flag=True)
-def show_authorship_tree(author_uri: str, rewrite: bool):
+@click.option("--pub-num", type=int, default=0)
+def show_authorship_tree(author_uri: str, pub_num: int):
     tree = get_author_publication_tree(author_uri)
-    if rewrite:
-        rewrite_authorship_tree(tree)
+    if pub_num > 0:
+        pub = tree.children[pub_num]
+        print_tree(pub, all_attrs=True)
+        return
 
     print_tree(tree, all_attrs=True)
 
@@ -51,10 +53,6 @@ def show_authorship_tuples(author_uri: str, abbrev: bool):
     for tuple in tuples:
         print(tuple)
         pass
-    # if abbrev:
-    #     abbrevs = abbreviate_author_tuples(tuples)
-    #     for a in abbrevs:
-    #         print(a)
 
 
 def validate_slice(

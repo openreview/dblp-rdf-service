@@ -1,7 +1,9 @@
 from SPARQLWrapper import SPARQLWrapper, JSON
 import typing as t
 
-from bigtree import Node, add_path_to_tree  # type: ignore
+from bigtree.node.node import Node
+from bigtree.tree.construct import add_path_to_tree
+from rich.pretty import pprint
 
 
 class AuthorTuple(t.NamedTuple):
@@ -32,6 +34,14 @@ def run_author_publication_query(authorURI: str) -> t.List[AuthorTuple]:
             ?sub ?pred ?obj
             FILTER (isBlank(?obj) ) .
             ?obj ?bpred ?bobj .
+          } UNION {
+            ?sub a ?obj .
+            BIND("isA" as ?pred)
+          } UNION {
+            ?sub ?pred ?obj
+            FILTER (isBlank(?obj) ) .
+            ?obj a ?bobj .
+            BIND("isA" as ?bpred)
           }
         }
         """
@@ -50,7 +60,7 @@ def run_author_publication_query(authorURI: str) -> t.List[AuthorTuple]:
             tuples.append(AuthorTuple(sub, pred, obj, bpred, bobj))
 
     except Exception as e:
-        print("error")
+        print("author pub query error")
         print(e)
 
     return tuples
