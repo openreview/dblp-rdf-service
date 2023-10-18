@@ -1,6 +1,8 @@
 import re
-from typing import Any, Optional, List, Union, Dict
+from typing import Any, Optional, List, Dict
 from bibtexparser import Library
+
+from dblp_service.lib.predef.utils import to_int
 
 # from bibtexparser
 from . import logger as log
@@ -79,18 +81,6 @@ def clean_string_data(data: Dict[str, Any], **keyspec: bool):
         sub(key, None)
 
 
-def to_int(value: Optional[Union[str, int]], coerceWarning: str) -> Optional[int]:
-    if value is None:
-        return None
-    if isinstance(value, int):
-        return value
-
-    try:
-        return int(value)
-    except Exception:
-        log.warn(coerceWarning)
-        return None
-
 
 def clean_int_data(data: Dict[str, Any], **keyspec: bool):
     def warn(key: str, info: str):
@@ -105,10 +95,13 @@ def clean_int_data(data: Dict[str, Any], **keyspec: bool):
         is_nullable = keyspec[key]
         value = data[key] if is_present else None
         # TODO give context if this fails
-        as_int = to_int(value, f"Failed to coerce data['{key}']={value} to int")
-        is_correct_type = as_int is not None
+        as_int = to_int(value)
+        if as_int is None:
+            print(f"Failed to coerce data['{key}']={value} to int")
+            continue
 
-        if is_present and is_correct_type:
+
+        if is_present:
             sub(key, as_int)
             continue
 

@@ -6,485 +6,439 @@ to another format, e.g., XML or bibtex.
 
 """
 
-from abc import abstractmethod
+from abc import ABC
+from dataclasses import dataclass, field
 import typing as t
-
 from bigtree.node.node import Node
 
-OutputType = t.TypeVar("OutputType")
+from dblp_service.lib.predef.utils import to_int
+from dblp_service.rdf_io.trees import simplify_urlname
 
 
-class OutputFactory(t.Generic[OutputType]):
-    """Factory to create and manipulate authorship output"""
-
-    @abstractmethod
-    def create_empty_output(self) -> OutputType:
-        pass
-
-    @abstractmethod
-    def create_entity_class(self, entity: Node, entity_class: Node) -> OutputType:
-        pass
-
-    @abstractmethod
-    def create_key_val_field(self, rel_type: Node, prop_val: Node, keystr: t.Optional[str]) -> OutputType:
-        pass
-
-    @abstractmethod
-    def append_fields(self, field1: OutputType, field2: OutputType) -> OutputType:
-        pass
-
-    @abstractmethod
-    def append_child(self, field1: OutputType, field2: OutputType) -> OutputType:
-        pass
-
-    def get_entry(self, node: Node) -> t.Optional[OutputType]:
-        return node.get_attr("entry")
-
-    def set_entry(self, node: Node, entry: OutputType) -> None:
-        node.set_attrs(dict(entry=entry))
-
-    # def get_or_create_entry(self, node: Node) -> OutputType:
-    #     entry = node.get_attr("entry")
-    #     if entry is None:
-    #         entry = self.create_empty_output()
-    #         node.set_attrs(dict(entry=entry))
-
-    #     return entry
+class OutputBase(ABC):
+    pass
 
 
-class AuthorshipPropertyHandlers(t.Generic[OutputType]):
+@dataclass
+class NameSpec(OutputBase):
+    name_type: t.Optional[str] = None
+    fullname: t.Optional[str] = None
+    ordinal: t.Optional[int] = None
+
+    def __repr__(self) -> str:
+        t = self.name_type or "??"
+        n = self.fullname or "<noname>"
+        return f"{t}:{n}"
+
+    def __str__(self) -> str:
+        return self.__repr__()
+
+
+@dataclass
+class NameList(OutputBase):
+    name_type: str
+    names: t.List[NameSpec] = field(default_factory=list)
+
+    def __repr__(self) -> str:
+        t = self.name_type or "??"
+        ns = [repr(n) for n in  self.names]
+        return f"{t}={ns}"
+
+    def __str__(self) -> str:
+        return self.__repr__()
+
+
+
+@dataclass
+class KeyValProp(OutputBase):
+    key: str
+    value: t.Union[str, NameList]
+
+    def __repr__(self) -> str:
+        return f"{self.key}: {self.value}"
+
+    def __str__(self) -> str:
+        return self.__repr__()
+
+
+@dataclass
+class Publication(OutputBase):
+    pub_type: t.Optional[str] = None
+    key: t.Optional[str] = None
+    props: t.List[KeyValProp] = field(default_factory=list)
+
+    def __repr__(self) -> str:
+        ps = [str(p) for p in self.props]
+        return f"@{self.pub_type}({self.key}){ps}"
+
+    def __str__(self) -> str:
+        return self.__repr__()
+
+class AuthorshipPropertyHandlers:
     """Properties Derived from dblp/schema.rdf"""
 
-    output_factory: OutputFactory[OutputType]
+    def hasA_simple_key_val_prop(self, rel_type: Node, prop_val: Node, keystr: t.Optional[str] = None):
+        name = keystr if keystr else simplify_urlname(rel_type.node_name)
+        value = prop_val.node_name
+        return KeyValProp(name, value)
 
-    def __init__(self, factory: OutputFactory[OutputType]):
-        self.output_factory = factory
+    # def isA_Entity(self, entity: Node, prop_val: Node):
+    #     """A general, identifiable entity in dblp."""
 
+    # def isA_Creator(self, entity: Node, prop_val: Node):
+    #     """A creator of a publication."""
 
+    # def isA_AmbiguousCreator(self, entity: Node, prop_val: Node):
+    #     """Not an actual creator, but an ambiguous proxy for an unknown number of unrelated actual creators. Associated publications do not have their true creators determined yet."""
 
-    def hasA_simple_key_val_prop(self, rel_type: Node, prop_val: Node, key: t.Optional[str] = None):
-        field = self.output_factory.create_key_val_field(rel_type, prop_val, key)
-        return field
-        # parent_entry = self.output_factory.get_entry(entity)
-        # assert parent_entry is not None
-        # appended = self.output_factory.append_child(parent_entry, field)
-        # self.output_factory.set_entry(entity, appended)
+    # def isA_Person(self, entity: Node, prop_val: Node):
+    #     """An actual person, who is a creator of a publication."""
 
-
-    def isA_Entity(self, entity: Node, prop_val: Node):
-        """A general, identifiable entity in dblp."""
-
-    def isA_Creator(self, entity: Node, prop_val: Node):
-        """A creator of a publication."""
-
-    def isA_AmbiguousCreator(self, entity: Node, prop_val: Node):
-        """Not an actual creator, but an ambiguous proxy for an unknown number of unrelated actual creators. Associated publications do not have their true creators determined yet."""
-
-    def isA_Person(self, entity: Node, prop_val: Node):
-        """An actual person, who is a creator of a publication."""
-
-    def isA_Group(self, entity: Node, prop_val: Node):
-        """A creator alias used by a group or consortium of persons."""
-
-    def isA_Signature(self, entity: Node, prop_val: Node):
-        """The information that links a publication to a creator."""
-
-    def isA_AuthorSignature(self, entity: Node, prop_val: Node):
-        """The information that links a publication to an author."""
-
-    def isA_EditorSignature(self, entity: Node, prop_val: Node):
-        """The information that links a publication to an editor."""
+    # def isA_Group(self, entity: Node, prop_val: Node):
+    #     """A creator alias used by a group or consortium of persons."""
 
     def isA_Publication(self, entity: Node, prop_val: Node):
         """A publication."""
-        pass
+        key = simplify_urlname(prop_val.node_name)
+        return Publication(pub_type=key)
 
     def isA_Book(self, entity: Node, prop_val: Node):
         """A book or a thesis."""
-        pass
+        key = simplify_urlname(prop_val.node_name)
+        return Publication(key=key)
 
     def isA_Article(self, entity: Node, prop_val: Node):
         """A journal article."""
-        pass
+        key = simplify_urlname(prop_val.node_name)
+        return Publication(key=key)
 
     def isA_Inproceedings(self, entity: Node, prop_val: Node):
         """A conference or workshop paper."""
-        return self.output_factory.create_entity_class(entity, prop_val)
+        key = simplify_urlname(prop_val.node_name)
+        return Publication(key=key)
 
     def isA_Incollection(self, entity: Node, prop_val: Node):
         """A part/chapter in a book or a collection."""
-        pass
+        key = simplify_urlname(prop_val.node_name)
+        return Publication(key=key)
 
-    def isA_Editorship(self, entity: Node, prop_val: Node):
-        """An edited publication."""
-        pass
+    def hasA_doi(self, rel: Node, prop_val: Node):
+        """A Digital Object Identifier."""
+        return self.hasA_simple_key_val_prop(rel, prop_val)
 
-    def isA_Reference(self, entity: Node, prop_val: Node):
-        """A reference work entry."""
-        pass
+    def hasA_isbn(self, rel: Node, prop_val: Node):
+        """An International Standard Book Number."""
+        return self.hasA_simple_key_val_prop(rel, prop_val)
 
-    def isA_Data(self, entity: Node, prop_val: Node):
-        """Research data or artifacts."""
-        pass
+    def hasA_title(self, rel: Node, prop_val: Node):
+        """The title of the publication."""
+        return self.hasA_simple_key_val_prop(rel, prop_val)
 
-    def isA_Informal(self, entity: Node, prop_val: Node):
-        """An informal or other publication."""
-        pass
+    def hasA_yearOfEvent(self, rel: Node, prop_val: Node):
+        """The year the conference or workshop contribution has been presented."""
+        return self.hasA_simple_key_val_prop(rel, prop_val, "year")
 
-    def isA_Withdrawn(self, entity: Node, prop_val: Node):
-        """A withdrawn publication item."""
-        pass
+    def hasA_yearOfPublication(self, rel: Node, prop_val: Node):
+        """The year the publication's issue or volume has been published."""
+        return self.hasA_simple_key_val_prop(rel, prop_val, "year")
 
-    def hasA_identifier(self, entity: Node, prop_val: Node):
-        """An abstract identifier."""
-        pass
-
-    def hasA_wikidata(self, entity: Node, prop_val: Node):
-        """A wikidata item."""
-        pass
-
-    def hasA_webpage(self, entity: Node, prop_val: Node):
+    def hasA_webpage(self, rel: Node, prop_val: Node):
         """The URL of a web page about this item."""
-        return self.hasA_simple_key_val_prop(entity, prop_val)
+        return self.hasA_simple_key_val_prop(rel, prop_val)
 
-    def hasA_archivedWebpage(self, entity: Node, prop_val: Node):
-        """The URL of an archived web page about this item, which may no longer be available in the web."""
-        pass
+    ####
+    ## Signature properties
+    def isA_Signature(self, entity: Node, prop_val: Node):
+        """The information that links a publication to a creator."""
+        # add empty signature, overwritable
 
-    def hasA_wikipedia(self, entity: Node, prop_val: Node):
-        """The URL of an (English) Wikipedia article about this item."""
-        pass
+    def isA_AuthorSignature(self, entity: Node, prop_val: Node):
+        """The information that links a publication to an author."""
+        return NameSpec(name_type="author")
 
-    def hasA_orcid(self, entity: Node, prop_val: Node):
-        """An Open Researcher and Contributor ID."""
-        pass
+    def isA_EditorSignature(self, entity: Node, prop_val: Node):
+        """The information that links a publication to an editor."""
+        return NameSpec(name_type="editor")
 
-    def hasA_creatorName(self, entity: Node, prop_val: Node):
-        """The full name of the creator."""
-        pass
-
-    def hasA_primaryCreatorName(self, entity: Node, prop_val: Node):
-        """The primary full name of the creator."""
-        pass
-
-    def hasA_creatorNote(self, entity: Node, prop_val: Node):
-        """An additional note about the creator."""
-        pass
-
-    def hasA_affiliation(self, entity: Node, prop_val: Node):
-        """A (past or present) affiliation of the creator. (Remark: This
-        property currently just gives literal xsd:string values until
-        institutions are modelled as proper entities.
-        """
-        pass
-
-    def hasA_primaryAffiliation(self, entity: Node, prop_val: Node):
-        """The primary affiliation of the creator. (Remark: This property
-        currently just gives literal xsd:string values until institutions are
-        modelled as proper entities.)
-        """
-        pass
-
-    def hasA_awardWebpage(self, entity: Node, prop_val: Node):
-        """The URL of a web page about an award received by this creator."""
-        pass
-
-    def hasA_homepage(self, entity: Node, prop_val: Node):
-        """The URL of an academic homepage of this creator."""
-        pass
-
-    def hasA_primaryHomepage(self, entity: Node, prop_val: Node):
-        """The primary URL of an academic homepage of this creator."""
-        pass
-
-    def hasA_creatorOf(self, entity: Node, prop_val: Node):
-        """The creator of the publication."""
-        pass
-
-    def hasA_authorOf(self, entity: Node, prop_val: Node):
-        """The creator is the author of the publication."""
-        pass
-
-    def hasA_editorOf(self, entity: Node, prop_val: Node):
-        """The creator is the editor of the publication."""
-        pass
-
-    def hasA_coCreatorWith(self, entity: Node, prop_val: Node):
-        """The creator is co-creator with the other creator."""
-        pass
-
-    def hasA_coAuthorWith(self, entity: Node, prop_val: Node):
-        """The creator is co-author with the other creator."""
-        pass
-
-    def hasA_coEditorWith(self, entity: Node, prop_val: Node):
-        """The creator is co-editor with the other creator."""
-        pass
-
-    def hasA_homonymousCreator(self, entity: Node, prop_val: Node):
-        """This creator shares a homonymous name with the other creator."""
-        pass
-
-    def hasA_possibleActualCreator(self, entity: Node, prop_val: Node):
-        """This ambiguous creator may be (or may be not) just a disambiguation
-        proxy for the other creator. Further actual creator candidates are
-        possible.
-
-        """
-        pass
-
-    def hasA_proxyAmbiguousCreator(self, entity: Node, prop_val: Node):
-        """This creator (and any of her fellow homonymous creators) is also
-        represented by the given ambiguous creator in cases where the authorship
-        of a publication is undetermined.
-
-        """
-        pass
-
-    def hasA_signatureCreator(self, entity: Node, prop_val: Node):
+    def hasA_signatureCreator(self, rel: Node, prop_val: Node):
         """A linked creator of the publication."""
-        pass
 
-    def hasA_signatureDblpName(self, entity: Node, prop_val: Node):
+    def hasA_signatureDblpName(self, rel: Node, prop_val: Node):
         """A dblp name (including any possible trailing homonym number) that links the publication to a creator."""
-        pass
+        return NameSpec(fullname=prop_val.node_name)
 
-    def hasA_signatureOrcid(self, entity: Node, prop_val: Node):
+    def hasA_signatureOrcid(self, rel: Node, prop_val: Node):
         """An ORCID that links the publication to a creator."""
         pass
 
-    def hasA_signatureOrdinal(self, entity: Node, prop_val: Node):
+    def hasA_signatureOrdinal(self, rel: Node, prop_val: Node):
         """The ordinal number of this signature for the publication, starting with 1."""
-        pass
+        ordinal = to_int(prop_val.node_name)
+        return NameSpec(ordinal=ordinal)
 
-    def hasA_signaturePublication(self, entity: Node, prop_val: Node):
+    def hasA_signaturePublication(self, rel: Node, prop_val: Node):
         """The publication of this signature."""
         pass
 
-    def hasA_doi(self, entity: Node, prop_val: Node):
-        """A Digital Object Identifier."""
-        return self.hasA_simple_key_val_prop(entity, prop_val)
-
-    def hasA_isbn(self, entity: Node, prop_val: Node):
-        """An International Standard Book Number."""
-        return self.hasA_simple_key_val_prop(entity, prop_val)
-
-    def hasA_title(self, entity: Node, prop_val: Node):
-        """The title of the publication."""
-        return self.hasA_simple_key_val_prop(entity, prop_val)
-
-    def hasA_bibtexType(self, entity: Node, prop_val: Node):
-        """The bibtex type of the publication, e.g. book, inproceedings, etc."""
-        pass
-
-    def hasA_createdBy(self, entity: Node, prop_val: Node):
-        """The publication is created by the creator."""
-        pass
-
-    def hasA_authoredBy(self, entity: Node, prop_val: Node):
-        """The publication is authored by the creator."""
-        pass
-
-    def hasA_editedBy(self, entity: Node, prop_val: Node):
-        """The publication is edited by the creator."""
-        pass
-
-    def hasA_numberOfCreators(self, entity: Node, prop_val: Node):
-        """The number of creators who created this publication."""
-        pass
-
-    def hasA_hasSignature(self, entity: Node, prop_val: Node):
+    def hasA_hasSignature(self, rel: Node, prop_val: Node):
         """A signature that links this publication to an creator."""
-        pass
+        return prop_val.get_attr("entry")
 
-    def hasA_documentPage(self, entity: Node, prop_val: Node):
-        """The URL of the electronic edition of the publication."""
-        pass
+    ## End Signature properties
+    ####
 
-    def hasA_primarydocumentPage(self, entity: Node, prop_val: Node):
-        """The primary URL of the electronic edition of the publication."""
-        pass
+    # def isA_Editorship(self, entity: Node, prop_val: Node):
+    #     """An edited publication."""
+    #     pass
 
-    def hasA_listedOnTocPage(self, entity: Node, prop_val: Node):
-        """The url of the dblp table of contents page listing this publication."""
-        pass
+    # def isA_Reference(self, entity: Node, prop_val: Node):
+    #     """A reference work entry."""
+    #     pass
 
-    def hasA_publishedIn(self, entity: Node, prop_val: Node):
-        """The name of the series, the journal, or the book in which the
-        publication has been published. (Remark: This property currently just
-        gives literal xsd:string values until journals and conference series are
-        modelled as proper entities.)
+    # def isA_Data(self, entity: Node, prop_val: Node):
+    #     """Research data or artifacts."""
+    #     pass
 
-        """
-        pass
+    # def isA_Informal(self, entity: Node, prop_val: Node):
+    #     """An informal or other publication."""
+    #     pass
 
-    def hasA_publishedInSeries(self, entity: Node, prop_val: Node):
-        """The name of the series in which the publication has been published.
-        (Remark: This is currently an intermediate property that will be removed
-        once journals and conference series are modelled as proper entities.)
+    # def isA_Withdrawn(self, entity: Node, prop_val: Node):
+    #     """A withdrawn publication item."""
+    #     pass
 
-        """
-        pass
+    # def hasA_identifier(self, rel: Node, prop_val: Node):
+    #     """An abstract identifier."""
+    #     pass
 
-    def hasA_publishedInSeriesVolume(self, entity: Node, prop_val: Node):
-        """The volume of the series in which the publication has been published.
-        (Remark: This is currently an intermediate property that will be removed
-        once journals and conference series are modelled as proper entities.)"""
-        pass
+    # def hasA_wikidata(self, rel: Node, prop_val: Node):
+    #     """A wikidata item."""
+    #     pass
 
-    def hasA_publishedInJournal(self, entity: Node, prop_val: Node):
-        """The name of the journal in which the publication has been published.
-        (Remark: This is currently an intermediate property that will be removed
-        once journals and conference series are modelled as proper entities.)
+    # def hasA_archivedWebpage(self, rel: Node, prop_val: Node):
+    #     """The URL of an archived web page about this item, which may no longer be available in the web."""
+    #     pass
 
-        """
-        pass
+    # def hasA_wikipedia(self, rel: Node, prop_val: Node):
+    #     """The URL of an (English) Wikipedia article about this item."""
+    #     pass
 
-    def hasA_publishedInJournalVolume(self, entity: Node, prop_val: Node):
-        """The volume of the journal in which the publication has been
-        published. (Remark: This is currently an intermediate property that will
-        be removed once journals and conference series are modelled as proper
-        entities.)"""
-        pass
+    # def hasA_orcid(self, rel: Node, prop_val: Node):
+    #     """An Open Researcher and Contributor ID."""
+    #     pass
 
-    def hasA_publishedInJournalVolumeIssue(self, entity: Node, prop_val: Node):
-        """The issue of the journal in which the publication has been published.
-        (Remark: This is currently an intermediate property that will be removed
-        once journals and conference series are modelled as proper entities.)
+    # def hasA_creatorName(self, rel: Node, prop_val: Node):
+    #     """The full name of the creator."""
+    #     pass
 
-        """
-        pass
+    # def hasA_primaryCreatorName(self, rel: Node, prop_val: Node):
+    #     """The primary full name of the creator."""
+    #     pass
 
-    def hasA_publishedInBook(self, entity: Node, prop_val: Node):
-        """The name of the book in which the publication has been published.
-        (Remark: This is currently an intermediate property that will be removed
-        once journals and conference series are modelled as proper entities.)
+    # def hasA_creatorNote(self, rel: Node, prop_val: Node):
+    #     """An additional note about the creator."""
+    #     pass
 
-        """
-        pass
+    # def hasA_affiliation(self, rel: Node, prop_val: Node):
+    #     """A (past or present) affiliation of the creator. (Remark: This
+    #     property currently just gives literal xsd:string values until
+    #     institutions are modelled as proper entities.
+    #     """
+    #     pass
 
-    def hasA_publishedInBookChapter(self, entity: Node, prop_val: Node):
-        """The chapter of the book in which the publication has been published.
-        (Remark: This is currently an intermediate property that will be removed
-        once journals and conference series are modelled as proper entities.)
+    # def hasA_primaryAffiliation(self, rel: Node, prop_val: Node):
+    #     """The primary affiliation of the creator. (Remark: This property
+    #     currently just gives literal xsd:string values until institutions are
+    #     modelled as proper entities.)
+    #     """
+    #     pass
 
-        """
-        pass
+    # def hasA_awardWebpage(self, rel: Node, prop_val: Node):
+    #     """The URL of a web page about an award received by this creator."""
+    #     pass
 
-    def hasA_pagination(self, entity: Node, prop_val: Node):
-        """The page numbers where the publication can be found."""
-        pass
+    # def hasA_homepage(self, rel: Node, prop_val: Node):
+    #     """The URL of an academic homepage of this creator."""
+    #     pass
 
-    def hasA_yearOfEvent(self, entity: Node, prop_val: Node):
-        """The year the conference or workshop contribution has been presented."""
-        return self.hasA_simple_key_val_prop(entity, prop_val, "year")
+    # def hasA_primaryHomepage(self, rel: Node, prop_val: Node):
+    #     """The primary URL of an academic homepage of this creator."""
+    #     pass
 
-    def hasA_yearOfPublication(self, entity: Node, prop_val: Node):
-        """The year the publication's issue or volume has been published."""
-        return self.hasA_simple_key_val_prop(entity, prop_val, "year")
+    # def hasA_creatorOf(self, rel: Node, prop_val: Node):
+    #     """The creator of the publication."""
+    #     pass
 
-    def hasA_monthOfPublication(self, entity: Node, prop_val: Node):
-        """The month the publication has been published."""
-        pass
+    # def hasA_authorOf(self, rel: Node, prop_val: Node):
+    #     """The creator is the author of the publication."""
+    #     pass
 
-    def hasA_publishedBy(self, entity: Node, prop_val: Node):
-        """The publisher of the publication. (Remark: This property currently
-        just gives literal xsd:string values until publishers are modelled as
-        proper entities.)
+    # def hasA_editorOf(self, rel: Node, prop_val: Node):
+    #     """The creator is the editor of the publication."""
+    #     pass
 
-        """
-        pass
+    # def hasA_coCreatorWith(self, rel: Node, prop_val: Node):
+    #     """The creator is co-creator with the other creator."""
+    #     pass
 
-    def hasA_publishersAddress(self, entity: Node, prop_val: Node):
-        """The address of the publisher. (Remark: This is currently an
-        intermediate property that will be removed once publishers are modelled
-        as proper entities.)
+    # def hasA_coAuthorWith(self, rel: Node, prop_val: Node):
+    #     """The creator is co-author with the other creator."""
+    #     pass
 
-        """
-        pass
+    # def hasA_coEditorWith(self, rel: Node, prop_val: Node):
+    #     """The creator is co-editor with the other creator."""
+    #     pass
 
-    def hasA_thesisAcceptedBySchool(self, entity: Node, prop_val: Node):
-        """The school where the publication (typically a thesis) has been
-        accepted. (Remark: This property currently just gives literal xsd:string
-        values until institutions are modelled as proper entities.)
+    # def hasA_homonymousCreator(self, rel: Node, prop_val: Node):
+    #     """This creator shares a homonymous name with the other creator."""
+    #     pass
 
-        """
-        pass
+    # def hasA_possibleActualCreator(self, rel: Node, prop_val: Node):
+    #     """This ambiguous creator may be (or may be not) just a disambiguation
+    #     proxy for the other creator. Further actual creator candidates are
+    #     possible.
 
-    def hasA_publicationNote(self, entity: Node, prop_val: Node):
-        """An additional note to the publication."""
-        pass
+    #     """
+    #     pass
 
-    def hasA_publishedAsPartOf(self, entity: Node, prop_val: Node):
-        """The publication has been published as a part of the other publication."""
-        pass
+    # def hasA_proxyAmbiguousCreator(self, rel: Node, prop_val: Node):
+    #     """This creator (and any of her fellow homonymous creators) is also
+    #     represented by the given ambiguous creator in cases where the authorship
+    #     of a publication is undetermined.
 
+    #     """
+    #     pass
 
-# class AuthorshipClassHandlers(t.Generic[OutputType]):
-#     """Classes Derived from dblp/schema.rdf"""
+    # def hasA_bibtexType(self, rel: Node, prop_val: Node):
+    #     """The bibtex type of the publication, e.g. book, inproceedings, etc."""
+    #     pass
 
-#     output_factory: OutputFactory[OutputType]
+    # def hasA_createdBy(self, rel: Node, prop_val: Node):
+    #     """The publication is created by the creator."""
+    #     pass
 
-#     def isA_Entity(self, entity: Node):
-#         """A general, identifiable entity in dblp."""
+    # def hasA_authoredBy(self, rel: Node, prop_val: Node):
+    #     """The publication is authored by the creator."""
+    #     pass
 
-#     def isA_Creator(self, entity: Node):
-#         """A creator of a publication."""
+    # def hasA_editedBy(self, rel: Node, prop_val: Node):
+    #     """The publication is edited by the creator."""
+    #     pass
 
-#     def isA_AmbiguousCreator(self, entity: Node):
-#         """Not an actual creator, but an ambiguous proxy for an unknown number of unrelated actual creators. Associated publications do not have their true creators determined yet."""
+    # def hasA_numberOfCreators(self, rel: Node, prop_val: Node):
+    #     """The number of creators who created this publication."""
+    #     pass
 
-#     def isA_Person(self, entity: Node):
-#         """An actual person, who is a creator of a publication."""
+    # def hasA_documentPage(self, rel: Node, prop_val: Node):
+    #     """The URL of the electronic edition of the publication."""
+    #     pass
 
-#     def isA_Group(self, entity: Node):
-#         """A creator alias used by a group or consortium of persons."""
+    # def hasA_primarydocumentPage(self, rel: Node, prop_val: Node):
+    #     """The primary URL of the electronic edition of the publication."""
+    #     pass
 
-#     def isA_Signature(self, entity: Node):
-#         """The information that links a publication to a creator."""
+    # def hasA_listedOnTocPage(self, rel: Node, prop_val: Node):
+    #     """The url of the dblp table of contents page listing this publication."""
+    #     pass
 
-#     def isA_AuthorSignature(self, entity: Node):
-#         """The information that links a publication to an author."""
+    # def hasA_publishedIn(self, rel: Node, prop_val: Node):
+    #     """The name of the series, the journal, or the book in which the
+    #     publication has been published. (Remark: This property currently just
+    #     gives literal xsd:string values until journals and conference series are
+    #     modelled as proper entities.)
 
-#     def isA_EditorSignature(self, entity: Node):
-#         """The information that links a publication to an editor."""
+    #     """
+    #     pass
 
-#     def isA_Publication(self, entity: Node):
-#         """A publication."""
-#         pass
+    # def hasA_publishedInSeries(self, rel: Node, prop_val: Node):
+    #     """The name of the series in which the publication has been published.
+    #     (Remark: This is currently an intermediate property that will be removed
+    #     once journals and conference series are modelled as proper entities.)
 
-#     def isA_Book(self, entity: Node):
-#         """A book or a thesis."""
-#         pass
+    #     """
+    #     pass
 
-#     def isA_Article(self, entity: Node):
-#         """A journal article."""
-#         pass
+    # def hasA_publishedInSeriesVolume(self, rel: Node, prop_val: Node):
+    #     """The volume of the series in which the publication has been published.
+    #     (Remark: This is currently an intermediate property that will be removed
+    #     once journals and conference series are modelled as proper entities.)"""
+    #     pass
 
-#     def isA_Inproceedings(self, entity: Node):
-#         """A conference or workshop paper."""
-#         print("Calling super inpro")
+    # def hasA_publishedInJournal(self, rel: Node, prop_val: Node):
+    #     """The name of the journal in which the publication has been published.
+    #     (Remark: This is currently an intermediate property that will be removed
+    #     once journals and conference series are modelled as proper entities.)
 
-#     def isA_Incollection(self, entity: Node):
-#         """A part/chapter in a book or a collection."""
-#         pass
+    #     """
+    #     pass
 
-#     def isA_Editorship(self, entity: Node):
-#         """An edited publication."""
-#         pass
+    # def hasA_publishedInJournalVolume(self, rel: Node, prop_val: Node):
+    #     """The volume of the journal in which the publication has been
+    #     published. (Remark: This is currently an intermediate property that will
+    #     be removed once journals and conference series are modelled as proper
+    #     entities.)"""
+    #     pass
 
-#     def isA_Reference(self, entity: Node):
-#         """A reference work entry."""
-#         pass
+    # def hasA_publishedInJournalVolumeIssue(self, rel: Node, prop_val: Node):
+    #     """The issue of the journal in which the publication has been published.
+    #     (Remark: This is currently an intermediate property that will be removed
+    #     once journals and conference series are modelled as proper entities.)
 
-#     def isA_Data(self, entity: Node):
-#         """Research data or artifacts."""
-#         pass
+    #     """
+    #     pass
 
-#     def isA_Informal(self, entity: Node):
-#         """An informal or other publication."""
-#         pass
+    # def hasA_publishedInBook(self, rel: Node, prop_val: Node):
+    #     """The name of the book in which the publication has been published.
+    #     (Remark: This is currently an intermediate property that will be removed
+    #     once journals and conference series are modelled as proper entities.)
 
-#     def isA_Withdrawn(self, entity: Node):
-#         """A withdrawn publication item."""
-#         pass
+    #     """
+    #     pass
+
+    # def hasA_publishedInBookChapter(self, rel: Node, prop_val: Node):
+    #     """The chapter of the book in which the publication has been published.
+    #     (Remark: This is currently an intermediate property that will be removed
+    #     once journals and conference series are modelled as proper entities.)
+
+    #     """
+    #     pass
+
+    # def hasA_pagination(self, rel: Node, prop_val: Node):
+    #     """The page numbers where the publication can be found."""
+    #     pass
+
+    # def hasA_monthOfPublication(self, rel: Node, prop_val: Node):
+    #     """The month the publication has been published."""
+    #     pass
+
+    # def hasA_publishedBy(self, rel: Node, prop_val: Node):
+    #     """The publisher of the publication. (Remark: This property currently
+    #     just gives literal xsd:string values until publishers are modelled as
+    #     proper entities.)
+
+    #     """
+    #     pass
+
+    # def hasA_publishersAddress(self, rel: Node, prop_val: Node):
+    #     """The address of the publisher. (Remark: This is currently an
+    #     intermediate property that will be removed once publishers are modelled
+    #     as proper entities.)
+
+    #     """
+    #     pass
+
+    # def hasA_thesisAcceptedBySchool(self, rel: Node, prop_val: Node):
+    #     """The school where the publication (typically a thesis) has been
+    #     accepted. (Remark: This property currently just gives literal xsd:string
+    #     values until institutions are modelled as proper entities.)
+
+    #     """
+    #     pass
+
+    # def hasA_publicationNote(self, rel: Node, prop_val: Node):
+    #     """An additional note to the publication."""
+    #     pass
+
+    # def hasA_publishedAsPartOf(self, rel: Node, prop_val: Node):
+    #     """The publication has been published as a part of the other publication."""
+    #     pass

@@ -57,7 +57,7 @@ SubjectObjectRelationship = t.Tuple[Node, str, Node]
 SubjectRelObjectNodes = t.Tuple[Node, Node, Node]
 
 
-def simplify_relation(rel: str) -> str:
+def simplify_urlname(rel: str) -> str:
     if "/" in rel:
         rel = rel.split("/")[-1]
 
