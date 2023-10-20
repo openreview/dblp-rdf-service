@@ -3,7 +3,6 @@ import typing as t
 
 from bigtree.node.node import Node
 from bigtree.tree.construct import add_path_to_tree
-from rich.pretty import pprint
 
 
 class AuthorTuple(t.NamedTuple):

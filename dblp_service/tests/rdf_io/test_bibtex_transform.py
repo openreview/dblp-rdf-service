@@ -21,10 +21,13 @@ from bibtexparser.model import (
 
 from rich.pretty import pprint
 
-from dblp_service.rdf_io.bibtex_transform import apply_handlers_to_tree, output_to_bibtex
+from dblp_service.rdf_io.bibtex_transform import dblprepr_to_bibtex
+from dblp_service.rdf_io.dblp_repr import DblpRepr, Publication
+from dblp_service.rdf_io.tree_traversal import traverse_authorship_tree
 from dblp_service.tests.rdf_io.test_tupledata import AUTHOR_1_TUPLES, AUTHOR_2_TUPLES
 
 from ..helpers import get_author_tree_from_string
+
 
 @dataclass
 class BibtexOutput:
@@ -34,12 +37,9 @@ class BibtexOutput:
     bibtex_str: str
 
 
-def tuplestr_to_bibtex_str(tuplestr: str) -> BibtexOutput:
-    tree = get_author_tree_from_string(tuplestr)
-
-    bibtex_entry = apply_handlers_to_tree(tree)
+def repr_to_bibtex_str(repr: DblpRepr) -> str:
+    entry = dblprepr_to_bibtex(repr)
     library = Library()
-    entry = output_to_bibtex(bibtex_entry)
     library.add(entry)
     bibtex_str = write_string(
         library,
@@ -48,13 +48,30 @@ def tuplestr_to_bibtex_str(tuplestr: str) -> BibtexOutput:
             MergeCoAuthors(allow_inplace_modification=True),
         ],
     )
-    return BibtexOutput(
-        tree = tree,
-        tree_str='',
-        entry = entry,
-        bibtex_str=bibtex_str
-    )
+    return bibtex_str
 
+
+def tuplestr_to_bibtex_str(tuplestr: str) -> BibtexOutput:
+    tree = get_author_tree_from_string(tuplestr)
+
+    dblp_repr = traverse_authorship_tree(tree)
+    library = Library()
+    entry = dblprepr_to_bibtex(dblp_repr)
+    library.add(entry)
+    bibtex_str = write_string(
+        library,
+        prepend_middleware=[
+            LatexEncodingMiddleware(allow_inplace_modification=True),
+            MergeCoAuthors(allow_inplace_modification=True),
+        ],
+    )
+    return BibtexOutput(tree=tree, tree_str="", entry=entry, bibtex_str=bibtex_str)
+
+
+def test_pub_repr():
+    pub = Publication(pub_type="InProceedings", key="conf/2001/asdf")
+    dblp_str = repr_to_bibtex_str(pub)
+    print(dblp_str)
 
 
 def test_tree_handler_dispatch():
@@ -221,8 +238,8 @@ def test_druck_has_signature():
     tree = get_author_tree_from_string(tuples)
     print_tree(tree)
 
-    bibtex_entry = apply_handlers_to_tree(tree)
-    entry = output_to_bibtex(bibtex_entry)
+    bibtex_entry = traverse_authorship_tree(tree)
+    entry = dblprepr_to_bibtex(bibtex_entry)
 
     library = Library()
     library.add(entry)
@@ -275,8 +292,8 @@ def test_druck_gg11():
 
     tree = get_author_tree_from_string(tuples)
 
-    bibtex_entry = apply_handlers_to_tree(tree)
-    entry = output_to_bibtex(bibtex_entry)
+    bibtex_entry = traverse_authorship_tree(tree)
+    entry = dblprepr_to_bibtex(bibtex_entry)
     library = Library()
 
     library.add(entry)

@@ -43,6 +43,7 @@ exclude = [
     "submodules/**"
 ]
 
+
 ### https://github.com/microsoft/pyright/blob/main/docs/configuration.md#diagnostic-rule-defaults
 reportMissingImports = "error" #[boolean or string, optional]
 reportMissingTypeStubs = false #[boolean or string, optional]

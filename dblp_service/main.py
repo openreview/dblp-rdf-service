@@ -5,22 +5,56 @@ import click
 import typing as t
 from rich.pretty import pprint
 from bigtree.tree.export import print_tree
+from dblp_service.lib.predef.log import create_logger
+from dblp_service.rdf_io.bibtex_transform import (
+    dblp_reprs_to_bibtex_library,
+    print_library,
+)
+from dblp_service.rdf_io.tree_traversal import authorship_tree_to_repr
+from dblp_service.rdf_io.trees import simplify_urlname
 
 from lib.open_exchange.open_fetch import fetch_profile, fetch_profiles
 from lib.predef.typedefs import Slice
 from lib.predef.config import setenv
 
-from rdf_io.xml_utils import print_xml
-from rdf_io.xml_transform import authorship_tree_to_xml, rewrite_authorship_tree
 from rdf_io.queries import (
     get_author_publication_tree,
     run_author_publication_query,
 )
 
+log = create_logger(__file__)
+
 
 @click.group()
 def cli():
     pass
+
+
+@cli.command()
+@click.argument("author-uri", type=str)
+@click.option("--format", type=click.Choice(["xml", "bibtex"], case_sensitive=True))
+@click.option("--show-tree", is_flag=True, default=False)
+@click.option("--show-repr", is_flag=True, default=False)
+def show_authorship(author_uri: str, format: str, show_tree: bool, show_repr: bool):
+    log.info("getting pub")
+    tree = get_author_publication_tree(author_uri)
+
+    if show_tree:
+        print_tree(tree, all_attrs=True)
+
+    dblp_repr = authorship_tree_to_repr(tree)
+
+    if show_repr:
+        pprint(dblp_repr)
+
+    if format.lower() == "bibtex":
+        print("Library")
+        library = dblp_reprs_to_bibtex_library(dblp_repr)
+        print_library(library)
+        return
+
+    # else format == 'xml'
+    print("TODO")
 
 
 @cli.command()
@@ -38,21 +72,13 @@ def show_authorship_tree(author_uri: str, pub_num: int):
 
 @cli.command()
 @click.argument("author-uri", type=str)
-def show_authorship_xml(author_uri: str):
-    tree = get_author_publication_tree(author_uri)
-    rewrite_authorship_tree(tree)
-    xml = authorship_tree_to_xml(tree)
-    print_xml(xml)
-
-
-@cli.command()
-@click.argument("author-uri", type=str)
 @click.option("--abbrev", is_flag=True)
 def show_authorship_tuples(author_uri: str, abbrev: bool):
     tuples = run_author_publication_query(author_uri)
     for tuple in tuples:
+        if abbrev:
+            tuple = [simplify_urlname(t) for t in tuple if t]
         print(tuple)
-        pass
 
 
 def validate_slice(

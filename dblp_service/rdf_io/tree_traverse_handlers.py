@@ -6,73 +6,13 @@ to another format, e.g., XML or bibtex.
 
 """
 
-from abc import ABC
-from dataclasses import dataclass, field
 import typing as t
 from bigtree.node.node import Node
 
 from dblp_service.lib.predef.utils import to_int
+from dblp_service.rdf_io.dblp_repr import KeyValProp, NameSpec, Publication, ResourceIdentifier
 from dblp_service.rdf_io.trees import simplify_urlname
 
-
-class OutputBase(ABC):
-    pass
-
-
-@dataclass
-class NameSpec(OutputBase):
-    name_type: t.Optional[str] = None
-    fullname: t.Optional[str] = None
-    ordinal: t.Optional[int] = None
-
-    def __repr__(self) -> str:
-        t = self.name_type or "??"
-        n = self.fullname or "<noname>"
-        return f"{t}:{n}"
-
-    def __str__(self) -> str:
-        return self.__repr__()
-
-
-@dataclass
-class NameList(OutputBase):
-    name_type: str
-    names: t.List[NameSpec] = field(default_factory=list)
-
-    def __repr__(self) -> str:
-        t = self.name_type or "??"
-        ns = [repr(n) for n in  self.names]
-        return f"{t}={ns}"
-
-    def __str__(self) -> str:
-        return self.__repr__()
-
-
-
-@dataclass
-class KeyValProp(OutputBase):
-    key: str
-    value: t.Union[str, NameList]
-
-    def __repr__(self) -> str:
-        return f"{self.key}: {self.value}"
-
-    def __str__(self) -> str:
-        return self.__repr__()
-
-
-@dataclass
-class Publication(OutputBase):
-    pub_type: t.Optional[str] = None
-    key: t.Optional[str] = None
-    props: t.List[KeyValProp] = field(default_factory=list)
-
-    def __repr__(self) -> str:
-        ps = [str(p) for p in self.props]
-        return f"@{self.pub_type}({self.key}){ps}"
-
-    def __str__(self) -> str:
-        return self.__repr__()
 
 class AuthorshipPropertyHandlers:
     """Properties Derived from dblp/schema.rdf"""
@@ -153,39 +93,96 @@ class AuthorshipPropertyHandlers:
         # add empty signature, overwritable
 
     def isA_AuthorSignature(self, entity: Node, prop_val: Node):
-        """The information that links a publication to an author."""
+        """The information that links a publication to an author.
+
+        Expected input tree shape:
+
+                        https://dblp.org/rdf/schema#hasSignature
+           entity   ->  ├── b2
+                        │   ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+                        │   │   └── https://dblp.org/rdf/schema#AuthorSignature
+                        │   ├── https://dblp.org/rdf/schema#signaturePublication
+                        │   │   └── https://dblp.org/rec/conf/cikm/DruckM11
+                        │   ├── https://dblp.org/rdf/schema#signatureDblpName
+                        │   │   └── Gregory Druck
+                        │   ├── https://dblp.org/rdf/schema#signatureCreator
+                        │   │   └── https://dblp.org/pid/66/4867
+                        │   ├── https://dblp.org/rdf/schema#signatureOrdinal
+                        │   │   └── 1
+           isA      ->  │   └── isA
+           prop_val ->  │       └── https://dblp.org/rdf/schema#AuthorSignature
+
+        Output:
+          Set entity b2.entry = NameSpec("author")
+        """
         return NameSpec(name_type="author")
 
     def isA_EditorSignature(self, entity: Node, prop_val: Node):
         """The information that links a publication to an editor."""
         return NameSpec(name_type="editor")
 
-    def hasA_signatureCreator(self, rel: Node, prop_val: Node):
-        """A linked creator of the publication."""
-
     def hasA_signatureDblpName(self, rel: Node, prop_val: Node):
         """A dblp name (including any possible trailing homonym number) that links the publication to a creator."""
         return NameSpec(fullname=prop_val.node_name)
 
-    def hasA_signatureOrcid(self, rel: Node, prop_val: Node):
-        """An ORCID that links the publication to a creator."""
-        pass
-
     def hasA_signatureOrdinal(self, rel: Node, prop_val: Node):
         """The ordinal number of this signature for the publication, starting with 1."""
         ordinal = to_int(prop_val.node_name)
+        assert isinstance(ordinal, int)
         return NameSpec(ordinal=ordinal)
 
-    def hasA_signaturePublication(self, rel: Node, prop_val: Node):
-        """The publication of this signature."""
-        pass
-
     def hasA_hasSignature(self, rel: Node, prop_val: Node):
-        """A signature that links this publication to an creator."""
+        """A signature that links this publication to an creator.
+
+        entity -> https://dblp.org/rec/conf/cikm/DruckM11
+        rel    -> ├── https://dblp.org/rdf/schema#hasSignature
+        prop   -> │   ├── b2
+                  │   │   ├── https://dblp.org/rdf/schema#signatureDblpName
+
+        """
         return prop_val.get_attr("entry")
 
+    # def hasA_signatureCreator(self, rel: Node, prop_val: Node):
+    #     """A linked creator of the publication."""
+    # def hasA_signatureOrcid(self, rel: Node, prop_val: Node):
+    #     """An ORCID that links the publication to a creator."""
+    # def hasA_signaturePublication(self, rel: Node, prop_val: Node):
+    #     """The publication of this signature."""
+
     ## End Signature properties
+
     ####
+    ## Resource Identifiers
+    def isA_ResourceIdentifier(self, entity: Node, prop_val: Node):
+        """Identifier, e.g., doi, dblp pid
+
+        blank0
+        ├── http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+        │   └── http://purl.org/spar/datacite/ResourceIdentifier
+        ├── http://purl.org/spar/literal/hasLiteralValue
+        │   └── conf/cikm/DruckM11
+        ├── http://purl.org/spar/datacite/usesIdentifierScheme
+        │   └── http://purl.org/spar/datacite/dblp-record
+        └── isA
+           └── http://purl.org/spar/datacite/ResourceIdentifier
+
+        """
+        return ResourceIdentifier()
+
+    def hasA_type(self, rel: Node, prop_val: Node):
+        """"""
+
+    def hasA_hasLiteralValue(self, rel: Node, prop_val: Node):
+        """"""
+        return ResourceIdentifier(value=prop_val.node_name)
+
+    def hasA_usesIdentifierSchem(self, rel: Node, prop_val: Node):
+        return ResourceIdentifier(id_scheme=prop_val.node_name)
+        """"""
+
+    # def hasA_identifier(self, rel: Node, prop_val: Node):
+    #     """An abstract identifier."""
+    #     pass
 
     # def isA_Editorship(self, entity: Node, prop_val: Node):
     #     """An edited publication."""
@@ -205,10 +202,6 @@ class AuthorshipPropertyHandlers:
 
     # def isA_Withdrawn(self, entity: Node, prop_val: Node):
     #     """A withdrawn publication item."""
-    #     pass
-
-    # def hasA_identifier(self, rel: Node, prop_val: Node):
-    #     """An abstract identifier."""
     #     pass
 
     # def hasA_wikidata(self, rel: Node, prop_val: Node):

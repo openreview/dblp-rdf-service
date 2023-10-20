@@ -1,14 +1,15 @@
 import re
 from typing import Any, Optional, List, Dict
 from bibtexparser import Library
+from dblp_service.lib.predef.log import create_logger
 
 from dblp_service.lib.predef.utils import to_int
 
 # from bibtexparser
-from . import logger as log
 
 TILDE_ID_RE = re.compile("^~.+\\d$")
 
+log = create_logger(__file__)
 
 def is_tildeid(id: str) -> bool:
     return TILDE_ID_RE.match(id) is not None

@@ -12,17 +12,18 @@ import openreview as op
 # from requests.sessions import Session
 from requests_futures.sessions import FuturesSession
 
+from dblp_service.lib.predef.log import create_logger
 from ..predef.config import get_config
 from ..predef.iterget import IterGet
 from ..predef.listops import ListOps
 from ..predef.typedefs import Slice
 from ..predef.utils import is_valid_email
 
-from . import logger
 
 from .profile_schemas import Profile, load_profile
 from .note_schemas import Note, load_notes
 
+logger = create_logger(__file__)
 
 Session = FuturesSession
 cached_client: Optional[op.Client] = None

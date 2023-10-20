@@ -6,9 +6,11 @@ import json
 from marshmallow import Schema, fields, post_load
 from dataclasses import dataclass
 
-from .schemas import StrField
-from .log import logger
+from dblp_service.lib.predef.log import create_logger
 
+from .schemas import StrField
+
+log = create_logger(__file__)
 
 @dataclass
 class OpenReviewConfig:
@@ -68,7 +70,7 @@ def getenv():
 def read_config(config_path: str) -> t.Optional[Config]:
     config: t.Optional[Config] = None
     if os.path.exists(config_path):
-        logger.info(f"Loading config '{config_path}'")
+        log.info(f"Loading config '{config_path}'")
         with open(config_path) as f:
             jsonContent = json.load(f)
             loaded: Config = cast(Config, ConfigSchema().load(jsonContent))
@@ -90,7 +92,7 @@ def load_config() -> t.Optional[Config]:
     workingdir = os.path.abspath(os.curdir)
     config_path = os.path.join(workingdir, config_filename)
     while workingdir != "/":
-        logger.debug(f"Looking for config '{config_filename}' in {workingdir}")
+        log.debug(f"Looking for config '{config_filename}' in {workingdir}")
         config_path = os.path.join(workingdir, config_filename)
 
         config = read_config(config_path)
@@ -98,7 +100,7 @@ def load_config() -> t.Optional[Config]:
             return config
         workingdir = os.path.abspath(os.path.join(workingdir, os.pardir))
     else:
-        logger.warn(f"Could not find config {config_filename}")
+        log.warn(f"Could not find config {config_filename}")
 
     return config
 
