@@ -5,11 +5,9 @@
 import xml.etree.ElementTree as ET
 from bigtree import Node  # type: ignore
 from bigtree.utils.iterators import preorder_iter
+from dblp_service.dblp_io.rdf_io.authorship_trees import is_hasSignature_node
 
-from dblp_service.rdf_io.authorship_trees import is_hasSignature_node
-# from dblp_service.rdf_io.tree_traverse_handlers import OutputFactory
-
-from .trees import (
+from dblp_service.dblp_io.rdf_io.trees import (
     get_attr_value,
     get_elem,
     get_tree_attr,
@@ -19,21 +17,6 @@ from .trees import (
     match_attr_value,
     set_elem,
 )
-
-# class XMLFactory(OutputFactory[ET.Element]):
-#     def create_field(self, name: str, value: str) -> ET.Element:
-#         elem = ET.Element(name)
-#         elem.text = value
-#         return elem
-
-#     def append_fields(self, field1: ET.Element, field2: ET.Element) -> ET.Element:
-#         """TODO"""
-#         return field1
-
-#     def append_child(self, field1: ET.Element, field2: ET.Element) -> ET.Element:
-#         field1.append(field2)
-#         return field1
-
 
 
 def authorship_tree_to_xml(root: Node) -> ET.Element:

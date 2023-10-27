@@ -1,11 +1,5 @@
 """Intermediate repr classes for DBLP authored works.
 
-One blank line. General description.
-
-Typical usage example:
-
-    foo = ClassFoo()
-bar = foo.FunctionBar()
 """
 
 from abc import ABC, abstractmethod
@@ -21,7 +15,7 @@ class DblpRepr(ABC):
 
 
 def merge_tuplewise(r1: DblpRepr, r2: DblpRepr) -> t.List[t.Any]:
-    fields = zip(astuple(r1), astuple(r2))
+    fields = list(zip(astuple(r1), astuple(r2)))
 
     def can_merge(s1: t.Any, s2: t.Any) -> bool:
         if isinstance(s1, str) and isinstance(s2, str):
@@ -66,10 +60,14 @@ class ResourceIdentifier(DblpRepr):
 
     def merge(self, other: DblpRepr) -> DblpRepr:
         if isinstance(other, ResourceIdentifier):
-            fields = zip(astuple(self), astuple(other))
-            merged = [f1 + f2 for f1, f2 in fields]
-            return ResourceIdentifier(*merged)
+            return ResourceIdentifier(*merge_tuplewise(self, other))
+
         raise Exception(f"no suitable combination {self.__class__} / {other.__class__}")
+
+    def __repr__(self) -> str:
+        t = self.id_scheme or "_"
+        n = self.value or "_"
+        return f"ResourceID={t}:{n}"
 
 
 @dataclass
@@ -99,7 +97,9 @@ class KeyValProp(DblpRepr):
 class Publication(DblpRepr):
     pub_type: str = ""
     key: str = ""
+    schema: str = ""
     props: t.List[KeyValProp] = field(default_factory=list)
+
 
     def merge(self, other: DblpRepr) -> DblpRepr:
         if isinstance(other, NameSpec):
@@ -116,7 +116,11 @@ class Publication(DblpRepr):
                 return self
             return replace(self, props=self.props + [other])
 
+        if isinstance(other, ResourceIdentifier):
+            return replace(self, key=other.value, schema=other.id_scheme)
+
         if isinstance(other, Publication):
+            pub_type = self.pub_type
             return Publication(*merge_tuplewise(self, other))
 
         raise Exception(f"no suitable combination {self.__class__} / {other.__class__}")

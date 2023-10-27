@@ -8,10 +8,10 @@ to another format, e.g., XML or bibtex.
 
 import typing as t
 from bigtree.node.node import Node
+from dblp_service.dblp_io.rdf_io.dblp_repr import KeyValProp, NameSpec, Publication, ResourceIdentifier
+from dblp_service.dblp_io.rdf_io.trees import simplify_urlname
 
 from dblp_service.lib.predef.utils import to_int
-from dblp_service.rdf_io.dblp_repr import KeyValProp, NameSpec, Publication, ResourceIdentifier
-from dblp_service.rdf_io.trees import simplify_urlname
 
 
 class AuthorshipPropertyHandlers:
@@ -45,22 +45,22 @@ class AuthorshipPropertyHandlers:
     def isA_Book(self, entity: Node, prop_val: Node):
         """A book or a thesis."""
         key = simplify_urlname(prop_val.node_name)
-        return Publication(key=key)
+        return Publication(pub_type=key)
 
     def isA_Article(self, entity: Node, prop_val: Node):
         """A journal article."""
         key = simplify_urlname(prop_val.node_name)
-        return Publication(key=key)
+        return Publication(pub_type=key)
 
     def isA_Inproceedings(self, entity: Node, prop_val: Node):
         """A conference or workshop paper."""
         key = simplify_urlname(prop_val.node_name)
-        return Publication(key=key)
+        return Publication(pub_type=key)
 
     def isA_Incollection(self, entity: Node, prop_val: Node):
         """A part/chapter in a book or a collection."""
         key = simplify_urlname(prop_val.node_name)
-        return Publication(key=key)
+        return Publication(pub_type=key)
 
     def hasA_doi(self, rel: Node, prop_val: Node):
         """A Digital Object Identifier."""
@@ -176,7 +176,7 @@ class AuthorshipPropertyHandlers:
         """"""
         return ResourceIdentifier(value=prop_val.node_name)
 
-    def hasA_usesIdentifierSchem(self, rel: Node, prop_val: Node):
+    def hasA_usesIdentifierScheme(self, rel: Node, prop_val: Node):
         return ResourceIdentifier(id_scheme=prop_val.node_name)
         """"""
 

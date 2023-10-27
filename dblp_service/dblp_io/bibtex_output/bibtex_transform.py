@@ -11,11 +11,11 @@ from bibtexparser.model import (
     Entry,
     Field,
 )
+from dblp_service.dblp_io.rdf_io.dblp_repr import DblpRepr, Publication
+from dblp_service.dblp_io.rdf_io.tree_traversal import all_authorship_trees_to_reprs
 
 from dblp_service.lib.predef.log import create_logger
 
-from dblp_service.rdf_io.tree_traversal import authorship_tree_to_repr
-from dblp_service.rdf_io.dblp_repr import DblpRepr, Publication
 
 log = create_logger(__file__)
 
@@ -29,7 +29,7 @@ def next_fake_key() -> str:
     return k
 
 
-def dblprepr_to_bibtex(repr: DblpRepr) -> Entry:
+def dblp_repr_to_bibtex(repr: DblpRepr) -> Entry:
     assert isinstance(repr, Publication)
     fields: t.List[Field] = []
 
@@ -57,7 +57,7 @@ def dblp_reprs_to_bibtex_library(reprs: t.List[DblpRepr]) -> Library:
     """ """
     library = Library()
     for repr in reprs:
-        entry = dblprepr_to_bibtex(repr)
+        entry = dblp_repr_to_bibtex(repr)
         library.add(entry)
 
     return library
@@ -65,16 +65,16 @@ def dblp_reprs_to_bibtex_library(reprs: t.List[DblpRepr]) -> Library:
 
 def authorship_tree_to_bibtex(root: Node) -> Library:
     """ """
-    dblp_reprs = authorship_tree_to_repr(root)
+    dblp_reprs = all_authorship_trees_to_reprs(root)
     library = Library()
     for repr in dblp_reprs:
-        entry = dblprepr_to_bibtex(repr)
+        entry = dblp_repr_to_bibtex(repr)
         library.add(entry)
 
     return library
 
 
-def print_library(library: Library):
+def library_to_str(library: Library):
     as_string = write_string(
         library,
         prepend_middleware=[
@@ -82,4 +82,13 @@ def print_library(library: Library):
             MergeCoAuthors(allow_inplace_modification=True),
         ],
     )
-    print(as_string)
+    return as_string
+
+
+def repr_to_bibtex_str(repr: DblpRepr) -> str:
+    lib = dblp_reprs_to_bibtex_library([repr])
+    return library_to_str(lib)
+
+
+def print_library(library: Library):
+    print(library_to_str(library))

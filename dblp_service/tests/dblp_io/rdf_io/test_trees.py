@@ -3,7 +3,8 @@
 from bigtree.tree.export import print_tree
 from bigtree.tree.construct import list_to_tree
 
-from dblp_service.rdf_io.trees import get_nth_descendent, iter_subject_triples
+from dblp_service.dblp_io.rdf_io.trees import get_nth_descendent, iter_subject_triples
+
 
 
 def test_iter_subject_triples_simple():

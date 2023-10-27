@@ -4,17 +4,13 @@
 import typing as t
 
 from bigtree.node.node import Node
+from bigtree.tree.export import print_tree
+from dblp_service.dblp_io.rdf_io.dblp_repr import DblpRepr, KeyValProp, Publication
+from dblp_service.dblp_io.rdf_io.tree_traverse_handlers import AuthorshipPropertyHandlers
+from dblp_service.dblp_io.rdf_io.trees import iter_subject_triples, simplify_urlname
 from dblp_service.lib.predef.log import create_logger
-from dblp_service.rdf_io.tree_traverse_handlers import (
-    AuthorshipPropertyHandlers,
-)
-from dblp_service.rdf_io.dblp_repr import (
-    KeyValProp,
-    DblpRepr,
-    Publication,
-)
 
-from dblp_service.rdf_io.trees import iter_subject_triples, simplify_urlname
+from icecream import ic
 
 log = create_logger(__file__)
 
@@ -56,8 +52,7 @@ def get_hasA_handler(
     if hasattr(handlers, handler) and callable(func := getattr(handlers, handler)):
         return func
 
-
-def traverse_authorship_tree(root: Node) -> DblpRepr:
+def authorship_tree_to_dblp_repr(root: Node) -> DblpRepr:
     """
     Traverse the authorship tree and return an intermediate encoding.
 
@@ -70,33 +65,39 @@ def traverse_authorship_tree(root: Node) -> DblpRepr:
     handlers = AuthorshipPropertyHandlers()
 
     # First time through, handle the 'isA' properties
-    for nsubj, nrel, nobj in iter_subject_triples(root):
-        if nrel.node_name != "isA":
+    for nsubj, isA_rel, nobj in iter_subject_triples(root):
+        if isA_rel.node_name != "isA":
             continue
 
         func = get_isA_handler(nobj, handlers)
         if func:
             created = func(nsubj, nobj)
             if created:
-                log.info(f"created isA {created}")
+                # log.info(f"init isA {created}")
                 nsubj.set_attrs(dict(entry=created))
+                ic(created, nsubj, 'from tree')
+                print_tree(isA_rel, all_attrs=True)
+                print()
 
     # Second time through, handle the 'hasA' properties
-    for nsubj, nrel, nobj in iter_subject_triples(root):
-        if nrel.node_name == "isA":
+    for nsubj, hasA_rel, nobj in iter_subject_triples(root):
+        if hasA_rel.node_name == "isA":
             continue
 
-        func = get_hasA_handler(nrel, handlers)
+        func = get_hasA_handler(hasA_rel, handlers)
         if func:
-            prior = nsubj.get_attr("entry")
-            if prior is None:
-                continue
-            created = func(nrel, nobj)
+            created = func(hasA_rel, nobj)
             if created:
                 log.info(f"hasA {created}")
-                combined = prior.merge(created)
-                log.info(f"  == {combined}")
+                prior = nsubj.get_attr("entry")
+                combined = created
+                if prior is not None:
+                    combined = prior.merge(created) if prior is not None else created
+                    log.info(f"  == {combined}")
                 nsubj.set_attrs(dict(entry=combined))
+                ic(created, nsubj, 'from tree')
+                print_tree(hasA_rel, all_attrs=True)
+                print()
 
     root_entry = root.get_attr("entry")
 
@@ -142,7 +143,7 @@ def get_prop(pub: Publication, prop_key: str) -> t.Optional[KeyValProp]:
     return matched_props[0]
 
 
-def authorship_tree_to_repr(root: Node) -> t.List[DblpRepr]:
+def all_authorship_trees_to_reprs(root: Node) -> t.List[DblpRepr]:
     """
     Convert an authorship tree to an intermediate repr.
 
@@ -152,4 +153,4 @@ def authorship_tree_to_repr(root: Node) -> t.List[DblpRepr]:
     Returns:
         List[DblpRepr]: A list of reprs for each child of the root node.
     """
-    return [traverse_authorship_tree(subject) for subject in root.children]
+    return [authorship_tree_to_dblp_repr(subject) for subject in root.children]

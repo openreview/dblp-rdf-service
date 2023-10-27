@@ -5,22 +5,20 @@ import click
 import typing as t
 from rich.pretty import pprint
 from bigtree.tree.export import print_tree
+from dblp_service.dblp_io.bibtex_output.bibtex_transform import dblp_reprs_to_bibtex_library, print_library
+from dblp_service.dblp_io.rdf_io.queries import get_author_publication_tree, run_author_publication_query
+from dblp_service.dblp_io.rdf_io.tree_traversal import all_authorship_trees_to_reprs
+from dblp_service.dblp_io.rdf_io.trees import simplify_urlname
 from dblp_service.lib.predef.log import create_logger
-from dblp_service.rdf_io.bibtex_transform import (
-    dblp_reprs_to_bibtex_library,
-    print_library,
-)
-from dblp_service.rdf_io.tree_traversal import authorship_tree_to_repr
-from dblp_service.rdf_io.trees import simplify_urlname
 
 from lib.open_exchange.open_fetch import fetch_profile, fetch_profiles
 from lib.predef.typedefs import Slice
 from lib.predef.config import setenv
 
-from rdf_io.queries import (
-    get_author_publication_tree,
-    run_author_publication_query,
-)
+# from rdf_io.queries import (
+#     get_author_publication_tree,
+#     run_author_publication_query,
+# )
 
 log = create_logger(__file__)
 
@@ -42,13 +40,12 @@ def show_authorship(author_uri: str, format: str, show_tree: bool, show_repr: bo
     if show_tree:
         print_tree(tree, all_attrs=True)
 
-    dblp_repr = authorship_tree_to_repr(tree)
+    dblp_repr = all_authorship_trees_to_reprs(tree)
 
     if show_repr:
         pprint(dblp_repr)
 
     if format.lower() == "bibtex":
-        print("Library")
         library = dblp_reprs_to_bibtex_library(dblp_repr)
         print_library(library)
         return

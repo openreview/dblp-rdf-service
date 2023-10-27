@@ -1,3 +1,38 @@
 #!/bin/bash
 
-mypy dblp_service/
+# mypy dblp_service/
+
+# Check if required number of arguments are passed
+if [ "$#" -ne 3 ]; then
+    echo "Usage: $0 <watchdir> <exec> <threshold>"
+    exit 1
+fi
+
+watchdir="$1"
+exec="$2"
+threshold="$3"
+declare -a changed_files=()
+last_run=0
+
+while :; do
+    # Use inotifywait to wait for changes in watchdir and its subdirectories
+    file=$(inotifywait -r -e modify,create,delete,move --format '%w%f' "$watchdir" | head -n 1)
+    current_time=$(date +%s%3N)  # Current time in milliseconds
+
+    # If the time since last run of the executable is less than the threshold
+    # Just store the changed file for now
+    if (( (current_time - last_run) < threshold )); then
+        changed_files+=("$file")
+    else
+        # If there are already stored files, append the latest changed file to the list
+        if [ "${#changed_files[@]}" -ne 0 ]; then
+            changed_files+=("$file")
+            "$exec" "${changed_files[@]}"
+            changed_files=()  # Clear the list of changed files
+        else
+            clear -x
+            "$exec" "$file"
+        fi
+        last_run=$current_time  # Update the last_run time
+    fi
+done

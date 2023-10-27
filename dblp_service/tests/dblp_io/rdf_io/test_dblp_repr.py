@@ -1,6 +1,4 @@
-
-
-from dblp_service.rdf_io.dblp_repr import ResourceIdentifier
+from dblp_service.dblp_io.rdf_io.dblp_repr import ResourceIdentifier
 
 
 def test_merge():

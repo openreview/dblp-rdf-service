@@ -1,8 +1,8 @@
-from dblp_service.rdf_io.dblp_repr import KeyValProp, NameSpec, Publication
-from dblp_service.rdf_io.tree_traversal import traverse_authorship_tree
-from dblp_service.tests.rdf_io.test_tupledata import AUTHOR_1_TUPLES, AUTHOR_2_TUPLES
+from dblp_service.dblp_io.rdf_io.dblp_repr import Publication, KeyValProp, NameSpec
+from dblp_service.dblp_io.rdf_io.tree_traversal import authorship_tree_to_dblp_repr
+from dblp_service.tests.dblp_io.rdf_io.test_tupledata import AUTHOR_1_TUPLES, AUTHOR_2_TUPLES
+from dblp_service.tests.helpers import get_author_tree_from_string
 
-from ..helpers import get_author_tree_from_string
 
 
 def test_traverse_has_signature():
@@ -10,7 +10,7 @@ def test_traverse_has_signature():
 
     tree = get_author_tree_from_string(tuples)
 
-    output = traverse_authorship_tree(tree)
+    output = authorship_tree_to_dblp_repr(tree)
 
     expected = Publication(
         pub_type="Publication",
@@ -28,7 +28,7 @@ def test_traverse_has_multiple_signature():
     """
 
     tree = get_author_tree_from_string(tuples)
-    output = traverse_authorship_tree(tree)
+    output = authorship_tree_to_dblp_repr(tree)
 
     expected = Publication(
         pub_type="Publication",
