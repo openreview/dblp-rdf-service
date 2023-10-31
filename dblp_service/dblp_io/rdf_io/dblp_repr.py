@@ -3,8 +3,9 @@
 """
 
 from abc import ABC, abstractmethod
-from dataclasses import astuple, dataclass, field, replace
+from dataclasses import astuple, dataclass, field, replace, KW_ONLY
 import typing as t
+from bigtree.node.node import Node
 
 
 @dataclass
@@ -16,20 +17,21 @@ class DblpRepr(ABC):
 
 def merge_tuplewise(r1: DblpRepr, r2: DblpRepr) -> t.List[t.Any]:
     fields = list(zip(astuple(r1), astuple(r2)))
+    merged: t.List[t.Any] = []
 
-    def can_merge(s1: t.Any, s2: t.Any) -> bool:
-        if isinstance(s1, str) and isinstance(s2, str):
-            return len(s1) == 0 or len(s2) == 0
-        if isinstance(s1, t.List) and isinstance(s2, t.List):
-            return True
-        if isinstance(s1, int) and isinstance(s2, int):
-            return True
-        return False
+    for f1, f2 in fields:
+        match (f1, f2):
+            case (str(s1), str(s2)):
+                merged.append(s1 if s1 else s2)
+            case ([*l1elems], [*l2elems]):
+                merged.append(l1elems + l2elems)
+            case (int(i1), int(i2)):
+                merged.append(i1 if i1 else i2)
+            case _:
+                raise Exception(f"merge_tuplewise: unmergable {f1} / {f2}")
 
-    # throw exception if trying to merge 2 non-empty strings
-    assert all([can_merge(s1, s2) for (s1, s2) in fields])
+    return merged
 
-    return [f1 + f2 for f1, f2 in fields]
 
 
 @dataclass
@@ -99,31 +101,41 @@ class Publication(DblpRepr):
     key: str = ""
     schema: str = ""
     props: t.List[KeyValProp] = field(default_factory=list)
-
+    propd: t.Dict[str, KeyValProp] = field(default_factory=dict)
 
     def merge(self, other: DblpRepr) -> DblpRepr:
-        if isinstance(other, NameSpec):
+        match other:
+            case NameSpec():
 
-            def update(maybe_prop: t.Optional[KeyValProp]) -> KeyValProp:
-                if maybe_prop and isinstance(maybe_prop.value, t.List):
-                    return replace(maybe_prop, value=maybe_prop.value + [other])
-                return KeyValProp(other.name_type, [other])
+                def update(prop: KeyValProp) -> KeyValProp:
+                    match prop:
+                        case KeyValProp(str(key), value=[*elems]):
+                            return KeyValProp(key, elems + [other])
 
-            return update_prop(self, other.name_type, update)
+                return update_prop_default(
+                    self,
+                    other.name_type,
+                    update,
+                    KeyValProp(other.name_type, [other])
+                )
 
-        if isinstance(other, KeyValProp):
-            if has_prop(self, other):
-                return self
-            return replace(self, props=self.props + [other])
 
-        if isinstance(other, ResourceIdentifier):
-            return replace(self, key=other.value, schema=other.id_scheme)
+            case KeyValProp():
+                if has_prop(self, other):
+                    return self
+                return replace(self, props=self.props + [other])
 
-        if isinstance(other, Publication):
-            pub_type = self.pub_type
-            return Publication(*merge_tuplewise(self, other))
+            case ResourceIdentifier():
+                return replace(self, key=other.value, schema=other.id_scheme)
 
-        raise Exception(f"no suitable combination {self.__class__} / {other.__class__}")
+            case Publication():
+                if self.pub_type == "Publication":
+                    return Publication(*merge_tuplewise(other, self))
+                else:
+                    return Publication(*merge_tuplewise(self, other))
+
+            case _:
+                raise Exception(f"no suitable combination {self.__class__} / {other.__class__}")
 
     def __repr__(self) -> str:
         ps = [str(p) for p in self.props]
@@ -151,6 +163,14 @@ def get_prop(pub: Publication, prop_key: str) -> t.Optional[KeyValProp]:
     return matched_props[0]
 
 
+# def create_or_update_prop(maybe_prop: t.Optional[KeyValProp]) -> KeyValProp:
+#     match maybe_prop:
+#         case None:
+#             return KeyValProp(other.name_type, [other])
+#         case KeyValProp(str(key), value=[*elems]):
+#             return KeyValProp(key, elems + [other])
+
+
 def update_prop(pub: Publication, prop_key: str, f: t.Callable[[t.Optional[KeyValProp]], KeyValProp]) -> Publication:
     updated: t.List[KeyValProp] = []
     for prop in pub.props:
@@ -159,3 +179,39 @@ def update_prop(pub: Publication, prop_key: str, f: t.Callable[[t.Optional[KeyVa
         else:
             updated.append(prop)
     return replace(pub, props=updated)
+
+
+def update_prop_default(
+    pub: Publication, prop_key: str, f: t.Callable[[KeyValProp], KeyValProp], fallback: KeyValProp
+) -> Publication:
+    updated: t.List[KeyValProp] = []
+    found_key = False
+    for prop in pub.props:
+        if prop.key == prop_key:
+            updated.append(f(prop))
+            found_key = True
+        else:
+            updated.append(fallback)
+    if not found_key:
+        updated.append(fallback)
+
+    return replace(pub, props=updated)
+
+@dataclass
+class UpdateOperation(ABC):
+    pass
+
+@dataclass
+class WriteReprField(UpdateOperation):
+    field: str
+    value: t.Any
+    _: KW_ONLY
+    overwrite: bool = True
+
+@dataclass
+class EmitRepr(UpdateOperation):
+    target: Node
+    value: t.Any
+
+
+HandlerType = t.Callable[[Node, Node], t.Optional[UpdateOperation]]

@@ -85,6 +85,28 @@ def test_venue_creation():
     print_tree(tree, all_attrs=True)
 
 
+def test_alt_signature_creation():
+    tuples = """
+        ('DruckP12', 'hasSignature', 'b5', 'signaturePublication', 'https://dblp.org/rec/conf/acl/DruckP12')
+        ('DruckP12', 'hasSignature', 'b5', 'signatureDblpName', 'Gregory Druck')
+        ('DruckP12', 'hasSignature', 'b5', 'signatureCreator', 'https://dblp.org/pid/66/4867')
+        ('DruckP12', 'hasSignature', 'b5', 'signatureOrdinal', '1')
+        ('DruckP12', 'hasSignature', 'b6', 'type', 'https://dblp.org/rdf/schema#AuthorSignature')
+        ('DruckP12', 'hasSignature', 'b6', 'signaturePublication', 'https://dblp.org/rec/conf/acl/DruckP12')
+        ('DruckP12', 'hasSignature', 'b6', 'signatureDblpName', 'Bo Pang')
+        ('DruckP12', 'hasSignature', 'b6', 'signatureCreator', 'https://dblp.org/pid/16/6344')
+        ('DruckP12', 'hasSignature', 'b6', 'signatureOrdinal', '2')
+    """
+
+    tree = get_author_tree_from_string(tuples)
+    signature_node = tree.children[0]
+    rewrite_hasSignature_node(signature_node)
+    print_tree(signature_node, all_attrs=True)
+    [elem1, elem2] = [sig.get_attr("element") for sig in signature_node.children]
+    # TODO write assertions
+    print_xml(elem1)
+    print_xml(elem2)
+
 # ('DruckP12', 'type', 'https://dblp.org/rdf/schema#Inproceedings', )
 # ('DruckP12', 'type', 'https://dblp.org/rdf/schema#Publication', )
 #

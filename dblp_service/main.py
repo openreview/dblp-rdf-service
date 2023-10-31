@@ -11,14 +11,9 @@ from dblp_service.dblp_io.rdf_io.tree_traversal import all_authorship_trees_to_r
 from dblp_service.dblp_io.rdf_io.trees import simplify_urlname
 from dblp_service.lib.predef.log import create_logger
 
-from lib.open_exchange.open_fetch import fetch_profile, fetch_profiles
-from lib.predef.typedefs import Slice
-from lib.predef.config import setenv
-
-# from rdf_io.queries import (
-#     get_author_publication_tree,
-#     run_author_publication_query,
-# )
+from dblp_service.lib.open_exchange.open_fetch import fetch_profile, fetch_profiles
+from dblp_service.lib.predef.typedefs import Slice
+from dblp_service.lib.predef.config import setenv
 
 log = create_logger(__file__)
 
@@ -30,12 +25,20 @@ def cli():
 
 @cli.command()
 @click.argument("author-uri", type=str)
-@click.option("--format", type=click.Choice(["xml", "bibtex"], case_sensitive=True))
+@click.option("--format", type=click.Choice(["xml", "bibtex"], case_sensitive=True), default='bibtex')
 @click.option("--show-tree", is_flag=True, default=False)
 @click.option("--show-repr", is_flag=True, default=False)
-def show_authorship(author_uri: str, format: str, show_tree: bool, show_repr: bool):
-    log.info("getting pub")
+@click.option("--choose-pub", type=int, default=0)
+def show_authorship(author_uri: str, format: str, show_tree: bool, show_repr: bool, choose_pub: int):
     tree = get_author_publication_tree(author_uri)
+    pub_count = len(tree.children)
+    log.info(f"Publication Count: {pub_count}")
+    if choose_pub > 0:
+        if choose_pub > pub_count:
+            print(f"Specify pub. number <= {pub_count-1}")
+        child = tree.children[choose_pub]
+        print(f"Only processing publication #{choose_pub}")
+        tree.children = [child]
 
     if show_tree:
         print_tree(tree, all_attrs=True)
@@ -79,7 +82,7 @@ def show_authorship_tuples(author_uri: str, abbrev: bool):
 
 
 def validate_slice(
-    ctx: click.Context, param: click.Parameter, value: t.Optional[t.Tuple[int, int]]
+    ctx: click.Context, _parm: click.Parameter, value: t.Optional[t.Tuple[int, int]]
 ) -> t.Optional[Slice]:
     if value is None:
         return None

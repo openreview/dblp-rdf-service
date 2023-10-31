@@ -11,8 +11,9 @@ from bibtexparser.model import (
     Entry,
     Field,
 )
-from dblp_service.dblp_io.rdf_io.dblp_repr import DblpRepr, Publication
-from dblp_service.dblp_io.rdf_io.tree_traversal import all_authorship_trees_to_reprs
+
+from dblp_service.dblp_io.rdf_io.dblp_repr_alt import DblpRepr, Publication
+from dblp_service.dblp_io.rdf_io.tree_traversal_alt import all_authorship_trees_to_reprs
 
 from dblp_service.lib.predef.log import create_logger
 
@@ -33,21 +34,15 @@ def dblp_repr_to_bibtex(repr: DblpRepr) -> Entry:
     assert isinstance(repr, Publication)
     fields: t.List[Field] = []
 
-    for prop in repr.props:
-        value = prop.value
-        if isinstance(value, t.List):
-            key = prop.key
-            fields.append(Field(key, value))
-        else:  # str
-            if prop.key in [f.key for f in fields]:
-                continue
-            fields.append(Field(prop.key, value))
+    entry_key = next_fake_key()
+    entry_type = "TODO"
 
-    key = repr.key or next_fake_key()
-    entry_type = repr.pub_type or "none"
+    for key, value in repr.items():
+        fields.append(Field(key, value))
+
     entry = Entry(
         entry_type=entry_type,
-        key=key,
+        key=entry_key,
         fields=fields,
     )
     return entry

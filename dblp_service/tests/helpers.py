@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
 
 from dataclasses import dataclass
-from bibtexparser import Library, parse_string
-from bibtexparser.middlewares.names import SeparateCoAuthors
-from bibtexparser.model import Entry
+from bibtexparser import Library, parse_string  # type: ignore
+from bibtexparser.middlewares.names import SeparateCoAuthors  # type: ignore
+from bibtexparser.model import Entry  # type: ignore
 from bigtree.node.node import Node
 import typing as t
 from bigtree.tree.export import print_tree
 
 from icecream import ic
-from rich.pretty import pprint, pretty_repr
+from rich.pretty import pprint
 from dblp_service.dblp_io.bibtex_output.bibtex_transform import dblp_repr_to_bibtex, repr_to_bibtex_str
 
 from dblp_service.dblp_io.rdf_io.queries import AuthorTuple, create_tree_from_tuples
-from dblp_service.dblp_io.rdf_io.tree_traversal import authorship_tree_to_dblp_repr
+from dblp_service.dblp_io.rdf_io.tree_traversal_alt import authorship_tree_to_dblp_repr
 
 
 def create_tree_from_tuplestrs(strs: t.List[str]) -> Node:
@@ -32,6 +32,7 @@ def get_author_tree_from_string(block: str) -> Node:
     lines = [line.strip() for line in block.split("\n") if line.strip()]
     return get_author_tree(lines)
 
+
 @dataclass
 class BibtexOutput:
     tree: Node
@@ -47,9 +48,13 @@ def rdf_to_bibtex(tuplestr: str) -> BibtexOutput:
     dblp_repr = authorship_tree_to_dblp_repr(tree)
     ic()
     pprint(dblp_repr)
-    bibtex_str = repr_to_bibtex_str(dblp_repr)
-    entry = dblp_repr_to_bibtex(dblp_repr)
+    # bibtex_str = repr_to_bibtex_str(dblp_repr)
+    # entry = dblp_repr_to_bibtex(dblp_repr)
+    entry = Entry(entry_type="none", key="none", fields=[])
+    bibtex_str = "TODO"
+
     return BibtexOutput(tree=tree, tree_str="", entry=entry, bibtex_str=bibtex_str)
+    # return BibtexOutput(tree=tree, tree_str="", bibtex_str="todo")
 
 
 def assert_fields_match(field: str, actual: Entry, expected: Entry):
@@ -61,6 +66,7 @@ def assert_fields_match(field: str, actual: Entry, expected: Entry):
 
     assert actual_value == expected_value
 
+
 def bibtex_str_to_library(bibtex_str: str) -> Library:
     return parse_string(
         bibtex_str,
@@ -68,6 +74,7 @@ def bibtex_str_to_library(bibtex_str: str) -> Library:
             SeparateCoAuthors(allow_inplace_modification=True),
         ],
     )
+
 
 def rdf_blocks_to_entry(rdf_blocks: t.List[str]) -> Entry:
     rdf = "\n".join(rdf_blocks)

@@ -90,6 +90,13 @@ def get_author_publication_tree(authorURI: str) -> Node:
 
 
 def create_tree_from_tuples(tuples: t.List[AuthorTuple]) -> Node:
+    """Create tree one path at a time.
+
+    Assumption is  that using '|' as  a separator between URLs  (the most common
+    node values),  will not create  a conflict by appearing  in any URLs.  If it
+    does, this will create a bug.
+
+    """
     sep = "|"
     root: Node = Node("root")
     for tuple in tuples:

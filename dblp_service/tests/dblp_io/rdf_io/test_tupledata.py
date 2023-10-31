@@ -33,7 +33,6 @@ AUTHOR_1_TUPLES = dedent(
     ('https://dblp.org/rec/conf/acl/DruckGG11', pred='https://dblp.org/rdf/schema#hasSignature', obj='b8', bpred='https://dblp.org/rdf/schema#signatureCreator', bobj='https://dblp.org/pid/66/4867')
     ('https://dblp.org/rec/conf/acl/DruckGG11', pred='https://dblp.org/rdf/schema#hasSignature', obj='b8', bpred='https://dblp.org/rdf/schema#signatureOrdinal', bobj='1')
     ('https://dblp.org/rec/conf/acl/DruckGG11', pred='https://dblp.org/rdf/schema#hasSignature', obj='b8', bpred='isA', bobj='https://dblp.org/rdf/schema#AuthorSignature')
-    ('https://dblp.org/rec/conf/acl/DruckGG11', pred='https://dblp.org/rdf/schema#hasSignature', obj='b8', bpred='isA', bobj='https://dblp.org/rdf/schema#AuthorSignature')
 """
 )
 

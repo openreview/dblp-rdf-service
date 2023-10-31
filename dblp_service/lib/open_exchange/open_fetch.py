@@ -2,7 +2,7 @@ from concurrent.futures import Future
 from dataclasses import asdict
 from pprint import pprint
 from typing import Any, Iterator, TypeVar, cast
-from typing import Optional, List
+from typing import Optional, List, TypeAlias
 
 import requests
 from requests import Response
@@ -25,7 +25,7 @@ from .note_schemas import Note, load_notes
 
 logger = create_logger(__file__)
 
-Session = FuturesSession
+Session: TypeAlias = FuturesSession
 cached_client: Optional[op.Client] = None
 
 
