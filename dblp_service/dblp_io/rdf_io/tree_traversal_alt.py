@@ -5,6 +5,7 @@ import typing as t
 
 from bigtree.node.node import Node
 from bigtree.tree.export import print_tree
+from dblp_service.dblp_io.rdf_io.dblp_repr import UpdateOperation
 from dblp_service.dblp_io.rdf_io.dblp_repr_alt import AppendField, DblpRepr, HandlerType, Publication, WriteReprField, EmitRepr
 from dblp_service.dblp_io.rdf_io.tree_traverse_handlers import AuthorPropertyHandlers
 from dblp_service.dblp_io.rdf_io.trees import iter_subject_triples, simplify_urlname
@@ -51,6 +52,27 @@ def get_hasA_handler(
         return func
 
 
+def run_op(op: object, nsubj: Node):
+    match op:
+        case WriteReprField(field, value, overwrite=do_overwrite):
+            if do_overwrite:
+                elem = nsubj.get_attr('elem')
+                elem[field] = value
+
+        case AppendField(field, value):
+            elem: DblpRepr = nsubj.get_attr('elem')
+            elem.setdefault(field, []).append(value)
+
+
+        case EmitRepr(target, value, replace=doreplace):
+            if doreplace:
+                target.set_attrs(dict(elem=value))
+
+        case _:
+            pass
+
+
+
 def authorship_tree_to_dblp_repr(root: Node) -> DblpRepr:
     """
     Traverse the authorship tree and return an intermediate encoding.
@@ -62,8 +84,6 @@ def authorship_tree_to_dblp_repr(root: Node) -> DblpRepr:
         DblpRepr: The representation of the authorship tree.
     """
     handlers = AuthorPropertyHandlers()
-    print("Starting tree:")
-    print_tree(root, all_attrs=True)
     init_pub = Publication()
     root.set_attrs(dict(elem=init_pub))
 
@@ -74,16 +94,7 @@ def authorship_tree_to_dblp_repr(root: Node) -> DblpRepr:
 
         if func := get_isA_handler(nobj, handlers):
             if op := func(nsubj, nobj):
-                match op:
-                    case WriteReprField(field, value):
-                        elem = nsubj.get_attr('elem')
-                        elem[field] = value
-
-                    case EmitRepr(target, value): # TODO make this Emit(...)?
-                        target.set_attrs(dict(elem=value))
-
-                    case _:
-                        pass
+                run_op(op, nsubj)
 
     # Second time through, handle the 'hasA' properties
     for nsubj, hasA_rel, nobj in iter_subject_triples(root):
@@ -92,22 +103,9 @@ def authorship_tree_to_dblp_repr(root: Node) -> DblpRepr:
 
         if func := get_hasA_handler(hasA_rel, handlers):
             if op := func(hasA_rel, nobj):
-                match op:
-                    case WriteReprField(field, value):
-                        elem: DblpRepr = nsubj.get_attr('elem')
-                        elem[field] = value
-
-                    case AppendField(field, value):
-                        elem: DblpRepr = nsubj.get_attr('elem')
-                        elem.setdefault(field, []).append(value)
-
-                    case _:
-                        pass
+                run_op(op, nsubj)
 
     root_entry = root.get_attr("elem")
-
-    print(f"End tree {root.node_name}")
-    print("\n")
 
     assert root_entry is not None
     return root_entry

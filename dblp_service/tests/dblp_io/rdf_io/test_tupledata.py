@@ -87,7 +87,7 @@ TITLE_VENUE_TUPLES = dedent(
     """
 )
 
-# Tuple data used to define e.g., @inproceedings{DBLP:conf/acl/DruckGG11
+# Tuple data used to define publication type e.g., @inproceedings|@article|@book/etc.{
 PUBLICATION_ID_TUPLES = dedent(
     """
     ('https://dblp.org/rec/conf/acl/DruckGG11', pred='https://dblp.org/rdf/schema#bibtexType', obj='http://purl.org/net/nknouf/ns/bibtex#Inproceedings', bpred=None, bobj=None)
@@ -95,6 +95,12 @@ PUBLICATION_ID_TUPLES = dedent(
     ('https://dblp.org/rec/conf/acl/DruckGG11', pred='http://www.w3.org/1999/02/22-rdf-syntax-ns#type', obj='https://dblp.org/rdf/schema#Publication', bpred=None, bobj=None)
     ('https://dblp.org/rec/conf/acl/DruckGG11', pred='isA', obj='https://dblp.org/rdf/schema#Inproceedings', bpred=None, bobj=None)
     ('https://dblp.org/rec/conf/acl/DruckGG11', pred='isA', obj='https://dblp.org/rdf/schema#Publication', bpred=None, bobj=None)
+    """
+)
+
+# Tuple data used to define key e.g., @...{DBLP:conf/acl/DruckGG11
+RESOURCE_IDENTIFIER_TUPLES = dedent(
+    """
     ('https://dblp.org/rec/conf/acl/DruckGG11', pred='http://purl.org/spar/datacite/hasIdentifier', obj='b7', bpred='http://www.w3.org/1999/02/22-rdf-syntax-ns#type', bobj='http://purl.org/spar/datacite/ResourceIdentifier')
     ('https://dblp.org/rec/conf/acl/DruckGG11', pred='http://purl.org/spar/datacite/hasIdentifier', obj='b7', bpred='http://purl.org/spar/literal/hasLiteralValue', bobj='conf/acl/DruckGG11')
     ('https://dblp.org/rec/conf/acl/DruckGG11', pred='http://purl.org/spar/datacite/hasIdentifier', obj='b7', bpred='http://purl.org/spar/datacite/usesIdentifierScheme', bobj='http://purl.org/spar/datacite/dblp-record')
