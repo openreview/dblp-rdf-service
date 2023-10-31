@@ -25,7 +25,7 @@ def cli():
 
 @cli.command()
 @click.argument("author-uri", type=str)
-@click.option("--format", type=click.Choice(["xml", "bibtex"], case_sensitive=True), default='bibtex')
+@click.option("--format", type=click.Choice(["xml", "bibtex"], case_sensitive=True), default="bibtex")
 @click.option("--show-tree", is_flag=True, default=False)
 @click.option("--show-repr", is_flag=True, default=False)
 @click.option("--choose-pub", type=int, default=0)
@@ -38,7 +38,7 @@ def show_authorship(author_uri: str, format: str, show_tree: bool, show_repr: bo
             print(f"Specify pub. number <= {pub_count-1}")
         child = tree.children[choose_pub]
         print(f"Only processing publication #{choose_pub}")
-        tree.children = [child]
+        tree.children = (child,)
 
     if show_tree:
         print_tree(tree, all_attrs=True)
@@ -76,9 +76,8 @@ def show_authorship_tree(author_uri: str, pub_num: int):
 def show_authorship_tuples(author_uri: str, abbrev: bool):
     tuples = run_author_publication_query(author_uri)
     for tuple in tuples:
-        if abbrev:
-            tuple = [simplify_urlname(t) for t in tuple if t]
-        print(tuple)
+        printable = [(simplify_urlname(t) if abbrev else t) for t in tuple if t]
+        print(printable)
 
 
 def validate_slice(

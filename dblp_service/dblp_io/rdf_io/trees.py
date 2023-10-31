@@ -25,6 +25,7 @@ def get_tree_attr(node: Node, keypat: str) -> t.Optional[str]:
     for chnode in node.children:
         if is_tree_attr_node(chnode) and match_attr_node(chnode, keypat):
             return chnode.children[0].node_name
+    return None
 
 
 def get_attr_value(node: Node) -> t.Optional[str]:
@@ -96,9 +97,9 @@ def iter_subject_triples(sub_node: Node) -> t.Generator[SubjectRelObjectNodes, N
 
 
 def get_nth_descendent(node: Node, n: int) -> t.Optional[Node]:
-    desc = node
+    desc: t.Optional[Node] = node
     for _ in range(n):
         if desc is None:
-            return
+            return None
         desc = desc.children[0] if desc.children else None
     return desc

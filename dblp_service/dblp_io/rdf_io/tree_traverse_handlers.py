@@ -7,7 +7,7 @@ to another format, e.g., XML or bibtex.
 """
 
 from bigtree.node.node import Node
-from dblp_service.dblp_io.rdf_io.dblp_repr_alt import (
+from dblp_service.dblp_io.rdf_io.dblp_repr import (
     AppendField,
     Publication,
     PersonName,

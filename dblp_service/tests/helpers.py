@@ -13,7 +13,7 @@ from rich.pretty import pprint
 from dblp_service.dblp_io.bibtex_output.bibtex_transform import dblp_repr_to_bibtex, repr_to_bibtex_str
 
 from dblp_service.dblp_io.rdf_io.queries import AuthorTuple, create_tree_from_tuples
-from dblp_service.dblp_io.rdf_io.tree_traversal_alt import authorship_tree_to_dblp_repr
+from dblp_service.dblp_io.rdf_io.tree_traversal import authorship_tree_to_dblp_repr
 
 
 def create_tree_from_tuplestrs(strs: t.List[str]) -> Node:

@@ -63,7 +63,7 @@ class Zipper(Generic[T]):
         if len(l) == 0:
             return None
 
-        pre = []
+        pre: List[T] = []
         post = l[1:]
         focus = l[0]
         return cls(pre=pre, post=post, focus=focus)

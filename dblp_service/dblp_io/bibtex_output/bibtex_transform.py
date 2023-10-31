@@ -12,8 +12,8 @@ from bibtexparser.model import (
     Field,
 )
 
-from dblp_service.dblp_io.rdf_io.dblp_repr_alt import DblpRepr, Publication
-from dblp_service.dblp_io.rdf_io.tree_traversal_alt import all_authorship_trees_to_reprs
+from dblp_service.dblp_io.rdf_io.dblp_repr import DblpRepr, Publication
+from dblp_service.dblp_io.rdf_io.tree_traversal import all_authorship_trees_to_reprs
 
 from dblp_service.lib.predef.log import create_logger
 
