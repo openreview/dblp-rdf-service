@@ -28,16 +28,16 @@ def cli():
 @click.option("--format", type=click.Choice(["xml", "bibtex"], case_sensitive=True), default="bibtex")
 @click.option("--show-tree", is_flag=True, default=False)
 @click.option("--show-repr", is_flag=True, default=False)
-@click.option("--choose-pub", type=int, default=0)
-def show_authorship(author_uri: str, format: str, show_tree: bool, show_repr: bool, choose_pub: int):
+@click.option("--pub-index", type=int, default=0)
+def show_authorship(author_uri: str, format: str, show_tree: bool, show_repr: bool, pub_index: int):
     tree = get_author_publication_tree(author_uri)
     pub_count = len(tree.children)
     log.info(f"Publication Count: {pub_count}")
-    if choose_pub > 0:
-        if choose_pub > pub_count:
+    if pub_index > 0:
+        if pub_index > pub_count:
             print(f"Specify pub. number <= {pub_count-1}")
-        child = tree.children[choose_pub]
-        print(f"Only processing publication #{choose_pub}")
+        child = tree.children[pub_index]
+        print(f"Only processing publication #{pub_index}")
         tree.children = (child,)
 
     if show_tree:
@@ -78,26 +78,6 @@ def show_authorship_tuples(author_uri: str, abbrev: bool):
     for tuple in tuples:
         printable = [(simplify_urlname(t) if abbrev else t) for t in tuple if t]
         print(printable)
-
-
-def validate_slice(
-    ctx: click.Context, _parm: click.Parameter, value: t.Optional[t.Tuple[int, int]]
-) -> t.Optional[Slice]:
-    if value is None:
-        return None
-    return Slice(start=value[0], length=value[1])
-
-
-@cli.command()
-@click.option("--slice", type=(int, int), callback=validate_slice)
-def profiles(slice: Slice):
-    """Fetch and display a list of user profiles from OpenReview"""
-
-    setenv("dev")
-    profiles = fetch_profiles(slice=slice)
-    for p in profiles:
-        names = p.content.names
-        print(f"Profile: {names}")
 
 
 @cli.command()

@@ -1,3 +1,4 @@
+from pprint import pp
 from bibtexparser import Library, write_string
 from bibtexparser.middlewares.names import MergeCoAuthors
 from bibtexparser.middlewares import LatexEncodingMiddleware
@@ -15,6 +16,7 @@ from dblp_service.tests.dblp_io.rdf_io.test_tupledata import (
     AUTHOR_ID_TUPLES,
     DRUCK_BIBTEX_ENTRY,
     PUBLICATION_ID_TUPLES,
+    RESOURCE_IDENTIFIER_TUPLES,
     TITLE_VENUE_TUPLES,
 )
 
@@ -45,6 +47,7 @@ def test_bibtex_signature():
 def test_bibtex_full():
     tuples = f"""
     {PUBLICATION_ID_TUPLES}
+    {RESOURCE_IDENTIFIER_TUPLES}
     {TITLE_VENUE_TUPLES}
     {AUTHOR_1_TUPLES}
     {AUTHOR_2_TUPLES}
@@ -55,7 +58,9 @@ def test_bibtex_full():
     tree = get_author_tree_from_string(tuples)
 
     bibtex_entry = authorship_tree_to_dblp_repr(tree)
+    pp(bibtex_entry)
     entry = dblp_repr_to_bibtex(bibtex_entry)
+    pp(entry)
     library = Library()
 
     library.add(entry)

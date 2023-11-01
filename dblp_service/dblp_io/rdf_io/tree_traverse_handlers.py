@@ -1,8 +1,7 @@
 """Tree node visitors for constructing authorship output.
 
-Classes implement functions that match the properties contained
-in authorship trees, to be called when transforming the tree
-to another format, e.g., XML or bibtex.
+Handler methods  that match the  URL-encoded properties contained  in authorship
+trees, dynamically called to generate intermediate representation objects.
 
 """
 
@@ -12,7 +11,6 @@ from dblp_service.dblp_io.rdf_io.dblp_repr import (
     Publication,
     PersonName,
     ResourceIdentifier,
-    SetSimpleKeyValue,
     WriteReprField,
     EmitRepr,
 )
@@ -22,11 +20,10 @@ from dblp_service.lib.predef.utils import to_int
 
 
 class SignaturePropertyHandlers:
-    def isA_Signature(self, entity: Node, prop_val: Node):
+    def isA_Signature(self, _: Node, __: Node):
         """The information that links a publication to a creator."""
-        # add empty signature, overwritable
 
-    def isA_AuthorSignature(self, entity: Node, prop_val: Node):
+    def isA_AuthorSignature(self, entity: Node, _: Node):
         """The information that links a publication to an author.
 
         Expected input tree shape:
@@ -46,8 +43,8 @@ class SignaturePropertyHandlers:
            isA      ->  │   └── isA
            prop_val ->  │       └── https://dblp.org/rdf/schema#AuthorSignature
 
-        Output:
-          Set entity b2.entry = PersonName("author")
+        Result:
+          Emits PersonName(...), which is then attached to entity node
         """
         return EmitRepr(entity, PersonName(name_type="author"))
 
@@ -74,12 +71,12 @@ class SignaturePropertyHandlers:
                   │   │   ├── https://dblp.org/rdf/schema#signatureDblpName
 
         """
-        # append('Signature.{name_type}', name_spec)
-        # return prop_val.get_attr("entry")
         return AppendField("author", prop_val.get_attr("elem"))
 
-    # def hasA_signatureCreator(self, rel: Node, prop_val: Node):
-    #     """A linked creator of the publication."""
+    def hasA_signatureCreator(self, rel: Node, prop_val: Node):
+        """A linked creator of the publication."""
+        return WriteReprField("pid", '/some/pid/todo')
+
     # def hasA_signatureOrcid(self, rel: Node, prop_val: Node):
     #     """An ORCID that links the publication to a creator."""
     # def hasA_signaturePublication(self, rel: Node, prop_val: Node):
@@ -204,11 +201,11 @@ class SimpleKeyValueFields:
         """The title of the publication."""
         return WriteReprField(simplify_urlname(rel.node_name), prop_val.node_name)
 
-    def hasA_yearOfEvent(self, rel: Node, prop_val: Node):
+    def hasA_yearOfEvent(self, _: Node, prop_val: Node):
         """The year the conference or workshop contribution has been presented."""
         return WriteReprField("year", prop_val.node_name)
 
-    def hasA_yearOfPublication(self, rel: Node, prop_val: Node):
+    def hasA_yearOfPublication(self, _: Node, prop_val: Node):
         """The year the publication's issue or volume has been published."""
         return WriteReprField("year", prop_val.node_name)
 
@@ -217,7 +214,78 @@ class SimpleKeyValueFields:
         return WriteReprField(simplify_urlname(rel.node_name), prop_val.node_name)
 
 
-class AuthorPropertyHandlers(SignaturePropertyHandlers, PublicationTypeHandlers, ResourceIdHandlers):
+class VenuePropertyHandlers:
+    def hasA_documentPage(self, rel: Node, prop_val: Node):
+        """The URL of the electronic edition of the publication."""
+        return WriteReprField("url", prop_val.node_name)
+
+
+    def hasA_primarydocumentPage(self, rel: Node, prop_val: Node):
+        """The primary URL of the electronic edition of the publication."""
+        return WriteReprField("url", prop_val.node_name)
+
+    def hasA_pagination(self, rel: Node, prop_val: Node):
+        """The page numbers where the publication can be found."""
+        return WriteReprField("pages", prop_val.node_name)
+
+    def hasA_listedOnTocPage(self, rel: Node, prop_val: Node):
+        """The url of the dblp table of contents page listing this publication."""
+
+    def hasA_publishedIn(self, rel: Node, prop_val: Node):
+        """The name of the series, the journal, or the book in which the
+        publication has been published. (Remark: This property currently just
+        gives literal xsd:string values until journals and conference series are
+        modelled as proper entities.)
+        """
+    def hasA_publishedInSeries(self, rel: Node, prop_val: Node):
+        """The name of the series in which the publication has been published.
+        (Remark: This is currently an intermediate property that will be removed
+        once journals and conference series are modelled as proper entities.)
+        """
+
+    def hasA_publishedInSeriesVolume(self, rel: Node, prop_val: Node):
+        """The volume of the series in which the publication has been published.
+        (Remark: This is currently an intermediate property that will be removed
+        once journals and conference series are modelled as proper entities.)"""
+
+    def hasA_publishedInJournal(self, rel: Node, prop_val: Node):
+        """The name of the journal in which the publication has been published.
+        (Remark: This is currently an intermediate property that will be removed
+        once journals and conference series are modelled as proper entities.)
+        """
+
+    def hasA_publishedInJournalVolume(self, rel: Node, prop_val: Node):
+        """The volume of the journal in which the publication has been
+        published. (Remark: This is currently an intermediate property that will
+        be removed once journals and conference series are modelled as proper
+        entities.)"""
+
+    def hasA_publishedInJournalVolumeIssue(self, rel: Node, prop_val: Node):
+        """The issue of the journal in which the publication has been published.
+        (Remark: This is currently an intermediate property that will be removed
+        once journals and conference series are modelled as proper entities.)
+        """
+
+    def hasA_publishedInBook(self, rel: Node, prop_val: Node):
+        """The name of the book in which the publication has been published.
+        (Remark: This is currently an intermediate property that will be removed
+        once journals and conference series are modelled as proper entities.)
+        """
+
+    def hasA_publishedInBookChapter(self, rel: Node, prop_val: Node):
+        """The chapter of the book in which the publication has been published.
+        (Remark: This is currently an intermediate property that will be removed
+        once journals and conference series are modelled as proper entities.)
+        """
+
+
+class AuthorPropertyHandlers(
+    SignaturePropertyHandlers,
+    PublicationTypeHandlers,
+    ResourceIdHandlers,
+    SimpleKeyValueFields,
+    VenuePropertyHandlers,
+):
     pass
 
 
@@ -314,7 +382,6 @@ class AuthorPropertyHandlers(SignaturePropertyHandlers, PublicationTypeHandlers,
 ###         of a publication is undetermined.
 ###         """
 ###
-###
 ###     def hasA_createdBy(self, rel: Node, prop_val: Node):
 ###         """The publication is created by the creator."""
 ###
@@ -327,65 +394,8 @@ class AuthorPropertyHandlers(SignaturePropertyHandlers, PublicationTypeHandlers,
 ###     def hasA_numberOfCreators(self, rel: Node, prop_val: Node):
 ###         """The number of creators who created this publication."""
 ###
-###     def hasA_documentPage(self, rel: Node, prop_val: Node):
-###         """The URL of the electronic edition of the publication."""
 ###
-###     def hasA_primarydocumentPage(self, rel: Node, prop_val: Node):
-###         """The primary URL of the electronic edition of the publication."""
 ###
-###     def hasA_listedOnTocPage(self, rel: Node, prop_val: Node):
-###         """The url of the dblp table of contents page listing this publication."""
-###
-###     def hasA_publishedIn(self, rel: Node, prop_val: Node):
-###         """The name of the series, the journal, or the book in which the
-###         publication has been published. (Remark: This property currently just
-###         gives literal xsd:string values until journals and conference series are
-###         modelled as proper entities.)
-###         """
-###
-###     def hasA_publishedInSeries(self, rel: Node, prop_val: Node):
-###         """The name of the series in which the publication has been published.
-###         (Remark: This is currently an intermediate property that will be removed
-###         once journals and conference series are modelled as proper entities.)
-###         """
-###
-###     def hasA_publishedInSeriesVolume(self, rel: Node, prop_val: Node):
-###         """The volume of the series in which the publication has been published.
-###         (Remark: This is currently an intermediate property that will be removed
-###         once journals and conference series are modelled as proper entities.)"""
-###
-###     def hasA_publishedInJournal(self, rel: Node, prop_val: Node):
-###         """The name of the journal in which the publication has been published.
-###         (Remark: This is currently an intermediate property that will be removed
-###         once journals and conference series are modelled as proper entities.)
-###         """
-###
-###     def hasA_publishedInJournalVolume(self, rel: Node, prop_val: Node):
-###         """The volume of the journal in which the publication has been
-###         published. (Remark: This is currently an intermediate property that will
-###         be removed once journals and conference series are modelled as proper
-###         entities.)"""
-###
-###     def hasA_publishedInJournalVolumeIssue(self, rel: Node, prop_val: Node):
-###         """The issue of the journal in which the publication has been published.
-###         (Remark: This is currently an intermediate property that will be removed
-###         once journals and conference series are modelled as proper entities.)
-###         """
-###
-###     def hasA_publishedInBook(self, rel: Node, prop_val: Node):
-###         """The name of the book in which the publication has been published.
-###         (Remark: This is currently an intermediate property that will be removed
-###         once journals and conference series are modelled as proper entities.)
-###         """
-###
-###     def hasA_publishedInBookChapter(self, rel: Node, prop_val: Node):
-###         """The chapter of the book in which the publication has been published.
-###         (Remark: This is currently an intermediate property that will be removed
-###         once journals and conference series are modelled as proper entities.)
-###         """
-###
-###     def hasA_pagination(self, rel: Node, prop_val: Node):
-###         """The page numbers where the publication can be found."""
 ###
 ###     def hasA_monthOfPublication(self, rel: Node, prop_val: Node):
 ###         """The month the publication has been published."""

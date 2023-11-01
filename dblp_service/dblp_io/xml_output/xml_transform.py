@@ -2,10 +2,13 @@
 """
 
 
+import typing as t
+
 import xml.etree.ElementTree as ET
 from bigtree import Node  # type: ignore
 from bigtree.utils.iterators import preorder_iter
 from dblp_service.dblp_io.rdf_io.authorship_trees import is_hasSignature_node
+from dblp_service.dblp_io.rdf_io.dblp_repr import DblpRepr, Publication
 
 from dblp_service.dblp_io.rdf_io.trees import (
     get_attr_value,
@@ -17,6 +20,35 @@ from dblp_service.dblp_io.rdf_io.trees import (
     match_attr_value,
     set_elem,
 )
+
+
+def dblp_repr_to_xml(repr: DblpRepr) -> ET.Element:
+    assert isinstance(repr, Publication)
+    child_elems: t.List[ET.Element] = []
+
+    entry_key = "Key#0"
+    entry_type = "TODO"
+
+    for key, value in repr.items():
+        match key:
+            case "key":
+                entry_key = value
+            case "type":
+                entry_type = value
+            case "author":
+                for a in value:
+                    pid = a["pid"]
+                    e = ET.Element("author", dict(pid=pid))
+                    e.text = a["fullname"]
+                    child_elems.append(e)
+            case _:
+                pass
+
+    xml_root = ET.Element(entry_type, dict(key=entry_key))
+    for c in child_elems:
+        xml_root.append(c)
+
+    return xml_root
 
 
 def authorship_tree_to_xml(root: Node) -> ET.Element:

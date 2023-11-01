@@ -22,7 +22,6 @@ log = create_logger(__file__)
 
 fake_key = 1
 
-
 def next_fake_key() -> str:
     global fake_key
     k = f"key#{fake_key}"
@@ -38,7 +37,17 @@ def dblp_repr_to_bibtex(repr: DblpRepr) -> Entry:
     entry_type = "TODO"
 
     for key, value in repr.items():
-        fields.append(Field(key, value))
+        match key:
+            case "key":
+                entry_key = value
+            case "type":
+                entry_type = value
+            case "author":
+                names = [ a["fullname"] for a in value ]
+                fields.append(Field(key, names))
+                pass
+            case _:
+                fields.append(Field(key, value))
 
     entry = Entry(
         entry_type=entry_type,
