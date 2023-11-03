@@ -1,0 +1,338 @@
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix bf: <http://id.loc.gov/ontologies/bibframe/> .
+@prefix bibo: <http://purl.org/ontology/bibo/> .
+@prefix bibtex: <http://purl.org/net/nknouf/ns/bibtex#> .
+@prefix cito: <http://purl.org/spar/cito/> .
+@prefix datacite: <http://purl.org/spar/datacite/> .
+@prefix dbo: <http://dbpedia.org/ontology/> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix litre: <http://purl.org/spar/literal/> .
+@prefix locid: <http://id.loc.gov/vocabulary/identifiers/> .
+@prefix locrel: <http://id.loc.gov/vocabulary/relators/> .
+@prefix schema: <https://schema.org/> .
+@prefix wd: <http://www.wikidata.org/entity/> .
+@prefix wdt: <http://www.wikidata.org/prop/direct/> .
+@prefix dblp: <https://dblp.org/rdf/schema#> .
+
+
+<https://dblp.org/rec/reference/vision/X14bd>
+	owl:sameAs <https://doi.org/10.1007/978-0-387-31439-6_100117>, <http://dx.doi.org/10.1007/978-0-387-31439-6_100117> ;
+	rdfs:label "Curvedness. (2014)" ;
+	dblp:doi <https://doi.org/10.1007/978-0-387-31439-6_100117>, <http://dx.doi.org/10.1007/978-0-387-31439-6_100117> ;
+	datacite:hasIdentifier [
+		datacite:usesIdentifierScheme datacite:dblp-record ;
+		litre:hasLiteralValue "reference/vision/X14bd" ;
+		a datacite:ResourceIdentifier
+	], [
+		datacite:usesIdentifierScheme datacite:doi ;
+		litre:hasLiteralValue "10.1007/978-0-387-31439-6_100117" ;
+		a datacite:ResourceIdentifier
+	] ;
+	dblp:title "Curvedness." ;
+	dblp:bibtexType bibtex:Incollection ;
+	dblp:numberOfCreators 0 ;
+	dblp:primaryDocumentPage <https://doi.org/10.1007/978-0-387-31439-6_100117> ;
+	dblp:documentPage <https://doi.org/10.1007/978-0-387-31439-6_100117> ;
+	dblp:listedOnTocPage <https://dblp.org/db/reference/vision/vision2014> ;
+	dblp:pagination "159" ;
+	dblp:publishedIn "Computer Vision, A Reference Guide" ;
+	dblp:publishedInBook "Computer Vision, A Reference Guide" ;
+	dblp:yearOfPublication "2014" ;
+	a dblp:Publication, dblp:Reference .
+
+<https://dblp.org/rec/reference/vision/Singh14>
+	owl:sameAs <https://doi.org/10.1007/978-0-387-31439-6_559>, <http://dx.doi.org/10.1007/978-0-387-31439-6_559> ;
+	rdfs:label "Manish Singh: Transparency and Translucency. (2014)" ;
+	dblp:doi <https://doi.org/10.1007/978-0-387-31439-6_559>, <http://dx.doi.org/10.1007/978-0-387-31439-6_559> ;
+	datacite:hasIdentifier [
+		datacite:usesIdentifierScheme datacite:dblp-record ;
+		litre:hasLiteralValue "reference/vision/Singh14" ;
+		a datacite:ResourceIdentifier
+	], [
+		datacite:usesIdentifierScheme datacite:doi ;
+		litre:hasLiteralValue "10.1007/978-0-387-31439-6_559" ;
+		a datacite:ResourceIdentifier
+	] ;
+	dblp:title "Transparency and Translucency." ;
+	dblp:bibtexType bibtex:Incollection ;
+	dblp:authoredBy <https://dblp.org/pid/78/459-1> ;
+	dblp:numberOfCreators 1 ;
+	dblp:hasSignature [
+		dblp:signatureDblpName "Manish Singh 0001" ;
+		dblp:signatureCreator <https://dblp.org/pid/78/459-1> ;
+		dblp:signatureOrdinal 1 ;
+		dblp:signaturePublication <https://dblp.org/rec/reference/vision/Singh14> ;
+		a dblp:AuthorSignature
+	] ;
+	dblp:primaryDocumentPage <https://doi.org/10.1007/978-0-387-31439-6_559> ;
+	dblp:documentPage <https://doi.org/10.1007/978-0-387-31439-6_559> ;
+	dblp:listedOnTocPage <https://dblp.org/db/reference/vision/vision2014> ;
+	dblp:pagination "815-819" ;
+	dblp:publishedIn "Computer Vision, A Reference Guide" ;
+	dblp:publishedInBook "Computer Vision, A Reference Guide" ;
+	dblp:yearOfPublication "2014" ;
+	a dblp:Publication, dblp:Reference .
+
+<https://dblp.org/rec/reference/vision/X14ii>
+	owl:sameAs <https://doi.org/10.1007/978-0-387-31439-6_100229>, <http://dx.doi.org/10.1007/978-0-387-31439-6_100229> ;
+	rdfs:label "Surface Orientation Histogram (Discrete Version of EGI). (2014)" ;
+	dblp:doi <https://doi.org/10.1007/978-0-387-31439-6_100229>, <http://dx.doi.org/10.1007/978-0-387-31439-6_100229> ;
+	datacite:hasIdentifier [
+		datacite:usesIdentifierScheme datacite:dblp-record ;
+		litre:hasLiteralValue "reference/vision/X14ii" ;
+		a datacite:ResourceIdentifier
+	], [
+		datacite:usesIdentifierScheme datacite:doi ;
+		litre:hasLiteralValue "10.1007/978-0-387-31439-6_100229" ;
+		a datacite:ResourceIdentifier
+	] ;
+	dblp:title "Surface Orientation Histogram (Discrete Version of EGI)." ;
+	dblp:bibtexType bibtex:Incollection ;
+	dblp:numberOfCreators 0 ;
+	dblp:primaryDocumentPage <https://doi.org/10.1007/978-0-387-31439-6_100229> ;
+	dblp:documentPage <https://doi.org/10.1007/978-0-387-31439-6_100229> ;
+	dblp:listedOnTocPage <https://dblp.org/db/reference/vision/vision2014> ;
+	dblp:pagination "781" ;
+	dblp:publishedIn "Computer Vision, A Reference Guide" ;
+	dblp:publishedInBook "Computer Vision, A Reference Guide" ;
+	dblp:yearOfPublication "2014" ;
+	a dblp:Publication, dblp:Reference .
+
+<https://dblp.org/rec/reference/vision/X14m>
+	owl:sameAs <https://doi.org/10.1007/978-0-387-31439-6_100189>, <http://dx.doi.org/10.1007/978-0-387-31439-6_100189> ;
+	rdfs:label "Appearance Scanning. (2014)" ;
+	dblp:doi <https://doi.org/10.1007/978-0-387-31439-6_100189>, <http://dx.doi.org/10.1007/978-0-387-31439-6_100189> ;
+	datacite:hasIdentifier [
+		datacite:usesIdentifierScheme datacite:dblp-record ;
+		litre:hasLiteralValue "reference/vision/X14m" ;
+		a datacite:ResourceIdentifier
+	], [
+		datacite:usesIdentifierScheme datacite:doi ;
+		litre:hasLiteralValue "10.1007/978-0-387-31439-6_100189" ;
+		a datacite:ResourceIdentifier
+	] ;
+	dblp:title "Appearance Scanning." ;
+	dblp:bibtexType bibtex:Incollection ;
+	dblp:numberOfCreators 0 ;
+	dblp:primaryDocumentPage <https://doi.org/10.1007/978-0-387-31439-6_100189> ;
+	dblp:documentPage <https://doi.org/10.1007/978-0-387-31439-6_100189> ;
+	dblp:listedOnTocPage <https://dblp.org/db/reference/vision/vision2014> ;
+	dblp:pagination "36" ;
+	dblp:publishedIn "Computer Vision, A Reference Guide" ;
+	dblp:publishedInBook "Computer Vision, A Reference Guide" ;
+	dblp:yearOfPublication "2014" ;
+	a dblp:Publication, dblp:Reference .
+
+<https://dblp.org/rec/reference/vision/Wong14>
+	owl:sameAs <https://doi.org/10.1007/978-0-387-31439-6_14>, <http://dx.doi.org/10.1007/978-0-387-31439-6_14> ;
+	rdfs:label "Tien-Tsin Wong: Image-Based Lighting. (2014)" ;
+	dblp:doi <https://doi.org/10.1007/978-0-387-31439-6_14>, <http://dx.doi.org/10.1007/978-0-387-31439-6_14> ;
+	datacite:hasIdentifier [
+		datacite:usesIdentifierScheme datacite:dblp-record ;
+		litre:hasLiteralValue "reference/vision/Wong14" ;
+		a datacite:ResourceIdentifier
+	], [
+		datacite:usesIdentifierScheme datacite:doi ;
+		litre:hasLiteralValue "10.1007/978-0-387-31439-6_14" ;
+		a datacite:ResourceIdentifier
+	] ;
+	dblp:title "Image-Based Lighting." ;
+	dblp:bibtexType bibtex:Incollection ;
+	dblp:authoredBy <https://dblp.org/pid/69/220> ;
+	dblp:numberOfCreators 1 ;
+	dblp:hasSignature [
+		dblp:signatureDblpName "Tien-Tsin Wong" ;
+		dblp:signatureCreator <https://dblp.org/pid/69/220> ;
+		dblp:signatureOrdinal 1 ;
+		dblp:signaturePublication <https://dblp.org/rec/reference/vision/Wong14> ;
+		a dblp:AuthorSignature
+	] ;
+	dblp:primaryDocumentPage <https://doi.org/10.1007/978-0-387-31439-6_14> ;
+	dblp:documentPage <https://doi.org/10.1007/978-0-387-31439-6_14> ;
+	dblp:listedOnTocPage <https://dblp.org/db/reference/vision/vision2014> ;
+	dblp:pagination "387-390" ;
+	dblp:publishedIn "Computer Vision, A Reference Guide" ;
+	dblp:publishedInBook "Computer Vision, A Reference Guide" ;
+	dblp:yearOfPublication "2014" ;
+	a dblp:Publication, dblp:Reference .
+
+<https://dblp.org/rec/reference/vision/X14gt>
+	owl:sameAs <https://doi.org/10.1007/978-0-387-31439-6_100172>, <http://dx.doi.org/10.1007/978-0-387-31439-6_100172> ;
+	rdfs:label "Radiometric Camera Calibration. (2014)" ;
+	dblp:doi <https://doi.org/10.1007/978-0-387-31439-6_100172>, <http://dx.doi.org/10.1007/978-0-387-31439-6_100172> ;
+	datacite:hasIdentifier [
+		datacite:usesIdentifierScheme datacite:dblp-record ;
+		litre:hasLiteralValue "reference/vision/X14gt" ;
+		a datacite:ResourceIdentifier
+	], [
+		datacite:usesIdentifierScheme datacite:doi ;
+		litre:hasLiteralValue "10.1007/978-0-387-31439-6_100172" ;
+		a datacite:ResourceIdentifier
+	] ;
+	dblp:title "Radiometric Camera Calibration." ;
+	dblp:bibtexType bibtex:Incollection ;
+	dblp:numberOfCreators 0 ;
+	dblp:primaryDocumentPage <https://doi.org/10.1007/978-0-387-31439-6_100172> ;
+	dblp:documentPage <https://doi.org/10.1007/978-0-387-31439-6_100172> ;
+	dblp:listedOnTocPage <https://dblp.org/db/reference/vision/vision2014> ;
+	dblp:pagination "658" ;
+	dblp:publishedIn "Computer Vision, A Reference Guide" ;
+	dblp:publishedInBook "Computer Vision, A Reference Guide" ;
+	dblp:yearOfPublication "2014" ;
+	a dblp:Publication, dblp:Reference .
+
+<https://dblp.org/rec/reference/vision/Pont14b>
+	owl:sameAs <https://doi.org/10.1007/978-0-387-31439-6_539>, <http://dx.doi.org/10.1007/978-0-387-31439-6_539> ;
+	rdfs:label "Sylvia C. Pont: Surface Roughness. (2014)" ;
+	dblp:doi <https://doi.org/10.1007/978-0-387-31439-6_539>, <http://dx.doi.org/10.1007/978-0-387-31439-6_539> ;
+	datacite:hasIdentifier [
+		datacite:usesIdentifierScheme datacite:dblp-record ;
+		litre:hasLiteralValue "reference/vision/Pont14b" ;
+		a datacite:ResourceIdentifier
+	], [
+		datacite:usesIdentifierScheme datacite:doi ;
+		litre:hasLiteralValue "10.1007/978-0-387-31439-6_539" ;
+		a datacite:ResourceIdentifier
+	] ;
+	dblp:title "Surface Roughness." ;
+	dblp:bibtexType bibtex:Incollection ;
+	dblp:authoredBy <https://dblp.org/pid/99/2633> ;
+	dblp:numberOfCreators 1 ;
+	dblp:hasSignature [
+		dblp:signatureDblpName "Sylvia C. Pont" ;
+		dblp:signatureCreator <https://dblp.org/pid/99/2633> ;
+		dblp:signatureOrcid <https://orcid.org/0000-0002-9834-9600> ;
+		dblp:signatureOrdinal 1 ;
+		dblp:signaturePublication <https://dblp.org/rec/reference/vision/Pont14b> ;
+		a dblp:AuthorSignature
+	] ;
+	dblp:primaryDocumentPage <https://doi.org/10.1007/978-0-387-31439-6_539> ;
+	dblp:documentPage <https://doi.org/10.1007/978-0-387-31439-6_539> ;
+	dblp:listedOnTocPage <https://dblp.org/db/reference/vision/vision2014> ;
+	dblp:pagination "781-782" ;
+	dblp:publishedIn "Computer Vision, A Reference Guide" ;
+	dblp:publishedInBook "Computer Vision, A Reference Guide" ;
+	dblp:yearOfPublication "2014" ;
+	a dblp:Publication, dblp:Reference .
+
+<https://dblp.org/rec/reference/vision/Alexander14>
+	owl:sameAs <https://doi.org/10.1007/978-0-387-31439-6_194>, <http://dx.doi.org/10.1007/978-0-387-31439-6_194> ;
+	rdfs:label "Daniel C. Alexander: Image Registration. (2014)" ;
+	dblp:doi <https://doi.org/10.1007/978-0-387-31439-6_194>, <http://dx.doi.org/10.1007/978-0-387-31439-6_194> ;
+	datacite:hasIdentifier [
+		datacite:usesIdentifierScheme datacite:dblp-record ;
+		litre:hasLiteralValue "reference/vision/Alexander14" ;
+		a datacite:ResourceIdentifier
+	], [
+		datacite:usesIdentifierScheme datacite:doi ;
+		litre:hasLiteralValue "10.1007/978-0-387-31439-6_194" ;
+		a datacite:ResourceIdentifier
+	] ;
+	dblp:title "Image Registration." ;
+	dblp:bibtexType bibtex:Incollection ;
+	dblp:authoredBy <https://dblp.org/pid/37/6152> ;
+	dblp:numberOfCreators 1 ;
+	dblp:hasSignature [
+		dblp:signatureDblpName "Daniel C. Alexander" ;
+		dblp:signatureCreator <https://dblp.org/pid/37/6152> ;
+		dblp:signatureOrdinal 1 ;
+		dblp:signaturePublication <https://dblp.org/rec/reference/vision/Alexander14> ;
+		a dblp:AuthorSignature
+	] ;
+	dblp:primaryDocumentPage <https://doi.org/10.1007/978-0-387-31439-6_194> ;
+	dblp:documentPage <https://doi.org/10.1007/978-0-387-31439-6_194> ;
+	dblp:listedOnTocPage <https://dblp.org/db/reference/vision/vision2014> ;
+	dblp:pagination "380-385" ;
+	dblp:publishedIn "Computer Vision, A Reference Guide" ;
+	dblp:publishedInBook "Computer Vision, A Reference Guide" ;
+	dblp:yearOfPublication "2014" ;
+	a dblp:Publication, dblp:Reference .
+
+<https://dblp.org/rec/reference/vision/Fukui14>
+	owl:sameAs <https://doi.org/10.1007/978-0-387-31439-6_708>, <http://dx.doi.org/10.1007/978-0-387-31439-6_708> ;
+	rdfs:label "Kazuhiro Fukui: Subspace Methods. (2014)" ;
+	dblp:doi <https://doi.org/10.1007/978-0-387-31439-6_708>, <http://dx.doi.org/10.1007/978-0-387-31439-6_708> ;
+	datacite:hasIdentifier [
+		datacite:usesIdentifierScheme datacite:dblp-record ;
+		litre:hasLiteralValue "reference/vision/Fukui14" ;
+		a datacite:ResourceIdentifier
+	], [
+		datacite:usesIdentifierScheme datacite:doi ;
+		litre:hasLiteralValue "10.1007/978-0-387-31439-6_708" ;
+		a datacite:ResourceIdentifier
+	] ;
+	dblp:title "Subspace Methods." ;
+	dblp:bibtexType bibtex:Incollection ;
+	dblp:authoredBy <https://dblp.org/pid/01/1485> ;
+	dblp:numberOfCreators 1 ;
+	dblp:hasSignature [
+		dblp:signatureDblpName "Kazuhiro Fukui" ;
+		dblp:signatureCreator <https://dblp.org/pid/01/1485> ;
+		dblp:signatureOrdinal 1 ;
+		dblp:signaturePublication <https://dblp.org/rec/reference/vision/Fukui14> ;
+		a dblp:AuthorSignature
+	] ;
+	dblp:primaryDocumentPage <https://doi.org/10.1007/978-0-387-31439-6_708> ;
+	dblp:documentPage <https://doi.org/10.1007/978-0-387-31439-6_708> ;
+	dblp:listedOnTocPage <https://dblp.org/db/reference/vision/vision2014> ;
+	dblp:pagination "777-781" ;
+	dblp:publishedIn "Computer Vision, A Reference Guide" ;
+	dblp:publishedInBook "Computer Vision, A Reference Guide" ;
+	dblp:yearOfPublication "2014" ;
+	a dblp:Publication, dblp:Reference .
+
+<https://dblp.org/rec/reference/vision/X14if>
+	owl:sameAs <https://doi.org/10.1007/978-0-387-31439-6_100254>, <http://dx.doi.org/10.1007/978-0-387-31439-6_100254> ;
+	rdfs:label "Structure-from-Motion (SfM). (2014)" ;
+	dblp:doi <https://doi.org/10.1007/978-0-387-31439-6_100254>, <http://dx.doi.org/10.1007/978-0-387-31439-6_100254> ;
+	datacite:hasIdentifier [
+		datacite:usesIdentifierScheme datacite:dblp-record ;
+		litre:hasLiteralValue "reference/vision/X14if" ;
+		a datacite:ResourceIdentifier
+	], [
+		datacite:usesIdentifierScheme datacite:doi ;
+		litre:hasLiteralValue "10.1007/978-0-387-31439-6_100254" ;
+		a datacite:ResourceIdentifier
+	] ;
+	dblp:title "Structure-from-Motion (SfM)." ;
+	dblp:bibtexType bibtex:Incollection ;
+	dblp:numberOfCreators 0 ;
+	dblp:primaryDocumentPage <https://doi.org/10.1007/978-0-387-31439-6_100254> ;
+	dblp:documentPage <https://doi.org/10.1007/978-0-387-31439-6_100254> ;
+	dblp:listedOnTocPage <https://dblp.org/db/reference/vision/vision2014> ;
+	dblp:pagination "775" ;
+	dblp:publishedIn "Computer Vision, A Reference Guide" ;
+	dblp:publishedInBook "Computer Vision, A Reference Guide" ;
+	dblp:yearOfPublication "2014" ;
+	a dblp:Publication, dblp:Reference .
+
+<https://dblp.org/rec/reference/vision/X14w>
+	owl:sameAs <https://doi.org/10.1007/978-0-387-31439-6_100211>, <http://dx.doi.org/10.1007/978-0-387-31439-6_100211> ;
+	rdfs:label "Body Configuration Recovery. (2014)" ;
+	dblp:doi <https://doi.org/10.1007/978-0-387-31439-6_100211>, <http://dx.doi.org/10.1007/978-0-387-31439-6_100211> ;
+	datacite:hasIdentifier [
+		datacite:usesIdentifierScheme datacite:dblp-record ;
+		litre:hasLiteralValue "reference/vision/X14w" ;
+		a datacite:ResourceIdentifier
+	], [
+		datacite:usesIdentifierScheme datacite:doi ;
+		litre:hasLiteralValue "10.1007/978-0-387-31439-6_100211" ;
+		a datacite:ResourceIdentifier
+	] ;
+	dblp:title "Body Configuration Recovery." ;
+	dblp:bibtexType bibtex:Incollection ;
+	dblp:numberOfCreators 0 ;
+	dblp:primaryDocumentPage <https://doi.org/10.1007/978-0-387-31439-6_100211> ;
+	dblp:documentPage <https://doi.org/10.1007/978-0-387-31439-6_100211> ;
+	dblp:listedOnTocPage <https://dblp.org/db/reference/vision/vision2014> ;
+	dblp:pagination "59" ;
+	dblp:publishedIn "Computer Vision, A Reference Guide" ;
+	dblp:publishedInBook "Computer Vision, A Reference Guide" ;
+	dblp:yearOfPublication "2014" ;
+	a dblp:Publication, dblp:Reference .
+
