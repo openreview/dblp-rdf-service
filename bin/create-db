@@ -1,8 +1,48 @@
 #!/bin/bash
 
-export JENA_HOME=apache-jena-4.9.0
-export FUSEKI_HOME=apache-jena-fuseki-4.9.0
-APACHE_JENA_BIN=apache-jena-4.9.0/bin
-JENA_FUSEKI_JAR=apache-jena-fuseki-4.9.0/fuseki-server.jar
+# Check if required number of arguments are passed
+if [ "$#" -ne 3 ]; then
+    echo "Usage: $0 <file:*.ttl> <graph-name> <db-root-dir>"
+    exit 1
+fi
 
-$APACHE_JENA_BIN/tdb2.xloader --loc=data/dataForTDB dblp.ttl
+ttlfile="$1"
+graphname="$2"
+dbroot="$3"
+graphurl="https://openreview.org/graph#${graphname}"
+dbloc="${dbroot}"
+
+if [[ -z "$FUSEKI_HOME" ]]; then
+    echo "FUSEKI_HOME must be set"
+    ##
+    exit 1
+fi
+if [[ -z "$JENA_HOME" ]]; then
+    echo "JENA_HOME must be set"
+    ##
+    exit 1
+fi
+
+if [[ ! -f "$ttlfile" ]]; then
+    echo "Arg 1 <ttl-file> must be a .ttl file"
+    exit 1
+fi
+
+if [[ ! -d "$dbroot" ]]; then
+    echo "Arg 3 <dbroot> must be existing dir"
+    exit 1
+fi
+
+if [[ -e "$dbloc" ]]; then
+    echo "DB at path $dbloc already exists. Loading additional data"
+else
+    echo "Creating DB at path $dbloc"
+    mkdir "$dbloc"
+fi
+
+
+APACHE_JENA_BIN="$JENA_HOME/bin"
+JENA_FUSEKI_JAR="$JENA_HOME/fuseki-server.jar"
+
+# $APACHE_JENA_BIN/tdb2.xloader --loc=data/dataForTDB dblp.ttl
+tdb2.tdbloader --loc "$dbloc" --graph="$graphurl" "$ttlfile"
