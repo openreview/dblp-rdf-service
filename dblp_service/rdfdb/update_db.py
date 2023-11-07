@@ -1,77 +1,44 @@
-import requests
-from tqdm import tqdm
-import hashlib
+#!/usr/bin/env python3
 
-# https://dblp.org/rdf/
-## default to latest..
-# /rdf
-#  STATISTICS.txt 2023-11-03 19:02 199
-#  dblp.ttl.gz 2023-11-03 19:05 1.6G
-#  dblp.ttl.gz.md5 2023-11-03 19:05 46
-#  release/ 2023-11-03 17:58 -
-#  schema 2023-03-17 13:18 41K
-#  schema-2020-07-01 2023-03-17 13:18 28K
-#  schema-2021-09-11 2023-03-17 13:18 35K
-#  schema-2022-03-02 2023-03-17 13:18 36K
-#  schema-2022-09-09 2023-03-17 13:18 41K
-#  schema.nt 2023-03-17 13:18 80K
-#  schema.ttl 2023-03-17 13:18 26K
+# Write a set of sparql queries for the Apache Jena RDF database.
+# Assume that there is an existing named graph in the Jena database named 'current-dblp'
+# The queries should do the following:
+# - Load the contents of a local rdf ttl (turtle) file named 'dblp.ttl' inta a new graph named 'updated-dblp'
+# LOAD <file:///path/to/dblp.ttl> INTO GRAPH <updated-dblp>
+#
+#
+# - Rename the database 'current-dblp' to 'prev-dblp'
+# ADD GRAPH <current-dblp> TO GRAPH <prev-dblp>
 
-# content of /rdf/release
-# dblp-2023-10-01.nt.gz.md5
-# dblp-2023-10-01.nt.gz
-# dblp-2023-09-01.nt.gz.md5
-# dblp-2023-09-01.nt.gz
+# # Drop the old 'current-dblp'
+# DROP GRAPH <current-dblp>
+
+## Copy 'updated-dblp' to 'current-dblp'
+# ADD GRAPH <updated-dblp> TO GRAPH <current-dblp>
+
+# Drop the old 'updated-dblp'
+# DROP GRAPH <updated-dblp>
+ # - Rename the database 'updated-dblp' to 'current-dblp'
+
+from dblp_service.rdfdb.fuseki_context import FusekiServerManager
+from dblp_service.rdfdb.sparql import run_sparql_update
+from os import getcwd, path
+import typing as t
 
 
+async def load_named_graph(ttl_file: str, graph: str, /, db_location: t.Optional[str] = None):
+    cwd = getcwd()
+    rdf_file = path.join(cwd, ttl_file)
+    async with FusekiServerManager(db_location=db_location):
+        results = run_sparql_update(f"LOAD <file://{rdf_file}> INTO GRAPH {graph} ")
+        assert results["statusCode"] == 200
 
-# write a python function that downloads the files
-# https://dblp.org/rdf/dblp.ttl.gz and https://dblp.org/rdf/dblp.ttl.gz.md5. The
-# function should show overall progress of the downloads. The files should be
-# saved to disk, then the integrity of the downloaded dblp.ttl.gz file should be
-# verified using the dblp.ttl.gz.md5 hash file.
+async def create_named_graph(graph: str, /, db_location: t.Optional[str] = None):
+    async with FusekiServerManager(db_location=db_location):
+        results = run_sparql_update(f"CREATE GRAPH <{graph}>")
+        assert results["statusCode"] == 200
 
-def download_file(url: str, filename: str):
-    # Stream the download to handle large files
-    response = requests.get(url, stream=True)
-    total_size_in_bytes = int(response.headers.get('content-length', 0))
-    block_size = 1024  # 1 Kibibyte
-    progress_bar = tqdm(total=total_size_in_bytes, unit='iB', unit_scale=True)
-    with open(filename, 'wb') as file:
-        for data in response.iter_content(block_size):
-            progress_bar.update(len(data))
-            file.write(data)
-    progress_bar.close()
-    if total_size_in_bytes != 0 and progress_bar.n != total_size_in_bytes:
-        print("ERROR, something went wrong")
-    return filename
-
-def verify_md5(filename: str, md5_hash: str):
-    md5 = hashlib.md5()
-    with open(filename, 'rb') as file:
-        for chunk in iter(lambda: file.read(4096), b""):
-            md5.update(chunk)
-    file_md5_hash = md5.hexdigest()
-    return file_md5_hash == md5_hash
-
-def download_and_verify_dblp_ttl():
-    # URLs for the files
-    file_url = 'https://dblp.org/rdf/dblp.ttl.gz'
-    md5_url = 'https://dblp.org/rdf/dblp.ttl.gz.md5'
-
-    # Download the files
-    print("Downloading the .ttl.gz file...")
-    ttl_gz_filename = download_file(file_url, 'dblp.ttl.gz')
-    print("Downloading the .md5 file...")
-    md5_filename = download_file(md5_url, 'dblp.ttl.gz.md5')
-
-    # Read the MD5 hash from the downloaded .md5 file
-    with open(md5_filename, 'r') as file:
-        md5_hash = file.read().split()[0]
-
-    # Verify the integrity of the .ttl.gz file
-    print("Verifying the integrity of the .ttl.gz file...")
-    if verify_md5(ttl_gz_filename, md5_hash):
-        print("Integrity check passed.")
-    else:
-        print("Integrity check failed!")
+async def delete_named_graph(graph: str, /, db_location: t.Optional[str] = None):
+    async with FusekiServerManager(db_location=db_location):
+        results = run_sparql_update(f"DROP GRAPH <{graph}>")
+        assert results["statusCode"] == 200

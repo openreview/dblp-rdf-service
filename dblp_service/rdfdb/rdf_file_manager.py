@@ -1,4 +1,5 @@
-#!/usr/bin/env python3
+""" Maintain RDF DB files on local drive .
+"""
 
 
 class RDFFileManager:
@@ -15,5 +16,4 @@ class RDFFileManager:
         """Delete all but the most recent *n* ttl/md5 files"""
 
     def update_rdf_metadata(self):
-        """
-        """
+        """ """

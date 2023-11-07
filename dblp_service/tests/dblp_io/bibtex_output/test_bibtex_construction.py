@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
 
-from bibtexparser import Library, write_string, parse_string
-from bibtexparser.middlewares.names import SeparateCoAuthors, MergeCoAuthors
-from bibtexparser.middlewares import LatexEncodingMiddleware
+from bibtexparser import Library, write_string, parse_string # type: ignore
+from bibtexparser.middlewares.names import SeparateCoAuthors, MergeCoAuthors # type: ignore
+from bibtexparser.middlewares import LatexEncodingMiddleware # type: ignore
 
 from copy import copy, deepcopy
 from textwrap import dedent

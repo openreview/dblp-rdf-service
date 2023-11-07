@@ -43,16 +43,30 @@ class MongoConfigSchema(Schema):
     def make(self, data: t.Any, **_) -> MongoConfig:
         return MongoConfig(**data)
 
+@dataclass
+class ApacheJenaConfig:
+    dbLocation: str
+
+
+class ApacheJenaConfigSchema(Schema):
+    connectionUrl = StrField
+    dbLocation = StrField
+
+    @post_load
+    def make(self, data: t.Any, **_) -> ApacheJenaConfig:
+        return ApacheJenaConfig(**data)
 
 @dataclass
 class Config:
     openreview: OpenReviewConfig
-    mongodb: MongoConfig
+    jena: ApacheJenaConfig
+    dblpServiceRoot: str
 
 
 class ConfigSchema(Schema):
     openreview = fields.Nested(OpenReviewSchema)
-    mongodb = fields.Nested(MongoConfigSchema)
+    jena = fields.Nested(ApacheJenaConfigSchema)
+    dblpServiceRoot = StrField
 
     @post_load
     def make(self, data: t.Any, **_) -> Config:

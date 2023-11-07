@@ -1,7 +1,7 @@
 from pprint import pp
-from bibtexparser import Library, write_string
-from bibtexparser.middlewares.names import MergeCoAuthors
-from bibtexparser.middlewares import LatexEncodingMiddleware
+from bibtexparser import Library, write_string # type: ignore
+from bibtexparser.middlewares.names import MergeCoAuthors # type: ignore
+from bibtexparser.middlewares import LatexEncodingMiddleware # type: ignore
 from icecream import ic
 
 from bibtexparser import Library, write_string

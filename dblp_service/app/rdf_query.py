@@ -10,8 +10,7 @@ from dblp_service.dblp_io.rdf_io.tree_traversal import all_authorship_trees_to_r
 from dblp_service.dblp_io.rdf_io.trees import simplify_urlname
 from dblp_service.lib.predef.log import create_logger
 
-from dblp_service.lib.open_exchange.open_fetch import fetch_profile, fetch_profiles
-from dblp_service.lib.predef.typedefs import Slice
+from dblp_service.lib.open_exchange.open_fetch import fetch_profile
 from dblp_service.lib.predef.config import setenv
 
 log = create_logger(__file__)
@@ -90,5 +89,3 @@ def profile(id: str):
         pprint(asdict(profile))
     else:
         print("No Profile found")
-
-

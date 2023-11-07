@@ -1,22 +1,37 @@
-##
-# You will write me a python program. When writing python, assume that the python version
-# is at least 3.11, and use type hints whenever possible.
-#
-# Write a python context manager that manages a running Apache Jena Fuseki server.
-# The context manager should accept the following arguments:
-# - an optional file path to the fuseki-server executable, defaulting to 'fuseki-server'
-# - an optional argument that specifies the location to store the database files.
-#     If the argument is not specified, the fuseki server should use a memory-based database.
-#
-# Write a set of test cases for the context manager you just created.
-# The test cases should do the following at a minimum:
-#   - connect to the running database, then run load, update, and query operations
-#   - ensure that the server is properly shut down after the tests are run
-#
-# Modify the context manager in the following way:
-#   - When starting the subprocess, stdin and stdout from the fuseki subprocess will be captured and echoed to
-#     the stdout of the main process. This will happen in a non-blocking manner, so that it does not
-#     stop the execution of the rest of the program
+from dblp_service.rdfdb.fuseki_context import FusekiServerManager
 
-def test_():
-    pass
+import pytest
+from os import getcwd, path
+import typing as t
+
+from dblp_service.rdfdb.sparql import (
+    query_is_a_publication,
+    query_publications_set_difference,
+    run_sparql_update,
+)
+
+
+@pytest.mark.asyncio
+async def test_load_named_graphs():
+    cwd = getcwd()
+    # File contains defs for 7 publication
+    rdf_file1 = path.join(cwd, "resources", "dblp-l222.ttl")
+
+    # File contains defs for 11 publication, 7 overlapping w/prev
+    rdf_file2 = path.join(cwd, "resources", "dblp-l338.ttl")
+    graph_1 = "<graph_1>"
+    graph_2 = "<graph_2>"
+    async with FusekiServerManager():
+        results = run_sparql_update(f"LOAD <file://{rdf_file1}> INTO GRAPH {graph_1} ")
+        assert results["statusCode"] == 200
+        results = run_sparql_update(f"LOAD <file://{rdf_file2}> INTO GRAPH {graph_2} ")
+        assert results["statusCode"] == 200
+
+        pubs_graph_1: t.List[t.List[t.Any]] = query_is_a_publication(graph_1)
+        assert len(pubs_graph_1) == 7
+
+        pubs_graph_2 = query_is_a_publication(graph_2)
+        assert len(pubs_graph_2) == 11
+
+        missing_pubs = query_publications_set_difference(graph_2, graph_1)
+        assert len(missing_pubs) == 4

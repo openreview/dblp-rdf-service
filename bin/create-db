@@ -9,7 +9,7 @@ fi
 ttlfile="$1"
 graphname="$2"
 dbroot="$3"
-graphurl="https://openreview.org/graph#${graphname}"
+graphurl="$graphname"
 dbloc="${dbroot}"
 
 if [[ -z "$FUSEKI_HOME" ]]; then

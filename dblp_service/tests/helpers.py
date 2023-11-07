@@ -80,3 +80,10 @@ def rdf_blocks_to_entry(rdf_blocks: t.List[str]) -> Entry:
     rdf = "\n".join(rdf_blocks)
     output = rdf_to_bibtex(rdf)
     return output.entry
+
+P = t.ParamSpec("P")
+def callable_fqn(fn: t.Callable[P, t.Any]) -> str:
+    # return 'dblp_service.rdfdb.file_stash.fetch_md5_hash'
+    m = fn.__module__
+    n = fn.__name__
+    return f'{m}.{n}'

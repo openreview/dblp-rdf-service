@@ -4,13 +4,13 @@
 import typing as t
 from bigtree.node.node import Node
 
-from bibtexparser import Library, write_string
-from bibtexparser.middlewares import LatexEncodingMiddleware
-from bibtexparser.middlewares.names import MergeCoAuthors
+from bibtexparser import Library, write_string  # type: ignore
+from bibtexparser.middlewares import LatexEncodingMiddleware  # type: ignore
+from bibtexparser.middlewares.names import MergeCoAuthors  # type: ignore
 from bibtexparser.model import (
     Entry,
     Field,
-)
+)  # type: ignore
 
 from dblp_service.dblp_io.rdf_io.dblp_repr import DblpRepr, Publication
 from dblp_service.dblp_io.rdf_io.tree_traversal import all_authorship_trees_to_reprs
@@ -21,6 +21,7 @@ from dblp_service.lib.predef.log import create_logger
 log = create_logger(__file__)
 
 fake_key = 1
+
 
 def next_fake_key() -> str:
     global fake_key
@@ -43,7 +44,7 @@ def dblp_repr_to_bibtex(repr: DblpRepr) -> Entry:
             case "type":
                 entry_type = value
             case "author":
-                names = [ a["fullname"] for a in value ]
+                names = [a["fullname"] for a in value]
                 fields.append(Field(key, names))
                 pass
             case _:

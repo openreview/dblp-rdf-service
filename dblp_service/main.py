@@ -1,7 +1,7 @@
 #!/bin/env python
 
 from app.cli import cli
-from app import rdf_query, rdf_db
+from app import rdf_query, rdf_db, stash
 
 if __name__ == "__main__":
     try:
