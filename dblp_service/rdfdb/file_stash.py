@@ -43,23 +43,12 @@ class DblpRdfCatalog:
     versions: t.List[DblpRdfFile]
     Schema: t.ClassVar[t.Type[mm.Schema]] = Schema
 
-    def get_versions(self) -> t.List[DblpRdfFile]:
+    def get_archived_versions(self) -> t.List[DblpRdfFile]:
         versions = sorted(self.versions, key=dblp_file_sortkey)
         return list(reversed(versions))
 
     def get_most_recent_version(self) -> DblpRdfFile:
-        return self.get_versions()[0]
-
-    def get_prior_version(self, f: DblpRdfFile) -> t.Optional[DblpRdfFile]:
-        versions = self.get_versions()
-        for i, v in enumerate(versions):
-            if v.md5 == f.md5 and i + 1 < len(versions):
-                return versions[i + 1]
-
-    def get_version_date_range(self) -> t.Tuple[str, str]:
-        versions = self.get_versions()
-        dates = [v.filename[5:][:-6] for v in versions]
-        return (dates[-1], dates[0])
+        return self.get_archived_versions()[0]
 
 
 @dataclass
@@ -130,7 +119,7 @@ def update_stash_index(*, old_index: StashIndex, new_index: StashIndex) -> Stash
         new_index,
         base_version=old_index.base_version,
         head_version=old_index.head_version,
-    )
+    )  # type: ignore
 
 
 def set_stash_base_and_head_versions(
@@ -146,7 +135,7 @@ def set_stash_base_and_head_versions(
 
     if not exactly_one_set:
         log.warning("Could not set base/head versions; Specify exactly one of set_base or set_head")
-        return
+        return None
 
     set_which = "head" if set_head else "base"
 
@@ -156,14 +145,14 @@ def set_stash_base_and_head_versions(
     if not md5:
         if set_head:
             md5 = catalog.latest.md5
-            updated = replace(stash_index, head_version=md5)
+            updated = replace(stash_index, head_version=md5)  # type: ignore
         else:
             md5 = most_recent_archived_version.md5
-            updated = replace(stash_index, base_version=md5)
+            updated = replace(stash_index, base_version=md5)  # type: ignore
         return updated
 
-    md5_matches = [v.md5 for v in catalog.get_versions() if v.md5.startswith(md5)]
-    # md5_occurrances = [v.md5.startswith(md5) for v in catalog.get_versions()]
+    md5_matches = [v.md5 for v in catalog.get_archived_versions() if v.md5.startswith(md5)]
+    # md5_occurrances = [v.md5.startswith(md5) for v in catalog.get_archived_versions()]
 
     num_matches = len(md5_matches)
 
@@ -179,9 +168,9 @@ def set_stash_base_and_head_versions(
     md5 = md5_matches[0]
 
     if set_head:
-        return replace(stash_index, head_version=md5)
+        return replace(stash_index, head_version=md5)  # type: ignore
     else:
-        return replace(stash_index, base_version=md5)
+        return replace(stash_index, base_version=md5)  # type: ignore
 
 
 def set_base_and_head(config: Config, md5: t.Optional[str], *, set_base: bool = False, set_head: bool = False):
@@ -370,7 +359,7 @@ def create_stash_report(config: Config) -> str:
             is_downloaded(config, version),
             base_head_indicator(stash_index, version),
         ]
-        for version in [latest, *stash_index.catalog.get_versions()]
+        for version in [latest, *stash_index.catalog.get_archived_versions()]
     ]
     table = format_table(headers, rows)
     return table

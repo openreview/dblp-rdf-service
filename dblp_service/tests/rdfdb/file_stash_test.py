@@ -1,6 +1,5 @@
 from unittest import mock
 
-from pprint import pprint
 import tempfile
 import unittest
 from dblp_service.lib.predef.config import load_config, setenv
@@ -63,7 +62,7 @@ class FileStashTests(unittest.TestCase):
             latest=most_recent_rdf_file,
             versions=timestamped_rdf_files,
         )
-        self.assertEqual(catalog.get_versions(), expected_catalog.get_versions())
+        self.assertEqual(catalog.get_archived_versions(), expected_catalog.get_archived_versions())
 
     def test_catalog_updates_retain_base_and_head(self):
         catalog = DblpRdfCatalog(latest=most_recent_rdf_file, versions=timestamped_rdf_files)
@@ -91,14 +90,12 @@ class FileStashTests(unittest.TestCase):
             latest=most_recent_rdf_file,
             versions=list(reversed(timestamped_rdf_files)),
         )
-        recent1 = catalog1.get_most_recent_version()
-        recent2 = catalog2.get_most_recent_version()
+        recent1 = catalog1.get_most_recent_archived_version()
+        recent2 = catalog2.get_most_recent_archived_version()
         recent_expect = timestamped_rdf_files[0]
 
         self.assertEqual(recent1, recent_expect)
         self.assertEqual(recent2, recent_expect)
-        range = catalog1.get_version_date_range()
-        self.assertEqual(range, ("2023-07-03", "2023-11-03"))
 
     def test_set_base_and_head(self):
         catalog = DblpRdfCatalog(latest=most_recent_rdf_file, versions=timestamped_rdf_files)
