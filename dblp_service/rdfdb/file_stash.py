@@ -47,7 +47,7 @@ class DblpRdfCatalog:
         versions = sorted(self.versions, key=dblp_file_sortkey)
         return list(reversed(versions))
 
-    def get_most_recent_version(self) -> DblpRdfFile:
+    def get_most_recent_archived_version(self) -> DblpRdfFile:
         return self.get_archived_versions()[0]
 
 
@@ -140,7 +140,7 @@ def set_stash_base_and_head_versions(
     set_which = "head" if set_head else "base"
 
     catalog = stash_index.catalog
-    most_recent_archived_version = catalog.get_most_recent_version()
+    most_recent_archived_version = catalog.get_most_recent_archived_version()
 
     if not md5:
         if set_head:
