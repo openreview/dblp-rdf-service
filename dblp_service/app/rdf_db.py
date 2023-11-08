@@ -1,5 +1,5 @@
 from pprint import pprint
-from app.cli import cli, get_config
+from .cli import cli, get_config
 import click
 from click.core import Context
 import asyncio

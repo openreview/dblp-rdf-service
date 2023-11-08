@@ -1,4 +1,4 @@
-# Rdf Db Operations
+# RDF database operations
 ## Download new rdf file(s)
 > download-rdf-file <file or URL> --stash
 - downloads a dblp.ttl+md5 file (or takes from local)
@@ -17,7 +17,8 @@ optionally load just named md5 graph?
 ## TODO manage local ttl files, prune old versions, keep index of available files
 dates of fetch, etc.
 
-## Example Session
+# File stash
+## Walkthrough database management session
 > db-manage --clean --init --report
 > stash --init/--update-index
 > stash --report

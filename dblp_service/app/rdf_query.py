@@ -15,7 +15,7 @@ from dblp_service.lib.predef.config import setenv
 
 log = create_logger(__file__)
 
-from app.cli import cli
+from .cli import cli
 
 @cli.group()
 def query():
