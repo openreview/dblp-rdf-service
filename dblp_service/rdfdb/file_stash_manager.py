@@ -22,6 +22,7 @@ from dblp_service.lib.predef.config import Config
 from dblp_service.lib.predef.log import create_logger
 from dblp_service.lib.predef.tables import format_table
 from dblp_service.rdfdb.dblp_rdf_catalog import DblpOrgFileFetcher, DblpRdfCatalog, DblpRdfFile
+from icecream import ic
 
 
 @dataclass
@@ -30,6 +31,12 @@ class StashIndex:
     base_version: str  # md5
     head_version: str  # md5
     Schema: t.ClassVar[t.Type[mm.Schema]] = Schema
+
+    @classmethod
+    def from_catalog(cls, catalog: DblpRdfCatalog):
+        latest_md5 = catalog.latest_release.md5
+        previous_md5 = catalog.most_recent_archived_rdf().md5
+        return cls(catalog, base_version=previous_md5, head_version=latest_md5)
 
 
 class FileStash:
@@ -94,7 +101,7 @@ class FileStash:
             If set_base is True, default to second most recent export
         """
 
-        if set_which := self.base_or_head(set_base=set_base, set_head=set_head):
+        if (set_which := self.base_or_head(set_base=set_base, set_head=set_head)) is None:
             self.log.error("Could not set base or head version")
             return None
 
@@ -102,14 +109,13 @@ class FileStash:
 
         if not md5:
             if set_head:
-                md5 = catalog.latest_rdf.md5
-                updated = replace(stash_index, head_version=md5)  # type: ignore
+                md5 = catalog.latest_release.md5
+                return replace(stash_index, head_version=md5)  # type: ignore
             else:
                 md5 = catalog.most_recent_archived_rdf().md5
-                updated = replace(stash_index, base_version=md5)  # type: ignore
-            return updated
+                return replace(stash_index, base_version=md5)  # type: ignore
 
-        md5_matches = [v.md5 for v in catalog.get_archived_versions() if v.md5.startswith(md5)]
+        md5_matches = [v.md5 for v in catalog.get_archived_releases() if v.md5.startswith(md5)]
 
         num_matches = len(md5_matches)
 
@@ -130,11 +136,9 @@ class FileStash:
             return replace(stash_index, base_version=md5)  # type: ignore
 
     def set_base_version(self, md5: t.Optional[str]):
-        """Set the head (newer) or base (older) file version (with MD5 prefix).
+        """Set the base (older) file version (with MD5 prefix).
 
-        If no ID is specified,
-            If set_head is True, default to latest export
-            If set_base is True, default to second most recent export
+        If no ID is specified, default to second most recent release
         """
         stash_index = self.read_index()
         if not stash_index:
@@ -162,19 +166,20 @@ class FileStash:
         if updated:
             self.write_index(updated)
 
+    def fetch_catalog(self) -> DblpRdfCatalog:
+        return self.dblp_file_fetcher.fetch_catalog()
+
     def create_or_update(self):
         self.ensure_dirs()
-        existing_index = self.read_index()
 
-        catalog = self.dblp_file_fetcher.fetch_catalog()
-        latest_md5 = catalog.latest_rdf.md5
-        new_index = StashIndex(catalog=catalog, base_version=latest_md5, head_version=latest_md5)
+        catalog = self.fetch_catalog()
+        stash_index = StashIndex.from_catalog(catalog)
 
-        if existing_index:
+        if (existing_index := self.read_index()):
             self.log.info("Replacing exiting stash index")
-            new_index = self.update_index(old_index=existing_index, new_index=new_index)
+            stash_index = self.update_index(old_index=existing_index, new_index=stash_index)
 
-        self.write_index(new_index)
+        self.write_index(stash_index)
 
     def downloaded_indicator(self, file: DblpRdfFile) -> str:
         file_dir = file.md5
@@ -197,7 +202,7 @@ class FileStash:
             return "<could not build table>"
 
         headers = ["RDF file", "MD5 prefix", "Downloaded?", "Base/Head"]
-        latest = stash_index.catalog.latest_rdf
+        latest = stash_index.catalog.latest_release
         rows = [
             [
                 version.filename,
@@ -205,7 +210,7 @@ class FileStash:
                 self.downloaded_indicator(version),
                 self.base_head_indicator(stash_index, version),
             ]
-            for version in [latest, *stash_index.catalog.get_archived_versions()]
+            for version in [latest, *stash_index.catalog.get_archived_releases()]
         ]
 
         return format_table(headers, rows)

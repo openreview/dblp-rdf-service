@@ -25,16 +25,16 @@ class DblpRdfFile:
 
 @dataclass
 class DblpRdfCatalog:
-    latest_rdf: DblpRdfFile
-    versions: t.List[DblpRdfFile]
+    latest_release: DblpRdfFile
+    archived_releases: t.List[DblpRdfFile]
     Schema: t.ClassVar[t.Type[mm.Schema]] = Schema
 
-    def get_archived_versions(self) -> t.List[DblpRdfFile]:
-        versions = sorted(self.versions, key=DblpRdfFile.sortkey)
-        return list(reversed(versions))
+    def get_archived_releases(self) -> t.List[DblpRdfFile]:
+        releases = sorted(self.archived_releases, key=DblpRdfFile.sortkey)
+        return list(reversed(releases))
 
     def most_recent_archived_rdf(self) -> DblpRdfFile:
-        return self.get_archived_versions()[0]
+        return self.get_archived_releases()[0]
 
 
 class DblpOrgFileFetcher:
@@ -44,40 +44,33 @@ class DblpOrgFileFetcher:
         pass
 
     def fetch_catalog(self) -> DblpRdfCatalog:
+        latest_release = self.fetch_latest_release()
+        archived_releases = self.fetch_archived_releases()
+        return DblpRdfCatalog(latest_release=latest_release, archived_releases=archived_releases)
+
+    def fetch_latest_release(self) -> DblpRdfFile:
         latest_filename = "dblp.nt.gz"
         latest_url = f"https://dblp.org/rdf/{latest_filename}"
         latest_md5_url = f"{latest_url}.md5"
         latest_hash = self.fetch_md5_hash(latest_md5_url)
-        latest_file = DblpRdfFile(latest_filename, latest_hash)
-        dblp_releases = self.fetch_rdf_releases()
-        catalog = DblpRdfCatalog(latest_rdf=latest_file, versions=dblp_releases)
-        return catalog
+        return DblpRdfFile(latest_filename, latest_hash)
 
     def fetch_md5_hash(self, url: str) -> str:
         content = fetch_file_content(url)
         md5_hash, _ = content.split()
         return md5_hash
 
-    def fetch_rdf_release_html(self) -> str:
+    def fetch_archived_releases_html(self) -> str:
         return fetch_file_content(DBLP_RELEASE_URL)
 
-    def fetch_rdf_releases(self) -> t.List[DblpRdfFile]:
+    def fetch_archived_releases(self) -> t.List[DblpRdfFile]:
         """
-        Extract all links from the specified webpage and create a JSON record for each.
-
-        :param url: The URL of the webpage to extract links from.
-        :return: A list of dictionaries with "name" and "loc" keys.
-
-        Example usage:
-        url = "https://dblp.org/rdf/release"
-        json_records = extract_links_to_json(url)
-        print(json.dumps(json_records, indent=2))
         """
         self.log.info("fetching dblp.org/rdf/release catalog")
-        content = self.fetch_rdf_release_html()
+        html = self.fetch_archived_releases_html()
 
         # Parse the content with BeautifulSoup
-        soup = BeautifulSoup(content, "html.parser")
+        soup = BeautifulSoup(html, "html.parser")
 
         def is_rdf_file(tag: Tag) -> bool:
             is_a_tag = tag.name == "a"
