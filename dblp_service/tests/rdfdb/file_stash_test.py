@@ -91,8 +91,8 @@ class FileStashTests(unittest.TestCase):
             versions=list(reversed(timestamped_rdf_files)),
         )
 
-        recent1 = catalog1.get_most_recent_archived_version()
-        recent2 = catalog2.get_most_recent_archived_version()
+        recent1 = catalog1.most_recent_archived_rdf()
+        recent2 = catalog2.most_recent_archived_rdf()
         recent_expect = timestamped_rdf_files[0]
 
         self.assertEqual(recent1, recent_expect)

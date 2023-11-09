@@ -1,4 +1,5 @@
-from pprint import pprint
+
+from dblp_service.app.arg_helpers import zero_or_one
 from .cli import cli, get_config
 import click
 from click.core import Context
@@ -35,10 +36,15 @@ def report(ctx: Context):
 
 @stash.command()
 @click.pass_context
-@click.option("--revisions", type=int, default=1)
+@click.argument("md5-prefix", type=str, nargs=-1)
 def download(ctx: Context):
-    """Download and verify RDF files from dblp.org"""
+    """Download and verify RDF files from dblp.org.
+
+    Downloads  RDFs  for  base  and  head versions,  if  they  are  not  already
+    downloaded
+    """
     assert (config := get_config(ctx))
+    # download_and_verify_dblp_ttl()
 
 
 @stash.command("import")
@@ -47,16 +53,6 @@ def import_file(ctx: Context):
     """Import local file into stash"""
     assert (config := get_config(ctx))
 
-
-def zero_or_one(strs: t.Tuple[str]) -> t.Tuple[bool, t.Optional[str]]:
-    if len(strs) > 1:
-        print(f"Too many arguments: only 0 or 1 allowed")
-        return False, None
-
-    if len(strs) == 1:
-        return True, strs[0]
-
-    return True, None
 
 
 @stash.command()

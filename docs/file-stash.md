@@ -14,5 +14,6 @@ The MD5 hashes of the base version that is currently in use, as well as the head
 > stash set-base 8156
 > stash download
 > stash set-head 929
+> stash set-head 
 > stash download
 > stash purge
