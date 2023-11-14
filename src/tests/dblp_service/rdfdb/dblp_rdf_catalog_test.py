@@ -3,7 +3,7 @@ from unittest import mock
 from dblp_service.lib.predef.config import setenv
 from dblp_service.rdfdb.dblp_rdf_catalog import DblpOrgFileFetcher, DblpRdfCatalog, DblpRdfFile
 
-from dblp_service.tests.helpers import callable_fqn, method_fqn
+from tests.helpers import callable_fqn, method_fqn
 
 
 setenv("test")

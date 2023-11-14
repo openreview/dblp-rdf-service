@@ -4,9 +4,9 @@ from unittest import mock
 from dblp_service.lib.predef.config import load_config, setenv
 from dblp_service.rdfdb.file_stash_manager import FileStash, StashIndex
 
-from dblp_service.tests.helpers import method_fqn
+from tests.helpers import method_fqn
 from dblp_service.rdfdb.dblp_rdf_catalog import DblpRdfCatalog, DblpRdfFile
-from dblp_service.tests.rdfdb.mock_data import rolling_catalogs
+from tests.rdfdb.mock_data import rolling_catalogs
 
 setenv("test")
 
