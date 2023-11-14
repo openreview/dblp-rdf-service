@@ -20,11 +20,13 @@ from bigtree.tree.export import print_tree
 
 from dblp_service.dblp_io.xml_output.xml_transform import create_xml_root_elem, rewrite_authorship_tree, rewrite_hasSignature_node
 from dblp_service.dblp_io.xml_output.xml_utils import print_xml
+from tests.helpers import get_author_tree, get_author_tree_from_string
 
 
 # from rdf_io.author_tree_transforms import  print_xml
-from .helpers import get_author_tree, get_author_tree_from_string
+# from .helpers import get_author_tree, get_author_tree_from_string
 
+# get_author_tree
 
 def test_root_elem_creation():
     tuplestrs = ["('/DruckP12', '#bibtexType', '#Inproceedings')"]
