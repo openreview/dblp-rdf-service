@@ -4,15 +4,13 @@ from unittest import mock
 from dblp_service.lib.predef.config import load_config, setenv
 from dblp_service.rdfdb.file_stash_manager import FileStash, StashIndex
 
-from dblp_service.tests.helpers import callable_fqn, method_fqn
-from dblp_service.rdfdb.dblp_rdf_catalog import DblpOrgFileFetcher, DblpRdfCatalog, DblpRdfFile
+from dblp_service.tests.helpers import method_fqn
+from dblp_service.rdfdb.dblp_rdf_catalog import DblpRdfCatalog, DblpRdfFile
 from dblp_service.tests.rdfdb.mock_data import rolling_catalogs
 
 setenv("test")
 
 most_recent_rdf_file = DblpRdfFile(filename="dblp.nt.gz", md5="0ba5a47ff1d882686b2e9553a886739c")
-
-from icecream import ic
 
 timestamped_rdf_files = [
     DblpRdfFile(filename="dblp-2023-11-03.nt.gz", md5="88cc90ebdd04bac3cdf72bf1ac878b58"),

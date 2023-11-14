@@ -1,16 +1,12 @@
-
 from dblp_service.app.arg_helpers import zero_or_one
+from dblp_service.lib.predef.log import create_logger
+from dblp_service.rdfdb.file_stash_manager import FileStash
 from .cli import cli, get_config
 import click
 from click.core import Context
 import typing as t
 
-from dblp_service.rdfdb.file_stash import (
-    create_or_update_stash,
-    create_stash_report,
-    set_base_and_head,
-)
-
+log = create_logger(__file__)
 
 @cli.group()
 def stash():
@@ -22,7 +18,8 @@ def stash():
 def update(ctx: Context):
     """Create or update stash; fetch updated list of available files from dblp.org"""
     assert (config := get_config(ctx))
-    create_or_update_stash(config)
+    fstash = FileStash(config)
+    fstash.create_or_update()
 
 
 @stash.command()
@@ -30,8 +27,8 @@ def update(ctx: Context):
 def report(ctx: Context):
     """Show available, downloaded, and imported files"""
     assert (config := get_config(ctx))
-    report = create_stash_report(config)
-    print(report)
+    fstash = FileStash(config)
+    print(fstash.create_report())
 
 
 @stash.command()
@@ -44,16 +41,20 @@ def download(ctx: Context):
     downloaded
     """
     assert (config := get_config(ctx))
+    fstash = FileStash(config)
     # download_and_verify_dblp_ttl()
 
 
 @stash.command("import")
 @click.pass_context
-def import_file(ctx: Context):
+@click.argument("filename", type=click.Path(exists=True, file_okay=True, dir_okay=False))
+def import_file(ctx: Context, filename: str):
     """Import local file into stash"""
     assert (config := get_config(ctx))
+    fstash = FileStash(config)
 
-
+    fstash.import_file(filename)
+    fstash.get_imported_files()
 
 @stash.command()
 @click.pass_context
@@ -67,8 +68,9 @@ def set_base(ctx: Context, md5_prefix: t.Tuple[str]):
     success, md5 = zero_or_one(md5_prefix)
 
     if success:
-        set_base_and_head(config, md5=md5, set_base=True)
-        print(create_stash_report(config))
+        fstash = FileStash(config)
+        fstash.set_base_version(md5)
+        print(fstash.create_report())
 
 
 @stash.command()
@@ -83,14 +85,6 @@ def set_head(ctx: Context, md5_prefix: t.Tuple[str]):
     success, md5 = zero_or_one(md5_prefix)
 
     if success:
-        set_base_and_head(config, md5=md5, set_head=True)
-
-        print(create_stash_report(config))
-
-
-# @stash.command()
-# @click.option("--file", type=str, default=None)
-# def download_rdf_file(file: t.Optional[str]):
-#     """Fetch the latest RDF db file from https://dblp.org"""
-
-#     download_and_verify_dblp_ttl()
+        fstash = FileStash(config)
+        fstash.set_head_version(md5)
+        print(fstash.create_report())

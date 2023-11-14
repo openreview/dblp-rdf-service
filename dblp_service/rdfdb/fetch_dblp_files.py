@@ -30,13 +30,15 @@ def fetch_file_content(url: str) -> str:
     response.raise_for_status()  # Will raise an HTTPError if the HTTP request returned an unsuccessful status code
     return str(response.content, "utf-8")
 
-
-def verify_md5(filename: str, md5_hash: str):
+def get_file_md5(filename: str):
     md5 = hashlib.md5()
     with open(filename, "rb") as file:
         for chunk in iter(lambda: file.read(4096), b""):
             md5.update(chunk)
-    file_md5_hash = md5.hexdigest()
+    return md5.hexdigest()
+
+def verify_md5(filename: str, md5_hash: str):
+    file_md5_hash = get_file_md5(filename)
     return file_md5_hash == md5_hash
 
 

@@ -9,14 +9,12 @@ from dblp_service.lib.predef.log import create_logger
 from dblp_service.rdfdb.fetch_dblp_files import fetch_file_content
 
 
-DBLP_RELEASE_URL = "https://dblp.org/rdf/release"
-
-
 @dataclass
 class DblpRdfFile:
     filename: str
     md5: str
-    Schema: t.ClassVar[t.Type[mm.Schema]] = Schema  # For the type checker
+
+    Schema: t.ClassVar[t.Type[mm.Schema]] = Schema
 
     @staticmethod
     def sortkey(f: "DblpRdfFile") -> str:
@@ -27,6 +25,7 @@ class DblpRdfFile:
 class DblpRdfCatalog:
     latest_release: DblpRdfFile
     archived_releases: t.List[DblpRdfFile]
+
     Schema: t.ClassVar[t.Type[mm.Schema]] = Schema
 
     def get_archived_releases(self) -> t.List[DblpRdfFile]:
@@ -38,22 +37,21 @@ class DblpRdfCatalog:
 
 
 class DblpOrgFileFetcher:
-    log = create_logger("DblpOrgFileFetcher")
+    current_rdf_filename = "dblp.nt.gz"
+    current_rdf_url = f"https://dblp.org/rdf/{current_rdf_filename}"
+    current_md5_url = f"{current_rdf_url}.md5"
+    archived_releases_page = "https://dblp.org/rdf/release"
 
-    def __init__(self):
-        pass
+    log = create_logger("DblpOrgFileFetcher")
 
     def fetch_catalog(self) -> DblpRdfCatalog:
         latest_release = self.fetch_latest_release()
         archived_releases = self.fetch_archived_releases()
-        return DblpRdfCatalog(latest_release=latest_release, archived_releases=archived_releases)
+        return DblpRdfCatalog(latest_release, archived_releases)
 
     def fetch_latest_release(self) -> DblpRdfFile:
-        latest_filename = "dblp.nt.gz"
-        latest_url = f"https://dblp.org/rdf/{latest_filename}"
-        latest_md5_url = f"{latest_url}.md5"
-        latest_hash = self.fetch_md5_hash(latest_md5_url)
-        return DblpRdfFile(latest_filename, latest_hash)
+        current_md5 = self.fetch_md5_hash(self.current_md5_url)
+        return DblpRdfFile(self.current_rdf_filename, current_md5)
 
     def fetch_md5_hash(self, url: str) -> str:
         content = fetch_file_content(url)
@@ -61,11 +59,10 @@ class DblpOrgFileFetcher:
         return md5_hash
 
     def fetch_archived_releases_html(self) -> str:
-        return fetch_file_content(DBLP_RELEASE_URL)
+        return fetch_file_content(self.archived_releases_page)
 
     def fetch_archived_releases(self) -> t.List[DblpRdfFile]:
-        """
-        """
+        """ """
         self.log.info("fetching dblp.org/rdf/release catalog")
         html = self.fetch_archived_releases_html()
 
@@ -88,7 +85,7 @@ class DblpOrgFileFetcher:
                 raise Exception("No href attr found in dblp file link: {link}")
 
             location = link["href"]
-            md5_url = f"{DBLP_RELEASE_URL}/{location}.md5"
+            md5_url = f"{self.archived_releases_page}/{location}.md5"
             md5_hash = self.fetch_md5_hash(md5_url)
             rec = DblpRdfFile(filename=link_text, md5=md5_hash)
             self.log.info(f"fetched {rec}")

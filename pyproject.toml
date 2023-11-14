@@ -34,6 +34,7 @@ types-tqdm = "^4.66.0.4"
 beautifulsoup4 = "^4.12.2"
 marshmallow-dataclass = "^8.6.0"
 types-beautifulsoup4 = "^4.12.0.7"
+structlog = "^23.2.0"
 
 
 [build-system]
