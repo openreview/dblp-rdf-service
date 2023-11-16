@@ -9,7 +9,7 @@ from bibtexparser import Library, write_string
 from dblp_service.dblp_io.rdf_io.tree_traversal import authorship_tree_to_dblp_repr
 from dblp_service.dblp_io.bibtex_output.bibtex_transform import dblp_repr_to_bibtex
 
-from tests.dblp_service.dblp_io.rdf_io.test_tupledata import (
+from tests.dblp_service.dblp_io.rdf_io.tupledata import (
     AUTHOR_1_TUPLES,
     AUTHOR_2_TUPLES,
     AUTHOR_3_TUPLES,

@@ -59,11 +59,11 @@ class Zipper(Generic[T]):
         return f"zipper[{self.pre} <{self.focus}> {self.post}]"
 
     @classmethod
-    def fromList(cls, l: List[T]) -> "Optional[Zipper[T]]":
-        if len(l) == 0:
+    def fromList(cls, ts: List[T]) -> "Optional[Zipper[T]]":
+        if len(ts) == 0:
             return None
 
         pre: List[T] = []
-        post = l[1:]
-        focus = l[0]
+        post = ts[1:]
+        focus = ts[0]
         return cls(pre=pre, post=post, focus=focus)

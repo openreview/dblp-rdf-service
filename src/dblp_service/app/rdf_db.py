@@ -1,47 +1,56 @@
+"""Manage Apache Jena RDF loading/unloading
+
+"""
+
+
 from pprint import pprint
+
+from dblp_service.app.arg_helpers import zero_or_one
 from .cli import cli, get_config
 import click
 from click.core import Context
 import asyncio
+import typing as t
 
 from dblp_service.rdfdb.manage_db import init_db
 
 
 @cli.group()
-def rdf():
+def jena():
     """Manage Apache Jena RDF DB"""
 
 
-@rdf.command()
+@jena.command()
 @click.pass_context
-@click.option("--init", is_flag=True, default=False)
-@click.option("--clean", is_flag=True, default=False)
-@click.option("--report", is_flag=True, default=False)
-def db_manage(ctx: Context, init: bool, clean: bool, report: bool):
-    """Init/clean/report on db"""
+def init(ctx: Context):
+    """Ensure that Jena is initialized"""
     assert (config := get_config(ctx))
     asyncio.run(init_db(config))
 
 
-@rdf.command()
+@jena.command("import")
+@click.argument("md5-prefix", type=str, nargs=-1)
 @click.pass_context
-@click.option("--file", type=str)
-@click.option("--graph", type=str)
-def load_rdfs(ctx: Context, file: str, graph: str):
-    print(f"load {file} into {graph}")
+def import_rdfs(ctx: Context, md5_prefix: t.Tuple[str]):
+    """Import RDFs into graphs, explicitly or stashed head/base by default"""
+    provided, md5 = zero_or_one(md5_prefix)
+
+    assert (config := get_config(ctx))
+
+    if provided:
+        pass
+    pprint(config)
+
+@jena.command()
+@click.pass_context
+def prune(ctx: Context):
+    """Delete graphs from Jena, by MD5 ID or all but head/base by default"""
     assert (config := get_config(ctx))
     pprint(config)
-    ## default to latest..
 
-
-@rdf.command()
-def rotate_dbs():
-    print("rotate")
-    ## default to latest..
-
-
-@rdf.command()
-@click.option("--graph1", type=str)
-@click.option("--graph2", type=str)
-def diff_dbs(graph1: str, graph2: str):
-    print("diff")
+@jena.command()
+@click.pass_context
+def report(ctx: Context):
+    """Import RDFs from stash, explicit or head/base by default"""
+    assert (config := get_config(ctx))
+    pprint(config)

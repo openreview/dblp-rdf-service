@@ -1,7 +1,7 @@
 import click
 from click.core import Context
 from dblp_service.lib.predef.log import create_logger
-from lib.predef.config import Config, load_config, setenv
+from dblp_service.lib.predef.config import Config, load_config, setenv
 import typing as t
 
 log = create_logger(__file__)

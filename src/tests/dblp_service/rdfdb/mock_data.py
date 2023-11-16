@@ -4,10 +4,10 @@ import tempfile
 import typing as t
 from contextlib import contextmanager
 
-from dblp_service.lib.predef.config import load_config, setenv
+from dblp_service.lib.predef.config import load_config
 from dblp_service.rdfdb.file_stash_manager import FileStash, StashIndex
 
-from dblp_service.rdfdb.dblp_rdf_catalog import DblpOrgFileFetcher, DblpRdfCatalog, DblpRdfFile
+from dblp_service.rdfdb.dblp_rdf_catalog import DblpRdfCatalog, DblpRdfFile
 
 most_recent_rdf_file = DblpRdfFile(filename="dblp.nt.gz", md5="0ba5a47ff1d882686b2e9553a886739c")
 

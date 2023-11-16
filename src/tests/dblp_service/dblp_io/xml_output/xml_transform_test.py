@@ -1,5 +1,4 @@
 
-from pprint import pp
 
 from bigtree.tree.export import print_tree
 
@@ -8,19 +7,17 @@ from dblp_service.dblp_io.rdf_io.tree_traversal import authorship_tree_to_dblp_r
 from dblp_service.dblp_io.xml_output.xml_transform import dblp_repr_to_xml
 from dblp_service.dblp_io.xml_output.xml_utils import print_xml
 
-from tests.dblp_service.dblp_io.rdf_io.test_tupledata import (
+from tests.dblp_service.dblp_io.rdf_io.tupledata import (
     AUTHOR_1_TUPLES,
     AUTHOR_2_TUPLES,
     AUTHOR_3_TUPLES,
     AUTHOR_ID_TUPLES,
-    DRUCK_BIBTEX_ENTRY,
     PUBLICATION_ID_TUPLES,
     RESOURCE_IDENTIFIER_TUPLES,
     TITLE_VENUE_TUPLES,
 )
 
 from tests.helpers import (
-    assert_fields_match,
     get_author_tree_from_string,
 )
 

@@ -2,7 +2,7 @@ from pprint import pprint as pp
 
 from bigtree.tree.export import print_tree
 from dblp_service.dblp_io.rdf_io.tree_traversal import authorship_tree_to_dblp_repr
-from tests.dblp_service.dblp_io.rdf_io.test_tupledata import AUTHOR_1_TUPLES, AUTHOR_2_TUPLES, PUBLICATION_ID_TUPLES, RESOURCE_IDENTIFIER_TUPLES
+from tests.dblp_service.dblp_io.rdf_io.tupledata import AUTHOR_1_TUPLES, AUTHOR_2_TUPLES, PUBLICATION_ID_TUPLES, RESOURCE_IDENTIFIER_TUPLES
 from tests.helpers import get_author_tree_from_string
 
 

@@ -4,8 +4,6 @@
 import typing as t
 
 from bigtree.node.node import Node
-from bigtree.tree.export import print_tree
-from dblp_service.dblp_io.rdf_io.dblp_repr import UpdateOperation
 from dblp_service.dblp_io.rdf_io.dblp_repr import (
     AppendField,
     DblpRepr,

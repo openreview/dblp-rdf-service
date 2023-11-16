@@ -20,6 +20,7 @@ tqdm = "^4.66.1"
 beautifulsoup4 = "^4.12.2"
 marshmallow-dataclass = "^8.6.0"
 structlog = "^23.2.0"
+ruff = "^0.1.5"
 
 [tool.poetry.group.test.dependencies]
 pytest = "^7.4.2"

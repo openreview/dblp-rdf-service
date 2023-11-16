@@ -15,12 +15,10 @@ class FusekiServerManager:
         self,
         fuseki_executable: str = "fuseki-server",
         db_location: Optional[str] = None,
-        file: Optional[str] = None,
         verbose: bool = False,
     ):
         self.fuseki_executable = fuseki_executable
         self.db_location = db_location
-        self.file = file
         self.process = None
         self.db_dir = None
         self.startup_event = threading.Event()
@@ -68,7 +66,7 @@ class FusekiServerManager:
         return self
 
     async def __aexit__(self, exc_type: t.Any, exc_value: object, traceback: object):
-        print(f"Fuseki exiting")
+        print("Fuseki exiting")
         # Terminate the Fuseki server process
         if self.process:
             os.killpg(os.getpgid(self.process.pid), signal.SIGTERM)

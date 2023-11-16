@@ -82,7 +82,7 @@ def separateOOBs(oobs: List[OneOrBoth[T]]) -> Tuple[Left[List[T]], Right[List[T]
     rs: List[T] = []
     bs: List[T] = []
     fold = Fold[T, Any](
-        lambda l: ls.append(l),
+        lambda ll: ls.append(ll),
         lambda r: rs.append(r),
         lambda b: bs.append(b),
     )
@@ -106,7 +106,7 @@ if __name__ == "__main__":
     pprint(align0)
 
     OobToStr = Fold[str, str](
-        lambda l: f"Left:{l}",
+        lambda ll: f"Left:{ll}",
         lambda r: f"Right:{r}",
         lambda b: f"Both:{b}",
     )

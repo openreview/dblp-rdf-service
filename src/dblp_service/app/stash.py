@@ -8,9 +8,19 @@ import typing as t
 
 log = create_logger(__file__)
 
+
 @cli.group()
 def stash():
     """Manage downloaded rdf db files"""
+
+
+@stash.command()
+@click.pass_context
+def init(ctx: Context):
+    """Initialize the stash; ensure directories exists, fetch available files from dblp.org"""
+    assert (config := get_config(ctx))
+    fstash = FileStash(config)
+    fstash.init()
 
 
 @stash.command()
@@ -55,6 +65,7 @@ def import_file(ctx: Context, filename: str):
 
     fstash.import_file(filename)
     fstash.get_imported_files()
+
 
 @stash.command()
 @click.pass_context
