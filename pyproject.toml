@@ -6,6 +6,11 @@ authors = ["Adam C. Saunders <saunders@cs.umass.edu>"]
 readme = "readme.md"
 packages = [{include = "dblp_service", from = "src"},]
 
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+
 [tool.poetry.dependencies]
 python = "^3.11"
 sparqlwrapper = "^2.0.0"
@@ -28,7 +33,6 @@ pyright = "^1.1.331"
 pylint = "^3.0.1"
 flake8 = "^6.1.0"
 mypy = "^1.6.0"
-black = "^23.9.1"
 flake8-pyproject = "^1.2.3"
 icecream = "^2.1.3"
 snoop = "^0.4.3"
@@ -45,15 +49,12 @@ addopts = [
     "--import-mode=importlib",
 ]
 
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
-
-[tool.black]
+[tool.ruff]
 line-length = 120
 
-[tool.flake8]
-max-line-length = 120
+[tool.ruff.format]
+quote-style = "single"
+indent-style = "space"
 
 [tool.pyright]
 useLibraryCodeForTypes = true
