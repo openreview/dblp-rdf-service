@@ -84,7 +84,7 @@ def getenv():
 def read_config(config_path: str) -> t.Optional[Config]:
     config: t.Optional[Config] = None
     if os.path.exists(config_path):
-        log.info(f"Loading config '{config_path}'")
+        log.debug(f"Loading config '{config_path}'")
         with open(config_path) as f:
             jsonContent = json.load(f)
             loaded: Config = cast(Config, ConfigSchema().load(jsonContent))

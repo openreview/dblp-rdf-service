@@ -11,7 +11,7 @@ log = create_logger(__file__)
 @click.pass_context
 @click.option("--env", type=click.Choice(["test", "dev", "prod"]), default="dev", help="Check that config is valid")
 def cli(ctx: Context, env: str):
-    log.info(f"env={env}")
+    log.debug(f"env={env}")
     setenv(env)
     set_config(ctx)
     if not get_config(ctx):

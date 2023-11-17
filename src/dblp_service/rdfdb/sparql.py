@@ -7,8 +7,8 @@ from pprint import pprint
 def unwrap_query_vars(queryReturn: t.Any) -> t.List[t.List[t.Any]]:
     output: t.List[t.List[t.Any]] = []
     match queryReturn:
-        case {"head": {"vars": [*varnames]}, "results": {"bindings": [*bindings]}}:
-            output = [[b[var]["value"] for var in varnames] for b in bindings]
+        case {'head': {'vars': [*varnames]}, 'results': {'bindings': [*bindings]}}:
+            output = [[b[var]['value'] for var in varnames] for b in bindings]
 
         case _:
             pprint(queryReturn)
@@ -17,21 +17,24 @@ def unwrap_query_vars(queryReturn: t.Any) -> t.List[t.List[t.Any]]:
 
 
 def run_sparql_query(query: str):
-    sparql = SPARQLWrapper("http://localhost:3030/" "ds")
+    sparql = SPARQLWrapper('http://localhost:3030/' 'ds')
     sparql.setReturnFormat(JSON)
     sparql.setQuery(query)
-    sparql.setMethod("GET")
+    sparql.setMethod('GET')
     ret: t.Any = sparql.queryAndConvert()
     return unwrap_query_vars(ret)
 
 
 def run_sparql_update(query: str):
-    sparql = SPARQLWrapper("http://localhost:3030/" "ds")
-    sparql.setReturnFormat(JSON)
-    sparql.setQuery(query)
-    sparql.setMethod("POST")
-    ret: t.Any = sparql.queryAndConvert()
-    return ret
+    try:
+        sparql = SPARQLWrapper('http://localhost:3030/' 'ds')
+        sparql.setReturnFormat(JSON)
+        sparql.setQuery(query)
+        sparql.setMethod('POST')
+        ret: t.Any = sparql.queryAndConvert()
+        return ret
+    except:
+        raise
 
 
 def query_graph_names() -> t.List[str]:

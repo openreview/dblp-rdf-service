@@ -12,7 +12,7 @@ from click.core import Context
 import asyncio
 import typing as t
 
-from dblp_service.rdfdb.manage_db import init_db
+from dblp_service.rdfdb.jena_db import init_db
 
 
 @cli.group()
@@ -28,8 +28,8 @@ def init(ctx: Context):
     asyncio.run(init_db(config))
 
 
-@jena.command("import")
-@click.argument("md5-prefix", type=str, nargs=-1)
+@jena.command('import')
+@click.argument('md5-prefix', type=str, nargs=-1)
 @click.pass_context
 def import_rdfs(ctx: Context, md5_prefix: t.Tuple[str]):
     """Import RDFs into graphs, explicitly or stashed head/base by default"""
@@ -41,12 +41,14 @@ def import_rdfs(ctx: Context, md5_prefix: t.Tuple[str]):
         pass
     pprint(config)
 
+
 @jena.command()
 @click.pass_context
 def prune(ctx: Context):
     """Delete graphs from Jena, by MD5 ID or all but head/base by default"""
     assert (config := get_config(ctx))
     pprint(config)
+
 
 @jena.command()
 @click.pass_context

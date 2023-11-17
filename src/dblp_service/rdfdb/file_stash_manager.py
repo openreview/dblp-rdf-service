@@ -1,19 +1,25 @@
 """Maintain downloaded and import files in a local cache .
 
-Stash directory structure is
-- stash-root
-  - downloads/
-    - 3df2c/
-    - ...
+Stash directory structure is e.g.,
+    service-root.d
+    └── stash
+        ├── downloads
+        ├── imports
+        │   ├── ed2c3d520c332d8e4e6d5b9446eb51d4
+        │   │   └── dblp-l222.ttl
+        │   └── ffe98a7f2f4ca496a4e25295e8117dac
+        │       └── dblp-l338.ttl
+        └── stash-index.json
 
 """
 
 from dataclasses import replace
+import dataclasses as dc
 import typing as t
 from os import path
 import os
 
-from marshmallow_dataclass import dataclass
+import marshmallow_dataclass as mmdc
 from marshmallow import Schema
 import marshmallow as mm
 
@@ -23,10 +29,19 @@ from dblp_service.lib.predef.tables import format_table
 from dblp_service.rdfdb.dblp_rdf_catalog import DblpOrgFileFetcher, DblpRdfCatalog, DblpRdfFile
 from dblp_service.rdfdb.fetch_dblp_files import get_file_md5
 from shutil import copyfile
-from icecream import ic
 
 
-@dataclass
+StashedFileSource: t.TypeAlias = t.Literal['dblp.org', 'local']
+
+
+@dc.dataclass
+class StashedFile:
+    source: StashedFileSource
+    path: t.Optional[str]
+    md5: str
+
+
+@mmdc.dataclass
 class StashIndex:
     catalog: DblpRdfCatalog
     base_version: t.Optional[str]  # md5
@@ -47,27 +62,27 @@ class FileStash:
     index_file: str
     dblp_file_fetcher: DblpOrgFileFetcher
 
-    log = create_logger("FileStash")
+    log = create_logger('FileStash')
 
     def __init__(self, config: Config):
         service_root = config.dblpServiceRoot
-        self.root_dir = path.join(service_root, "stash")
-        self.downloads_dir = path.join(self.root_dir, "downloads")
-        self.imports_dir = path.join(self.root_dir, "imports")
-        self.index_file = path.join(self.root_dir, "stash-index.json")
+        self.root_dir = path.join(service_root, 'stash')
+        self.downloads_dir = path.join(self.root_dir, 'downloads')
+        self.imports_dir = path.join(self.root_dir, 'imports')
+        self.index_file = path.join(self.root_dir, 'stash-index.json')
         self.dblp_file_fetcher = DblpOrgFileFetcher()
 
     def write_index(self, stash_index: StashIndex) -> None:
         content = StashIndex.Schema().dumps(stash_index)  # type: ignore
-        with open(self.index_file, "w") as f:
+        with open(self.index_file, 'w') as f:
             f.write(content)
 
     def read_index(self) -> t.Optional[StashIndex]:
         if not os.path.exists(self.index_file):
             return None
 
-        self.log.debug(f"loading index {self.index_file}")
-        with open(self.index_file, "r") as f:
+        self.log.debug(f'loading index {self.index_file}')
+        with open(self.index_file, 'r') as f:
             content = f.read()
             sindex: StashIndex = StashIndex.Schema().loads(content)  # type: ignore
             return sindex
@@ -93,10 +108,28 @@ class FileStash:
         exactly_one_set = set_base ^ set_head
 
         if not exactly_one_set:
-            self.log.warning("Must set exactly one of set_base or set_head to True")
+            self.log.warning('Must set exactly one of set_base or set_head to True')
             return None
 
-        return "head" if set_head else "base"
+        return 'head' if set_head else 'base'
+
+    def get_stashed_files(self) -> t.List[StashedFile]:
+        files: t.List[StashedFile] = []
+
+        for filepath in self.get_imported_files():
+            md5, _ = path.split(filepath)
+            resolved_path = path.join(self.imports_dir, filepath)
+            p = resolved_path if os.path.exists(resolved_path) else None
+
+            files.append(StashedFile(source='local', path=p, md5=md5))
+
+        if sindex := self.read_index():
+            for f in sindex.catalog.get_archived_releases():
+                filepath = path.join(self.downloads_dir, f.filename)
+                p = filepath if os.path.exists(filepath) else None
+                files.append(StashedFile(source='dblp.org', path=p, md5=f.md5))
+
+        return files
 
     def get_all_stashed_md5s(self) -> t.List[str]:
         md5s = [md5 for md5, _ in [path.split(f) for f in self.get_imported_files()]]
@@ -119,7 +152,7 @@ class FileStash:
         """
 
         if (set_which := self.base_or_head(set_base=set_base, set_head=set_head)) is None:
-            self.log.error("Could not set base or head version")
+            self.log.error('Could not set base or head version')
             return None
 
         catalog = stash_index.catalog
@@ -138,12 +171,12 @@ class FileStash:
         num_matches = len(md5_matches)
 
         if num_matches == 0:
-            self.log.warning(f"Could not set {set_which} version; Specified MD5 not found")
+            self.log.warning(f'Could not set {set_which} version; Specified MD5 not found')
             return None
 
         if num_matches > 1:
-            self.log.warning(f"Could not set {set_which} version; Multiple matching MD5s found")
-            print("\n".join(md5_matches))
+            self.log.warning(f'Could not set {set_which} version; Multiple matching MD5s found')
+            print('\n'.join(md5_matches))
             return None
 
         md5 = md5_matches[0]
@@ -152,6 +185,18 @@ class FileStash:
             return replace(stash_index, head_version=md5)  # type: ignore
         else:
             return replace(stash_index, base_version=md5)  # type: ignore
+
+    def get_base_and_head_id(self) -> t.Tuple[t.Optional[str], t.Optional[str]]:
+        if sindex := self.read_index():
+            return sindex.base_version, sindex.head_version
+        return None, None
+
+    def get_stashed_file(self, md5: str) -> t.Optional[StashedFile]:
+        for f in self.get_stashed_files():
+            if f.md5 == md5:
+                return f
+
+        return None
 
     def set_base_version(self, md5: t.Optional[str]):
         """Set the base (older) file version (with MD5 prefix).
@@ -164,7 +209,7 @@ class FileStash:
                 self.write_index(updated)
                 return
 
-        self.log.error("Base version not set")
+        self.log.error('Base version not set')
 
     def set_head_version(self, md5: t.Optional[str]):
         """Set the head (newer) or base (older) file version (with MD5 prefix).
@@ -179,14 +224,14 @@ class FileStash:
                 self.write_index(updated)
                 return
 
-        self.log.error("Head version not set")
+        self.log.error('Head version not set')
 
     def fetch_catalog(self) -> DblpRdfCatalog:
         return self.dblp_file_fetcher.fetch_catalog()
 
     def init(self):
         self.ensure_dirs()
-        if not (current_index := self.read_index()):
+        if not (_current_index := self.read_index()):
             self.create_or_update()
 
     def create_or_update(self):
@@ -194,7 +239,7 @@ class FileStash:
         catalog = self.fetch_catalog()
         updated_index = StashIndex.from_catalog(catalog)
         if current_index := self.read_index():
-            self.log.debug("Updating exiting stash index")
+            self.log.debug('Updating exiting stash index')
             updated_index = self.update_index(old_index=current_index, new_index=updated_index)
 
         self.write_index(updated_index)
@@ -204,23 +249,22 @@ class FileStash:
         dir_exists = path.isdir(path.join(self.downloads_dir, file_dir))
         file_exists = path.isfile(path.join(self.downloads_dir, file_dir, file.filename))
 
-        indicator = "✓" if dir_exists and file_exists else "✗"
+        indicator = '✓' if dir_exists and file_exists else '✗'
         return indicator
 
-    # def base_head_indicator(self, index: StashIndex, file: DblpRdfFile) -> str:
     def base_head_indicator(self, index: StashIndex, md5: str) -> str:
-        base = "<-base " if index.base_version == md5 else ""
-        head = "<-head" if index.head_version == md5 else ""
+        base = '<-base ' if index.base_version == md5 else ''
+        head = '<-head' if index.head_version == md5 else ''
 
-        return f"{base}{head}".strip()
+        return f'{base}{head}'.strip()
 
     def create_report(self) -> str:
         stash_index = self.read_index()
         if not stash_index:
-            self.log.warn("No stash index found")
-            return ""
+            self.log.warn('No stash index found')
+            return ''
 
-        headers = ["RDF file", "MD5 prefix", "Downloaded?", "Base/Head"]
+        headers = ['RDF file', 'MD5 prefix', 'Downloaded?', 'Base/Head']
         latest = stash_index.catalog.latest_release
         rows = [
             [
@@ -234,7 +278,7 @@ class FileStash:
         for import_file in self.get_imported_files():
             md5, name = path.split(import_file)
             bh_indicator = self.base_head_indicator(stash_index, md5)
-            dl_indicator = "-"
+            dl_indicator = '-'
             row = [name, md5[:6], dl_indicator, bh_indicator]
             rows.append(row)
 
@@ -250,7 +294,7 @@ class FileStash:
             imported_files = os.listdir(md5_dir)
             imported_files = [path.join(md5_dir, dir) for dir in imported_files]
             if len(imported_files) != 1:
-                self.log.error(f"no file found in {md5_dir} (or more than 1 file found)")
+                self.log.error(f'no file found in {md5_dir} (or more than 1 file found)')
                 continue
             file = imported_files[0]
             name = path.basename(file)
@@ -260,15 +304,17 @@ class FileStash:
 
         return files
 
-    def import_file(self, filename: str) -> None:
+    def import_file(self, filename: str) -> StashedFile:
         file_md5 = get_file_md5(filename)
         import_dir = path.join(self.imports_dir, file_md5)
         basename = path.basename(filename)
         os.makedirs(import_dir, exist_ok=True)
         dest_file = path.join(import_dir, basename)
         if path.isfile(dest_file):
-            self.log.info(f"import exists: {dest_file}")
-            return
+            self.log.info(f'import exists: {dest_file}')
+        else:
+            self.log.info(f'importing {filename} to {dest_file}')
+            copyfile(filename, dest_file)
 
-        self.log.info(f"importing {filename} to {dest_file}")
-        copyfile(filename, dest_file)
+        assert (stashed_file := self.get_stashed_file(file_md5)) is not None
+        return stashed_file

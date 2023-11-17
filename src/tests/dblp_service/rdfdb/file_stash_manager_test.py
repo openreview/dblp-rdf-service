@@ -1,44 +1,26 @@
-import tempfile
 import unittest
 from unittest import mock
-from dblp_service.lib.predef.config import load_config, setenv
+from dblp_service.lib.predef.config import setenv
 from dblp_service.rdfdb.file_stash_manager import FileStash, StashIndex
 
 from tests.helpers import method_fqn
 from dblp_service.rdfdb.dblp_rdf_catalog import DblpRdfCatalog, DblpRdfFile
-from tests.dblp_service.rdfdb.mock_data import rolling_catalogs
+from tests.dblp_service.rdfdb.mock_data import rolling_catalogs, test_file_stash
 
-setenv("test")
+setenv('test')
 
-most_recent_rdf_file = DblpRdfFile(filename="dblp.nt.gz", md5="0ba5a47ff1d882686b2e9553a886739c")
+most_recent_rdf_file = DblpRdfFile(filename='dblp.nt.gz', md5='0ba5a47ff1d882686b2e9553a886739c')
 
 timestamped_rdf_files = [
-    DblpRdfFile(filename="dblp-2023-11-03.nt.gz", md5="88cc90ebdd04bac3cdf72bf1ac878b58"),
-    DblpRdfFile(filename="dblp-2023-10-01.nt.gz", md5="4aa22d6b038ceef3849a7423fcf15365"),
-    DblpRdfFile(filename="dblp-2023-09-01.nt.gz", md5="572661d887a04191893bb29beef61768"),
-    DblpRdfFile(filename="dblp-2023-08-01.nt.gz", md5="1a97d3506208d99592be9ade9012763b"),
-    DblpRdfFile(filename="dblp-2023-07-03.nt.gz", md5="6bc3587d2af5c39b72e664baed29d3b5"),
+    DblpRdfFile(filename='dblp-2023-11-03.nt.gz', md5='88cc90ebdd04bac3cdf72bf1ac878b58'),
+    DblpRdfFile(filename='dblp-2023-10-01.nt.gz', md5='4aa22d6b038ceef3849a7423fcf15365'),
+    DblpRdfFile(filename='dblp-2023-09-01.nt.gz', md5='572661d887a04191893bb29beef61768'),
+    DblpRdfFile(filename='dblp-2023-08-01.nt.gz', md5='1a97d3506208d99592be9ade9012763b'),
+    DblpRdfFile(filename='dblp-2023-07-03.nt.gz', md5='6bc3587d2af5c39b72e664baed29d3b5'),
 ]
 timestamped_rdf_md5s = [f.md5 for f in timestamped_rdf_files]
 html_links = [f"<a href='{f.filename}'> {f.filename} </a>" for f in timestamped_rdf_files]
 
-from contextlib import contextmanager
-import typing as t
-
-
-@contextmanager
-def test_file_stash(catalog: t.Optional[DblpRdfCatalog] = None) -> t.Generator[FileStash, t.Any, t.Any]:
-    assert (config := load_config())
-    with tempfile.TemporaryDirectory() as tmpdirname:
-        config.dblpServiceRoot = tmpdirname
-        file_stash = FileStash(config)
-        file_stash.ensure_dirs()
-
-        if catalog:
-            stash_index = StashIndex.from_catalog(catalog)
-            file_stash.write_index(stash_index)
-
-        yield file_stash
 
 
 class FileStashManagerTest(unittest.TestCase):

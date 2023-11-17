@@ -2,6 +2,7 @@
 
 Retrieves *.rdf + *.mdf, downloads and verifies file
 
+TODO this is all being refactored into other modules, this file should be obsolete soon...
 """
 
 import requests
@@ -35,6 +36,7 @@ def get_file_md5(filename: str):
     with open(filename, "rb") as file:
         for chunk in iter(lambda: file.read(4096), b""):
             md5.update(chunk)
+
     return md5.hexdigest()
 
 def verify_md5(filename: str, md5_hash: str):

@@ -8,7 +8,7 @@ import pytest
 
 @pytest.mark.asyncio
 async def test_update_fetch():
-    async with FusekiServerManager() as manager:
+    async with FusekiServerManager():
         sparql = SPARQLWrapper("http://localhost:3030/" "ds")
         sparql.setReturnFormat(JSON)
 
