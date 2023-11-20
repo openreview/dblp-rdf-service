@@ -9,7 +9,7 @@ python ./dblp_service/main.py "$@"
 # sys.path.append("dblp_service")
 
 # from dlbp_service.main import cli
-# # from dblp_service.rdf_io.cli import cli
+# # from dblp_service.rdf_tuples.cli import cli
 
 # if __name__ == '__main__':
 #     sys.exit(cli())

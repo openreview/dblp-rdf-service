@@ -12,7 +12,7 @@ from click.core import Context
 import asyncio
 import typing as t
 
-from dblp_service.rdfdb.jena_db import init_db
+from dblp_service.local_storage.jena_db import init_db
 
 
 @cli.group()

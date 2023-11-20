@@ -1,6 +1,6 @@
 from dblp_service.app.arg_helpers import zero_or_one
-from dblp_service.lib.predef.log import create_logger
-from dblp_service.rdfdb.file_stash_manager import FileStash
+from dblp_service.lib.log import create_logger
+from dblp_service.local_storage.file_stash_manager import FileStash
 from .cli import cli, get_config
 import click
 from click.core import Context

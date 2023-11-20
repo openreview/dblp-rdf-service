@@ -11,8 +11,8 @@ from bigtree.tree.export import print_tree
 from rich.pretty import pprint
 from os import path
 
-from dblp_service.dblp_io.rdf_io.queries import AuthorTuple, create_tree_from_tuples
-from dblp_service.dblp_io.rdf_io.tree_traversal import authorship_tree_to_dblp_repr
+from dblp_service.pub_formats.rdf_tuples.queries import AuthorTuple, create_tree_from_tuples
+from dblp_service.pub_formats.rdf_tuples.tree_traversal import authorship_tree_to_dblp_repr
 
 
 def create_tree_from_tuplestrs(strs: t.List[str]) -> Node:

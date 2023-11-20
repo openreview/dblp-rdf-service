@@ -4,14 +4,14 @@ from dataclasses import asdict
 import click
 from rich.pretty import pprint
 from bigtree.tree.export import print_tree
-from dblp_service.dblp_io.bibtex_output.bibtex_transform import dblp_reprs_to_bibtex_library, print_library
-from dblp_service.dblp_io.rdf_io.queries import get_author_publication_tree, run_author_publication_query
-from dblp_service.dblp_io.rdf_io.tree_traversal import all_authorship_trees_to_reprs
-from dblp_service.dblp_io.rdf_io.trees import simplify_urlname
-from dblp_service.lib.predef.log import create_logger
+from dblp_service.pub_formats.bibtex.bibtex_transform import dblp_reprs_to_bibtex_library, print_library
+from dblp_service.pub_formats.rdf_tuples.queries import get_author_publication_tree, run_author_publication_query
+from dblp_service.pub_formats.rdf_tuples.tree_traversal import all_authorship_trees_to_reprs
+from dblp_service.pub_formats.rdf_tuples.trees import simplify_urlname
+from dblp_service.lib.log import create_logger
 
-from dblp_service.lib.open_exchange.open_fetch import fetch_profile
-from dblp_service.lib.predef.config import setenv
+from dblp_service.open_exchange.open_fetch import fetch_profile
+from dblp_service.lib.config import setenv
 
 log = create_logger(__file__)
 
