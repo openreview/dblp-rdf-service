@@ -10,32 +10,33 @@ from dblp_service.pub_formats.rdf_tuples.tree_traversal import all_authorship_tr
 from dblp_service.pub_formats.rdf_tuples.trees import simplify_urlname
 from dblp_service.lib.log import create_logger
 
-from dblp_service.open_exchange.open_fetch import fetch_profile
+from dblp_service.open_exchange.open_fetch import fetch_notes_for_author, fetch_profile
 from dblp_service.lib.config import setenv
+from .cli import cli
 
 log = create_logger(__file__)
 
-from .cli import cli
 
 @cli.group()
 def query():
     """Query Jena (RDF DB)"""
 
+
 @query.command()
-@click.argument("author-uri", type=str)
-@click.option("--format", type=click.Choice(["xml", "bibtex"], case_sensitive=True), default="bibtex")
-@click.option("--show-tree", is_flag=True, default=False)
-@click.option("--show-repr", is_flag=True, default=False)
-@click.option("--pub-index", type=int, default=0)
+@click.argument('author-uri', type=str)
+@click.option('--format', type=click.Choice(['xml', 'bibtex'], case_sensitive=True), default='bibtex')
+@click.option('--show-tree', is_flag=True, default=False)
+@click.option('--show-repr', is_flag=True, default=False)
+@click.option('--pub-index', type=int, default=0)
 def show_authorship(author_uri: str, format: str, show_tree: bool, show_repr: bool, pub_index: int):
     tree = get_author_publication_tree(author_uri)
     pub_count = len(tree.children)
-    log.info(f"Publication Count: {pub_count}")
+    log.info(f'Publication Count: {pub_count}')
     if pub_index > 0:
         if pub_index > pub_count:
-            print(f"Specify pub. number <= {pub_count-1}")
+            print(f'Specify pub. number <= {pub_count-1}')
         child = tree.children[pub_index]
-        print(f"Only processing publication #{pub_index}")
+        print(f'Only processing publication #{pub_index}')
         tree.children = (child,)
 
     if show_tree:
@@ -46,18 +47,18 @@ def show_authorship(author_uri: str, format: str, show_tree: bool, show_repr: bo
     if show_repr:
         pprint(dblp_repr)
 
-    if format.lower() == "bibtex":
+    if format.lower() == 'bibtex':
         library = dblp_reprs_to_bibtex_library(dblp_repr)
         print_library(library)
         return
 
     # else format == 'xml'
-    print("TODO")
+    print('TODO')
 
 
 @query.command()
-@click.argument("author-uri", type=str)
-@click.option("--pub-num", type=int, default=0)
+@click.argument('author-uri', type=str)
+@click.option('--pub-num', type=int, default=0)
 def show_authorship_tree(author_uri: str, pub_num: int):
     tree = get_author_publication_tree(author_uri)
     if pub_num > 0:
@@ -69,8 +70,8 @@ def show_authorship_tree(author_uri: str, pub_num: int):
 
 
 @query.command()
-@click.argument("author-uri", type=str)
-@click.option("--abbrev", is_flag=True)
+@click.argument('author-uri', type=str)
+@click.option('--abbrev', is_flag=True)
 def show_authorship_tuples(author_uri: str, abbrev: bool):
     tuples = run_author_publication_query(author_uri)
     for tuple in tuples:
@@ -79,13 +80,17 @@ def show_authorship_tuples(author_uri: str, abbrev: bool):
 
 
 @query.command()
-@click.argument("id", type=str)
+@click.argument('id', type=str)
 def profile(id: str):
     """Fetch (by id) and display a user profile from OpenReview"""
 
-    setenv("dev")
+    setenv('dev')
     profile = fetch_profile(id)
     if profile:
         pprint(asdict(profile))
+        print("Notes==================")
+        for note in fetch_notes_for_author(id):
+            pprint(asdict(note))
+
     else:
-        print("No Profile found")
+        print('No Profile found')

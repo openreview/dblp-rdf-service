@@ -4,7 +4,7 @@ from bibtexparser.middlewares.names import MergeCoAuthors # type: ignore
 from bibtexparser.middlewares import LatexEncodingMiddleware # type: ignore
 from icecream import ic
 
-from bibtexparser import Library, write_string
+# from bibtexparser import Library, write_string
 
 from dblp_service.pub_formats.rdf_tuples.tree_traversal import authorship_tree_to_dblp_repr
 from dblp_service.pub_formats.bibtex.bibtex_transform import dblp_repr_to_bibtex

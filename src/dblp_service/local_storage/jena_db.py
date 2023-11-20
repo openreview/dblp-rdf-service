@@ -20,19 +20,6 @@ class JenaDB:
         graph_names = [r for [r] in self.run_sparql_query(query)]
         return [uri_to_graph_name(g) for g in graph_names]
 
-    def load_active_graphs(self):
-        """"""
-        head_id, base_id = self.fstash.get_base_and_head_id()
-        if head_id:
-            self.load_stashed_graph(head_id)
-        else:
-            self.log.warn(f'No file source found for head={head_id}')
-
-        if base_id:
-            self.load_stashed_graph(base_id)
-        else:
-            self.log.warn(f'No file source found for base={base_id}')
-
     def run_sparql_query(self, query: str):
         self.log.debug(f'Running query `{query}`')
         try:
@@ -62,7 +49,6 @@ class JenaDB:
         file_uri = f'<file://{rdf_file}>'
         results = self.run_sparql_update(f'LOAD {file_uri} INTO GRAPH {graph_name.uri()}')
         assert results['statusCode'] == 200
-
 
 
 def unwrap_query_vars(queryReturn: t.Any) -> t.List[t.List[t.Any]]:

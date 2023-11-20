@@ -89,3 +89,16 @@ class DiffEngine:
         )
         self.jenadb.run_sparql_update(query_pubs)
         return diff_graph
+
+    def load_active_graphs(self):
+        """"""
+        head_id, base_id = self.fstash.get_base_and_head_id()
+        if head_id:
+            self.load_stashed_graph(head_id)
+        else:
+            self.log.warn(f'No file source found for head={head_id}')
+
+        if base_id:
+            self.load_stashed_graph(base_id)
+        else:
+            self.log.warn(f'No file source found for base={base_id}')
