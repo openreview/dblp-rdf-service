@@ -1,4 +1,3 @@
-from os import getcwd, path
 from SPARQLWrapper import SPARQLWrapper, JSON
 
 import typing as t
@@ -6,29 +5,15 @@ import typing as t
 from dblp_service.lib.predef.config import Config
 from dblp_service.lib.predef.filesys import ensure_directory
 from dblp_service.lib.predef.log import AppLogger, create_logger
-from dblp_service.rdfdb.file_stash_manager import FileStash
 from dblp_service.rdfdb.fuseki_context import FusekiServerManager
-from dblp_service.rdfdb.graph_naming import GraphName, md5_to_graph_name, uri_to_graph_name
-from dblp_service.rdfdb.sparql import run_sparql_update, unwrap_query_vars
+from dblp_service.rdfdb.graph_naming import GraphName, uri_to_graph_name
 
 
 class JenaDB:
-    fstash: FileStash
     log: AppLogger
 
-    def __init__(self, fstash: FileStash):
-        self.fstash = fstash
+    def __init__(self):
         self.log = create_logger(self.__class__.__name__)
-
-    def load_stashed_graph(self, md5: str):
-        """Load the RDF file into a named graph."""
-        if stashed_file := self.fstash.get_stashed_file(md5):
-            graph_name = md5_to_graph_name(md5)
-            file_uri = f'<file://{stashed_file.path}>'
-            results = self.run_sparql_update(f'LOAD {file_uri} INTO GRAPH {graph_name.uri()}')
-            assert results['statusCode'] == 200
-        else:
-            self.log.warn(f'Stashed id found but no file located. md5={md5}')
 
     def get_named_graphs(self) -> t.List[GraphName]:
         query = """ SELECT ?g WHERE {GRAPH ?g { }} """
@@ -72,6 +57,25 @@ class JenaDB:
         except:
             raise
 
+    def load_graph(self, graph_name: GraphName, rdf_file: str):
+        """Load the RDF file into a named graph."""
+        file_uri = f'<file://{rdf_file}>'
+        results = self.run_sparql_update(f'LOAD {file_uri} INTO GRAPH {graph_name.uri()}')
+        assert results['statusCode'] == 200
+
+
+
+def unwrap_query_vars(queryReturn: t.Any) -> t.List[t.List[t.Any]]:
+    output: t.List[t.List[t.Any]] = []
+    match queryReturn:
+        case {'head': {'vars': [*varnames]}, 'results': {'bindings': [*bindings]}}:
+            output = [[b[var]['value'] for var in varnames] for b in bindings]
+
+        case _:
+            print(queryReturn)
+
+    return output
+
 
 async def init_db(config: Config):
     """
@@ -104,21 +108,24 @@ async def init_db(config: Config):
 # - Rename the database 'updated-dblp' to 'current-dblp'
 
 
-async def load_named_graph(ttl_file: str, graph: str, /, db_location: t.Optional[str] = None):
-    cwd = getcwd()
-    rdf_file = path.join(cwd, ttl_file)
-    async with FusekiServerManager(db_location=db_location):
-        results = run_sparql_update(f'LOAD <file://{rdf_file}> INTO GRAPH {graph} ')
-        assert results['statusCode'] == 200
+# async def load_named_graph(ttl_file: str, graph: str, /, db_location: t.Optional[str] = None):
+#     cwd = getcwd()
+#     rdf_file = path.join(cwd, ttl_file)
+#     async with FusekiServerManager(db_location=db_location):
+#         results = run_sparql_update(f'LOAD <file://{rdf_file}> INTO GRAPH {graph} ')
+#         assert results['statusCode'] == 200
 
 
-async def create_named_graph(graph: str, /, db_location: t.Optional[str] = None):
-    async with FusekiServerManager(db_location=db_location):
-        results = run_sparql_update(f'CREATE GRAPH <{graph}>')
-        assert results['statusCode'] == 200
+# async def create_named_graph(graph: str, /, db_location: t.Optional[str] = None):
+#     async with FusekiServerManager(db_location=db_location):
+#         results = run_sparql_update(f'CREATE GRAPH <{graph}>')
+#         assert results['statusCode'] == 200
 
 
-async def delete_named_graph(graph: str, /, db_location: t.Optional[str] = None):
-    async with FusekiServerManager(db_location=db_location):
-        results = run_sparql_update(f'DROP GRAPH <{graph}>')
-        assert results['statusCode'] == 200
+# async def delete_named_graph(graph: str, /, db_location: t.Optional[str] = None):
+#     async with FusekiServerManager(db_location=db_location):
+#         results = run_sparql_update(f'DROP GRAPH <{graph}>')
+#         assert results['statusCode'] == 200
+
+
+# Query everything in graph g1 = run_sparql_query(f"""SELECT ?s ?r ?o WHERE {{ graph {graph_1} {{  ?s ?r ?o }} }} """)

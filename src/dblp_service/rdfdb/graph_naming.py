@@ -5,6 +5,8 @@ import dataclasses as dc
 import typing as t
 import re
 
+from dblp_service.rdfdb.fetch_dblp_files import get_file_md5
+
 
 @dc.dataclass
 class GraphName:
@@ -75,4 +77,8 @@ def uri_to_graph_name(uri: str) -> GraphName:
 
 
 def md5_to_graph_name(md5: str) -> DblpGraphName:
+    return DblpGraphName(md5)
+
+def file_to_graph_name(file_path: str) -> DblpGraphName:
+    md5 = get_file_md5(file_path)
     return DblpGraphName(md5)

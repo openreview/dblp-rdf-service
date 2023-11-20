@@ -8,8 +8,8 @@ from bigtree.node.node import Node
 import typing as t
 from bigtree.tree.export import print_tree
 
-from icecream import ic
 from rich.pretty import pprint
+from os import path
 
 from dblp_service.dblp_io.rdf_io.queries import AuthorTuple, create_tree_from_tuples
 from dblp_service.dblp_io.rdf_io.tree_traversal import authorship_tree_to_dblp_repr
@@ -45,7 +45,6 @@ def rdf_to_bibtex(tuplestr: str) -> BibtexOutput:
     print_tree(tree, all_attrs=True)
 
     dblp_repr = authorship_tree_to_dblp_repr(tree)
-    ic()
     pprint(dblp_repr)
     # bibtex_str = repr_to_bibtex_str(dblp_repr)
     # entry = dblp_repr_to_bibtex(dblp_repr)
@@ -91,3 +90,7 @@ def method_fqn(method: t.Callable[P, t.Any]) -> str:
     mod = method.__module__
     qn = method.__qualname__
     return f'{mod}.{qn}'
+
+def get_resource_path(file: str) -> str:
+    p = path.join(path.dirname(__file__), 'resources', file)
+    return path.normpath(p)
