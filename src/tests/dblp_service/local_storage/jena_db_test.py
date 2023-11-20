@@ -3,9 +3,9 @@ from dblp_service.dblp_org.fetch_dblp_files import get_file_md5
 from dblp_service.local_storage.fuseki_context import FusekiServerManager
 from dblp_service.local_storage.graph_naming import DblpGraphName
 from dblp_service.local_storage.jena_db import JenaDB
+from tests.dblp_service.local_storage.fixtures import *  # type: ignore # noqa
 
 from tests.helpers import get_resource_path
-from tests.dblp_service.rdfdb import fixtures  # type: ignore # noqa
 
 
 async def test_load_graph(
