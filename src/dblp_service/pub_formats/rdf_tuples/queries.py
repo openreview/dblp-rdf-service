@@ -1,3 +1,4 @@
+from pprint import pprint
 from SPARQLWrapper import SPARQLWrapper, JSON
 import typing as t
 

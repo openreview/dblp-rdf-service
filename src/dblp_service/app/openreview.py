@@ -4,7 +4,8 @@ from rich.pretty import pprint
 from dblp_service.lib.log import create_logger
 
 from dblp_service.open_exchange.open_fetch import fetch_notes_for_author, fetch_profile
-from dblp_service.services.patch_openreview import DblpAuthID, OpenreviewFetcher
+from dblp_service.services.author_alignment import DblpAuthID, OpenreviewFetcher
+
 from .cli import cli
 
 log = create_logger(__file__)

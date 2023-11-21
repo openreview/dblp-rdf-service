@@ -7,8 +7,6 @@ from dblp_service.pub_formats.rdf_tuples.tree_traversal import all_authorship_tr
 from dblp_service.pub_formats.rdf_tuples.trees import simplify_urlname
 from dblp_service.lib.log import create_logger
 
-from dblp_service.open_exchange.open_fetch import fetch_notes_for_author, fetch_profile
-from dblp_service.lib.config import setenv
 from .cli import cli
 
 log = create_logger(__file__)
@@ -24,12 +22,12 @@ def query():
 @click.option('--format', type=click.Choice(['xml', 'bibtex'], case_sensitive=True), default='bibtex')
 @click.option('--show-tree', is_flag=True, default=False)
 @click.option('--show-repr', is_flag=True, default=False)
-@click.option('--pub-index', type=int, default=0)
+@click.option('--pub-index', type=int, default=-1)
 def show_authorship(author_uri: str, format: str, show_tree: bool, show_repr: bool, pub_index: int):
     tree = get_author_publication_tree(author_uri)
     pub_count = len(tree.children)
     log.info(f'Publication Count: {pub_count}')
-    if pub_index > 0:
+    if pub_index > -1:
         if pub_index > pub_count:
             print(f'Specify pub. number <= {pub_count-1}')
         child = tree.children[pub_index]
@@ -45,11 +43,12 @@ def show_authorship(author_uri: str, format: str, show_tree: bool, show_repr: bo
         pprint(dblp_repr)
 
     if format.lower() == 'bibtex':
+        log.info('Output==Bibtex')
         library = dblp_reprs_to_bibtex_library(dblp_repr)
         print_library(library)
         return
 
-    # else format == 'xml'
+    log.info('Output==XML')
     print('TODO')
 
 
@@ -74,5 +73,3 @@ def show_authorship_tuples(author_uri: str, abbrev: bool):
     for tuple in tuples:
         printable = [(simplify_urlname(t) if abbrev else t) for t in tuple if t]
         print(printable)
-
-

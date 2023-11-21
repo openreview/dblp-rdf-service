@@ -4,11 +4,13 @@
 import typing as t
 
 from bigtree.node.node import Node
+from icecream import ic
 from dblp_service.pub_formats.rdf_tuples.dblp_repr import (
     AppendField,
     DblpRepr,
     HandlerType,
     Publication,
+    UpdateOperation,
     WriteReprField,
     EmitRepr,
 )
@@ -32,7 +34,7 @@ def get_isA_handler(node: Node, handlers: AuthorPropertyHandlers) -> t.Optional[
         Callable or None: The handler function if it exists and is callable, otherwise None.
     """
     rel = simplify_urlname(node.node_name)
-    handler = f"isA_{rel}"
+    handler = f'isA_{rel}'
     if hasattr(handlers, handler) and callable(func := getattr(handlers, handler)):
         return func
 
@@ -51,22 +53,22 @@ def get_hasA_handler(node: Node, handlers: AuthorPropertyHandlers) -> t.Optional
         Callable or None: The handler function if it exists and is callable, otherwise None.
     """
     rel = simplify_urlname(node.node_name)
-    handler = f"hasA_{rel}"
+    handler = f'hasA_{rel}'
     if hasattr(handlers, handler) and callable(func := getattr(handlers, handler)):
         return func
 
     return None
 
 
-def run_op(op: object, nsubj: Node):
+def run_op(op: UpdateOperation, nsubj: Node):
     match op:
         case WriteReprField(field, value, overwrite=do_overwrite):
-            if do_overwrite:
-                elem = nsubj.get_attr("elem")
+            elem = nsubj.get_attr('elem')
+            if field not in elem or do_overwrite:
                 elem[field] = value
 
         case AppendField(field, value):
-            aelem: DblpRepr = nsubj.get_attr("elem")
+            aelem: DblpRepr = nsubj.get_attr('elem')
             aelem.setdefault(field, []).append(value)
 
         case EmitRepr(target, value, replace=doreplace):
@@ -93,8 +95,11 @@ def authorship_tree_to_dblp_repr(root: Node) -> DblpRepr:
 
     # First time through, handle the 'isA' properties
     for nsubj, isA_rel, nobj in iter_subject_triples(root):
-        if isA_rel.node_name != "isA":
+        if isA_rel.node_name != 'isA':
             continue
+
+        # myfunction('')
+        ic(nsubj, isA_rel, nobj)
 
         if func := get_isA_handler(nobj, handlers):
             if op := func(nsubj, nobj):
@@ -102,14 +107,18 @@ def authorship_tree_to_dblp_repr(root: Node) -> DblpRepr:
 
     # Second time through, handle the 'hasA' properties
     for nsubj, hasA_rel, nobj in iter_subject_triples(root):
-        if hasA_rel.node_name == "isA":
+        if hasA_rel.node_name == 'isA':
             continue
 
+        ic(nsubj, hasA_rel, nobj)
         if func := get_hasA_handler(hasA_rel, handlers):
+            ic(func.__name__, nsubj, hasA_rel, nobj)
             if op := func(hasA_rel, nobj):
+                ic(op, func, nsubj, hasA_rel, nobj)
                 run_op(op, nsubj)
 
-    root_entry = root.get_attr("elem")
+    root_entry = root.get_attr('elem')
+    ic(root_entry)
 
     assert root_entry is not None
     return root_entry

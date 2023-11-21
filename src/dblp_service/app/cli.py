@@ -3,6 +3,7 @@ from click.core import Context
 from dblp_service.lib.log import create_logger
 from dblp_service.lib.config import Config, load_config, setenv
 import typing as t
+from dblp_service.lib.debug import install_icecream
 
 log = create_logger(__file__)
 
@@ -12,6 +13,7 @@ log = create_logger(__file__)
 @click.option("--env", type=click.Choice(["test", "dev", "prod"]), default="dev", help="Check that config is valid")
 def cli(ctx: Context, env: str):
     log.debug(f"env={env}")
+    install_icecream()
     setenv(env)
     set_config(ctx)
     if not get_config(ctx):
