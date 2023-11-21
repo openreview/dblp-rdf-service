@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-
-from dataclasses import asdict
 import click
 from rich.pretty import pprint
 from bigtree.tree.export import print_tree
@@ -79,18 +76,3 @@ def show_authorship_tuples(author_uri: str, abbrev: bool):
         print(printable)
 
 
-@query.command()
-@click.argument('id', type=str)
-def profile(id: str):
-    """Fetch (by id) and display a user profile from OpenReview"""
-
-    setenv('dev')
-    profile = fetch_profile(id)
-    if profile:
-        pprint(asdict(profile))
-        print("Notes==================")
-        for note in fetch_notes_for_author(id):
-            pprint(asdict(note))
-
-    else:
-        print('No Profile found')

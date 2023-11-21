@@ -1,4 +1,6 @@
 from concurrent.futures import Future
+from dataclasses import asdict
+from pprint import pprint
 from typing import Any, Iterator, TypeVar, cast
 from typing import Optional, List, TypeAlias
 
@@ -45,13 +47,6 @@ def get_session() -> Session:
     session = FuturesSession()
     session.headers.update(client.headers)
     return session
-    # global cached_session
-    # if not cached_session:
-    #     client = get_client()
-    #     cached_session = FuturesSession()
-    #     # cached_session = requests.Session()
-    #     cached_session.headers.update(client.headers)
-    # return cached_session
 
 
 def resolve_api_url(urlpath: str) -> str:
@@ -107,8 +102,6 @@ def _note_fetcher(**params: QueryParms) -> List[Note]:
 
 
 def _fetch_notes(*, slice: Optional[Slice], **initparams: QueryParms) -> Iterator[Note]:
-    # client = get_client()
-
     def _fetcher(**params: QueryParms) -> List[Note]:
         return _note_fetcher(**params)
 
@@ -151,15 +144,8 @@ def fetch_profile(user_id: str) -> Optional[Profile]:
 
     return list_to_optional(profile_fetcher(id=user_id))
 
-
-def fetch_profiles(*, slice: Optional[Slice]) -> Iterator[Profile]:
-    def _fetcher(**params: QueryParms) -> List[Profile]:
-        return profile_fetcher(**params)
-
-    # params = {"invitation": "~/-/profiles"}
-    params = {'term': 'mccallum', 'es': True}
-    iter = IterGet(_fetcher, **params)
-    if slice:
-        iter = iter.withSlice(slice)
-
-    return iter
+def fetch_profile_with_dblp_pid(dblp_pid: str) -> Optional[Profile]:
+    profiles = profile_fetcher(content=dict(dblp=dblp_pid))
+    for p in profiles:
+        pprint(asdict(p))
+    return list_to_optional(profiles)

@@ -1,5 +1,5 @@
 import pytest
-from dblp_service.services.diff_engine import DiffEngine
+from dblp_service.services.rdf_graph_diff import DiffEngine
 
 from dblp_service.local_storage.fuseki_context import FusekiServerManager
 from dblp_service.local_storage.graph_naming import file_to_graph_name
