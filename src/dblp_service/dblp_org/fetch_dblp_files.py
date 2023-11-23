@@ -42,26 +42,3 @@ def get_file_md5(filename: str):
 def verify_md5(filename: str, md5_hash: str):
     file_md5_hash = get_file_md5(filename)
     return file_md5_hash == md5_hash
-
-
-def download_and_verify_dblp_ttl():
-    # URLs for the files
-    file_url = "https://dblp.org/rdf/dblp.ttl.gz"
-    md5_url = "https://dblp.org/rdf/dblp.ttl.gz.md5"
-
-    # Download the files
-    print("Downloading the .ttl.gz file...")
-    ttl_gz_filename = download_file(file_url, "dblp.ttl.gz")
-    print("Downloading the .md5 file...")
-    md5_filename = download_file(md5_url, "dblp.ttl.gz.md5")
-
-    # Read the MD5 hash from the downloaded .md5 file
-    with open(md5_filename, "r") as file:
-        md5_hash = file.read().split()[0]
-
-    # Verify the integrity of the .ttl.gz file
-    print("Verifying the integrity of the .ttl.gz file...")
-    if verify_md5(ttl_gz_filename, md5_hash):
-        print("Integrity check passed.")
-    else:
-        print("Integrity check failed!")

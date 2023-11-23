@@ -1,10 +1,10 @@
 import pytest
 import structlog
 from structlog.testing import LogCapture
-from dblp_service.services.diff_engine import DiffEngine
 from dblp_service.local_storage.file_stash_manager import FileStash
 from dblp_service.local_storage.fuseki_context import FusekiServerManager
 from dblp_service.local_storage.jena_db import JenaDB
+from dblp_service.services.rdf_graph_diff import DiffEngine
 
 from tests.dblp_service.local_storage.mock_data import test_file_stash
 

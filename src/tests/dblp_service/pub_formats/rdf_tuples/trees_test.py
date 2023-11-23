@@ -50,6 +50,7 @@ def test_iter_subj_obj_relationships_depths():
 
     for exnum, example in enumerate(examples):
         root = list_to_tree(example)
+
         desc = get_nth_descendent(root, exnum)
         assert desc is not None
         for n1, n2, n3 in iter_subj_obj_relationships(desc):

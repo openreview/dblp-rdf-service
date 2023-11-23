@@ -55,9 +55,6 @@ def resolve_api_url(urlpath: str) -> str:
     return f'{baseurl}/{urlpath}'
 
 
-def profiles_url() -> str:
-    return resolve_api_url('profiles')
-
 
 def profiles_search_url() -> str:
     return resolve_api_url('profiles/search')

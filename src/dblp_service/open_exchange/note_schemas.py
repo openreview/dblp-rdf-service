@@ -52,7 +52,7 @@ class NoteContentSchema(PartialSchema):
         May indicate an error in the OpenReview database, but in any case,
         notes are not useful unless they have certain fields
         """
-        valid_title = 'title' in data and type(data['title']) is str
+        valid_title = 'title' in data and isinstance(data['title'], str)
         if not valid_title:
             data['title'] = ''
         valid_authors = 'authors' in data and isinstance(data['authors'], list)

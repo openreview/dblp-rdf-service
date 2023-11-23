@@ -30,20 +30,6 @@ class OpenReviewSchema(Schema):
 
 
 @dataclass
-class MongoConfig:
-    connectionUrl: str
-    dbName: str
-
-
-class MongoConfigSchema(Schema):
-    connectionUrl = StrField
-    dbName = StrField
-
-    @post_load
-    def make(self, data: t.Any, **_) -> MongoConfig:
-        return MongoConfig(**data)
-
-@dataclass
 class ApacheJenaConfig:
     dbLocation: str
 

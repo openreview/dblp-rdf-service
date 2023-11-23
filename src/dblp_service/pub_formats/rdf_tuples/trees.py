@@ -104,3 +104,12 @@ def iter_subj_obj_relationships(sub_node: Node) -> t.Generator[SubjectRelObjectN
         rel_node = obj_node.parent
         assert rel_node is not None
         yield (sub_node, rel_node, obj_node)
+
+
+def get_nth_descendent(node: Node, n: int) -> t.Optional[Node]:
+    desc: t.Optional[Node] = node
+    for _ in range(n):
+        if desc is None:
+            return None
+        desc = desc.children[0] if desc.children else None
+    return desc
