@@ -7,7 +7,6 @@ from textwrap import dedent
 
 from dblp_service.local_storage.graph_naming import DblpGraphName, DiffGraphName, GraphName, md5_to_graph_name
 
-
 class DiffEngine:
     """Compute and manage the changes between dblp.org data exports."""
 

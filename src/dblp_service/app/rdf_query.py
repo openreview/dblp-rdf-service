@@ -22,8 +22,16 @@ def query():
 @click.option('--format', type=click.Choice(['xml', 'bibtex'], case_sensitive=True), default='bibtex')
 @click.option('--show-tree', is_flag=True, default=False)
 @click.option('--show-repr', is_flag=True, default=False)
+@click.option('--step', is_flag=True, default=False)
 @click.option('--pub-index', type=int, default=-1)
-def show_authorship(author_uri: str, format: str, show_tree: bool, show_repr: bool, pub_index: int):
+def show_authorship(
+    author_uri: str,
+    format: str,
+    show_tree: bool,
+    show_repr: bool,
+    step: bool,
+    pub_index: int,
+):
     tree = get_author_publication_tree(author_uri)
     pub_count = len(tree.children)
     log.info(f'Publication Count: {pub_count}')

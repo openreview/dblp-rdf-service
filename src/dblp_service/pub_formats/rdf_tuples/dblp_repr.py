@@ -23,7 +23,7 @@ class PersonName(DblpRepr):
         super().__init__(**kwargs)
 
     def fieldnames(self) -> t.List[str]:
-        return list("name_type fullname ordinal".split())
+        return list('name_type fullname ordinal'.split())
 
 
 class ResourceIdentifier(DblpRepr):
@@ -31,7 +31,7 @@ class ResourceIdentifier(DblpRepr):
         super().__init__(**kwargs)
 
     def fieldnames(self) -> t.List[str]:
-        return list("id_scheme value".split())
+        return list('id_scheme value'.split())
 
 
 class Publication(DblpRepr):
@@ -39,7 +39,7 @@ class Publication(DblpRepr):
         super().__init__(**kwargs)
 
     def fieldnames(self) -> t.List[str]:
-        return list("pub_type key schema".split())
+        return list('pub_type key schema'.split())
 
 
 @dataclass
@@ -48,31 +48,33 @@ class UpdateOperation(ABC):
 
 
 @dataclass
-class WriteReprField(UpdateOperation):
+class SetField(UpdateOperation):
     field: str
     value: t.Any
     _: KW_ONLY
     overwrite: bool = True
 
-@dataclass
-class SetSimpleKeyValue(UpdateOperation):
-    field: str
-    value: t.Any
-    _: KW_ONLY
-    overwrite: bool = True
+    def __str__(self):
+        return f'{self.__class__.__name__}({self.field} = {self.value}, overwrite={self.overwrite})'
+
 
 @dataclass
 class AppendField(UpdateOperation):
     field: str
     value: t.Any
 
+    def __str__(self):
+        return f'{self.__class__.__name__}({self.field} = {self.value})'
+
 
 @dataclass
-class EmitRepr(UpdateOperation):
-    target: Node
+class InitFields(UpdateOperation):
     value: DblpRepr
     _: KW_ONLY
     replace: bool = True
+
+    def __str__(self):
+        return f'{self.__class__.__name__}({self.value}, replace={self.replace})'
 
 
 HandlerType: t.TypeAlias = t.Callable[[Node, Node], t.Optional[UpdateOperation]]

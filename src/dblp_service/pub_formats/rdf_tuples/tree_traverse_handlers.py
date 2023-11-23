@@ -11,10 +11,10 @@ from dblp_service.pub_formats.rdf_tuples.dblp_repr import (
     Publication,
     PersonName,
     ResourceIdentifier,
-    WriteReprField,
-    EmitRepr,
+    SetField,
+    InitFields,
 )
-from dblp_service.pub_formats.rdf_tuples.trees import simplify_urlname
+from dblp_service.pub_formats.rdf_tuples.trees import get_repr, simplify_urlname
 
 from dblp_service.lib.utils import to_int
 
@@ -46,21 +46,21 @@ class SignaturePropertyHandlers:
         Result:
           Emits PersonName(...), which is then attached to entity node
         """
-        return EmitRepr(entity, PersonName(name_type='author'))
+        return InitFields(PersonName(name_type='author'))
 
     def isA_EditorSignature(self, entity: Node, prop_val: Node):
         """The information that links a publication to an editor."""
-        return EmitRepr(entity, PersonName(name_type='editor'))
+        return InitFields(PersonName(name_type='editor'))
 
     def hasA_signatureDblpName(self, rel: Node, prop_val: Node):
         """A dblp name (including any possible trailing homonym number) that links the publication to a creator."""
-        return WriteReprField('fullname', prop_val.node_name)
+        return SetField('fullname', prop_val.node_name)
 
     def hasA_signatureOrdinal(self, rel: Node, prop_val: Node):
         """The ordinal number of this signature for the publication, starting with 1."""
         ordinal = to_int(prop_val.node_name)
         assert isinstance(ordinal, int)
-        return WriteReprField('ordinal', ordinal)
+        return SetField('ordinal', ordinal)
 
     def hasA_hasSignature(self, rel: Node, prop_val: Node):
         """A signature that links this publication to an creator.
@@ -71,11 +71,11 @@ class SignaturePropertyHandlers:
                   │   │   ├── https://dblp.org/rdf/schema#signatureDblpName
 
         """
-        return AppendField('author', prop_val.get_attr('elem'))
+        return AppendField('author', get_repr(prop_val))
 
     def hasA_signatureCreator(self, rel: Node, prop_val: Node):
         """A linked creator of the publication."""
-        return WriteReprField('pid', '/some/pid/todo')
+        return SetField('pid', '/some/pid/todo')
 
     # def hasA_signatureOrcid(self, rel: Node, prop_val: Node):
     #     """An ORCID that links the publication to a creator."""
@@ -89,27 +89,27 @@ class PublicationTypeHandlers:
     def isA_Publication(self, entity: Node, prop_val: Node):
         """A publication."""
         key = simplify_urlname(prop_val.node_name)
-        return EmitRepr(entity, Publication(type=key), replace=False)
+        return InitFields(Publication(type=key), replace=False)
 
     def isA_Book(self, entity: Node, prop_val: Node):
         """A book or a thesis."""
         key = simplify_urlname(prop_val.node_name)
-        return EmitRepr(entity, Publication(type=key))
+        return InitFields(Publication(type=key))
 
     def isA_Article(self, entity: Node, prop_val: Node):
         """A journal article."""
         key = simplify_urlname(prop_val.node_name)
-        return EmitRepr(entity, Publication(type=key))
+        return InitFields(Publication(type=key))
 
     def isA_Inproceedings(self, entity: Node, prop_val: Node):
         """A conference or workshop paper."""
         key = simplify_urlname(prop_val.node_name)
-        return EmitRepr(entity, Publication(type=key))
+        return InitFields(Publication(type=key))
 
     def isA_Incollection(self, entity: Node, prop_val: Node):
         """A part/chapter in a book or a collection."""
         key = simplify_urlname(prop_val.node_name)
-        return EmitRepr(entity, Publication(type=key))
+        return InitFields(Publication(type=key))
 
     ##
     ## Unused Methods below this point
@@ -154,7 +154,7 @@ class ResourceIdHandlers:
                └── http://purl.org/spar/datacite/ResourceIdentifier
 
         """
-        return EmitRepr(entity, ResourceIdentifier())
+        return InitFields(ResourceIdentifier())
 
     def hasA_type(self, rel: Node, prop_val: Node):
         """Specifies relationship http://www.w3.org/1999/02/22-rdf-syntax-ns#type
@@ -166,7 +166,7 @@ class ResourceIdHandlers:
     def hasA_hasLiteralValue(self, rel: Node, prop_val: Node):
         """"""
         value = prop_val.node_name
-        return WriteReprField('value', value)
+        return SetField('value', value)
 
     def hasA_usesIdentifierScheme(self, rel: Node, prop_val: Node):
         value = simplify_urlname(prop_val.node_name).lower()
@@ -178,56 +178,56 @@ class ResourceIdHandlers:
         # Always use the DBLP id when available
         overwrite = value == 'dblp'
 
-        return WriteReprField('scheme', value.upper(), overwrite=overwrite)
+        return SetField('scheme', value.upper(), overwrite=overwrite)
 
     def hasA_hasIdentifier(self, rel: Node, prop_val: Node):
         """An abstract identifier."""
-        ident: ResourceIdentifier = prop_val.get_attr('elem')
+        assert (ident := get_repr(prop_val)) is not None
         s = ident['scheme']
         v = ident['value']
         idval = f'{s}:{v}'
 
-        return WriteReprField('key', idval)
+        return SetField('key', idval)
 
 
 class SimpleKeyValueFields:
     def hasA_doi(self, rel: Node, prop_val: Node):
         """A Digital Object Identifier."""
-        return WriteReprField(simplify_urlname(rel.node_name), prop_val.node_name)
+        return SetField(simplify_urlname(rel.node_name), prop_val.node_name)
 
     def hasA_isbn(self, rel: Node, prop_val: Node):
         """An International Standard Book Number."""
-        return WriteReprField(simplify_urlname(rel.node_name), prop_val.node_name)
+        return SetField(simplify_urlname(rel.node_name), prop_val.node_name)
 
     def hasA_title(self, rel: Node, prop_val: Node):
         """The title of the publication."""
-        return WriteReprField(simplify_urlname(rel.node_name), prop_val.node_name)
+        return SetField(simplify_urlname(rel.node_name), prop_val.node_name)
 
     def hasA_yearOfEvent(self, _: Node, prop_val: Node):
         """The year the conference or workshop contribution has been presented."""
-        return WriteReprField('year', prop_val.node_name)
+        return SetField('year', prop_val.node_name)
 
     def hasA_yearOfPublication(self, _: Node, prop_val: Node):
         """The year the publication's issue or volume has been published."""
-        return WriteReprField('year', prop_val.node_name)
+        return SetField('year', prop_val.node_name)
 
     def hasA_webpage(self, rel: Node, prop_val: Node):
         """The URL of a web page about this item."""
-        return WriteReprField(simplify_urlname(rel.node_name), prop_val.node_name)
+        return SetField(simplify_urlname(rel.node_name), prop_val.node_name)
 
 
 class VenuePropertyHandlers:
     def hasA_documentPage(self, rel: Node, prop_val: Node):
         """The URL of the electronic edition of the publication."""
-        return WriteReprField('url', prop_val.node_name)
+        return SetField('url', prop_val.node_name)
 
     def hasA_primarydocumentPage(self, rel: Node, prop_val: Node):
         """The primary URL of the electronic edition of the publication."""
-        return WriteReprField('url', prop_val.node_name)
+        return SetField('url', prop_val.node_name)
 
     def hasA_pagination(self, rel: Node, prop_val: Node):
         """The page numbers where the publication can be found."""
-        return WriteReprField('pages', prop_val.node_name)
+        return SetField('pages', prop_val.node_name)
 
     def hasA_listedOnTocPage(self, rel: Node, prop_val: Node):
         """The url of the dblp table of contents page listing this publication."""
