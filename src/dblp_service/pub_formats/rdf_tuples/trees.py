@@ -59,6 +59,10 @@ def has_elem(n: Node) -> bool:
 def get_repr(n: Node) -> t.Optional[DblpRepr]:
     return n.get_attr('repr')
 
+def remove_repr(n: Node) -> t.Optional[DblpRepr]:
+    repr = get_repr(n)
+    delattr(n, 'repr')
+    return repr
 
 def set_repr(n: Node, repr: DblpRepr) -> None:
     n.set_attrs(dict(repr=repr))

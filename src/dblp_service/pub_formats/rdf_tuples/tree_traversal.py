@@ -64,12 +64,12 @@ def run_op(op: UpdateOperation, nsubj: Node):
     subj_repr = get_repr(nsubj)
     match op:
         case SetField(field, value, overwrite=do_overwrite):
-            assert subj_repr
+            assert subj_repr is not None
             if field not in subj_repr or do_overwrite:
                 subj_repr[field] = value
 
         case AppendField(field, value):
-            assert subj_repr
+            assert subj_repr is not None
             subj_repr.setdefault(field, []).append(value)
 
         case InitFields(value, replace=doreplace):
@@ -107,38 +107,42 @@ def authorship_tree_to_dblp_repr(root: Node) -> DblpRepr:
 
     __sv = StepViewer(interactive=False)
 
-    # First time through, handle the 'isA' properties
-    for nsubj, isA_rel, nobj in iter_subj_obj_relationships(root):
-        if isA_rel.node_name != 'isA':
-            continue
+    try:
+        # First time through, handle the 'isA' properties
+        for nsubj, isA_rel, nobj in iter_subj_obj_relationships(root):
+            if isA_rel.node_name != 'isA':
+                continue
 
-        __sv.scrutinees(nsubj, isA_rel, nobj)
+            __sv.scrutinees(nsubj, isA_rel, nobj)
 
-        if func := get_isA_handler(nobj, handlers):
-            __sv.handler(func)
-            if op := func(nsubj, nobj):
-                run_op(op, nsubj)
-                __sv.ran_op(op)
+            if func := get_isA_handler(nobj, handlers):
+                __sv.handler(func)
+                if op := func(nsubj, nobj):
+                    run_op(op, nsubj)
+                    __sv.ran_op(op)
 
-        __sv.render_output()
+            __sv.render_output()
 
-    # Second time through, handle the 'hasA' properties
-    for nsubj, hasA_rel, nobj in iter_subj_obj_relationships(root):
-        if hasA_rel.node_name == 'isA':
-            continue
+        # Second time through, handle the 'hasA' properties
+        for nsubj, hasA_rel, nobj in iter_subj_obj_relationships(root):
+            if hasA_rel.node_name == 'isA':
+                continue
 
-        __sv.scrutinees(nsubj, hasA_rel, nobj)
+            __sv.scrutinees(nsubj, hasA_rel, nobj)
 
-        if func := get_hasA_handler(hasA_rel, handlers):
-            __sv.handler(func)
-            if op := func(hasA_rel, nobj):
-                run_op(op, nsubj)
-                __sv.ran_op(op)
+            if func := get_hasA_handler(hasA_rel, handlers):
+                __sv.handler(func)
+                if op := func(hasA_rel, nobj):
+                    run_op(op, nsubj)
+                    __sv.ran_op(op)
 
-        __sv.render_output()
+            __sv.render_output()
 
-    __sv.done()
+        __sv.done()
 
-    assert (root_entry := get_repr(root)) is not None
+        assert (root_entry := get_repr(root)) is not None
 
-    return root_entry
+        return root_entry
+    except Exception as e:
+        print(f'exception was {e}')
+        raise

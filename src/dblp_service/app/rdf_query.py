@@ -4,7 +4,7 @@ from bigtree.tree.export import print_tree
 from dblp_service.pub_formats.bibtex.bibtex_transform import dblp_reprs_to_bibtex_library, print_library
 from dblp_service.pub_formats.rdf_tuples.queries import get_author_publication_tree, run_author_publication_query
 from dblp_service.pub_formats.rdf_tuples.tree_traversal import all_authorship_trees_to_reprs
-from dblp_service.pub_formats.rdf_tuples.trees import simplify_urlname
+from dblp_service.pub_formats.rdf_tuples.trees import iter_subj_obj_relationships, simplify_urlname
 from dblp_service.lib.log import create_logger
 
 from .cli import cli
@@ -22,6 +22,7 @@ def query():
 @click.option('--format', type=click.Choice(['xml', 'bibtex'], case_sensitive=True), default='bibtex')
 @click.option('--show-tree', is_flag=True, default=False)
 @click.option('--show-repr', is_flag=True, default=False)
+@click.option('--show-tuples', is_flag=True, default=False)
 @click.option('--step', is_flag=True, default=False)
 @click.option('--pub-index', type=int, default=-1)
 def show_authorship(
@@ -29,6 +30,7 @@ def show_authorship(
     format: str,
     show_tree: bool,
     show_repr: bool,
+    show_tuples: bool,
     step: bool,
     pub_index: int,
 ):
@@ -42,8 +44,20 @@ def show_authorship(
         print(f'Only processing publication #{pub_index}')
         tree.children = (child,)
 
+
+    if show_tuples:
+        print('Tuples')
+        for child in tree.children:
+            for tuple in iter_subj_obj_relationships(child):
+                printable = [t.node_name for t in tuple if t]
+                # printable = [simplify_urlname(t.node_name) for t in tuple if t]
+                print(printable)
+        print('\n\n')
+
     if show_tree:
+        print('Tree')
         print_tree(tree, all_attrs=True)
+        print('\n\n')
 
     dblp_repr = all_authorship_trees_to_reprs(tree)
 

@@ -12,6 +12,7 @@ from bigtree.node.node import Node
 from rich.console import ConsoleRenderable
 from dblp_service.pub_formats.rdf_tuples.dblp_repr import UpdateOperation
 
+from copy import deepcopy
 
 from dblp_service.pub_formats.rdf_tuples.trees import get_repr, simplify_urlname  # type: ignore
 
@@ -117,7 +118,7 @@ def make_rich_tree(leaf: Node) -> ConsoleRenderable:
         style = Style() if n > 2 else styles[n]
         rich_node = Tree(Text(node.node_name, style=style))
         if (elem := get_repr(node)) is not None:
-            ecopy = elem.copy()
+            ecopy = deepcopy(elem)
             pretty = Pretty(ecopy, overflow='fold', max_length=120, expand_all=True)
             rich_node.add(pretty)
         if n > 0:

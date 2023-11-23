@@ -14,7 +14,7 @@ from dblp_service.pub_formats.rdf_tuples.dblp_repr import (
     SetField,
     InitFields,
 )
-from dblp_service.pub_formats.rdf_tuples.trees import get_repr, simplify_urlname
+from dblp_service.pub_formats.rdf_tuples.trees import get_repr, remove_repr, simplify_urlname
 
 from dblp_service.lib.utils import to_int
 
@@ -71,11 +71,12 @@ class SignaturePropertyHandlers:
                   │   │   ├── https://dblp.org/rdf/schema#signatureDblpName
 
         """
-        return AppendField('author', get_repr(prop_val))
+        # remove_repr
+        return AppendField('author', remove_repr(prop_val))
 
     def hasA_signatureCreator(self, rel: Node, prop_val: Node):
         """A linked creator of the publication."""
-        return SetField('pid', '/some/pid/todo')
+        return SetField('pid', prop_val.node_name)
 
     # def hasA_signatureOrcid(self, rel: Node, prop_val: Node):
     #     """An ORCID that links the publication to a creator."""
@@ -182,12 +183,14 @@ class ResourceIdHandlers:
 
     def hasA_hasIdentifier(self, rel: Node, prop_val: Node):
         """An abstract identifier."""
-        assert (ident := get_repr(prop_val)) is not None
+        assert (ident := remove_repr(prop_val)) is not None
         s = ident['scheme']
         v = ident['value']
         idval = f'{s}:{v}'
 
-        return SetField('key', idval)
+        overwrite = s == "DBLP"
+
+        return SetField('key', idval, overwrite=overwrite)
 
 
 class SimpleKeyValueFields:
