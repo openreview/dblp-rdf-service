@@ -80,7 +80,7 @@ def run_op(op: UpdateOperation, nsubj: Node):
             raise Exception(f'Unknown UpdateOperation {op}')
 
 
-def all_authorship_trees_to_reprs(root: Node) -> t.List[DblpRepr]:
+def all_authorship_trees_to_reprs(root: Node, step_debug: bool) -> t.List[DblpRepr]:
     """
     Convert an authorship tree to an intermediate repr.
 
@@ -90,10 +90,10 @@ def all_authorship_trees_to_reprs(root: Node) -> t.List[DblpRepr]:
     Returns:
         List[DblpRepr]: A list of reprs for each child of the root node.
     """
-    return [authorship_tree_to_dblp_repr(subject) for subject in root.children]
+    return [authorship_tree_to_dblp_repr(subject, step_debug) for subject in root.children]
 
 
-def authorship_tree_to_dblp_repr(root: Node) -> DblpRepr:
+def authorship_tree_to_dblp_repr(root: Node, step_debug: bool) -> DblpRepr:
     """
     Traverse the authorship tree and return an intermediate encoding.
 
@@ -105,7 +105,8 @@ def authorship_tree_to_dblp_repr(root: Node) -> DblpRepr:
     """
     handlers = AuthorPropertyHandlers()
 
-    __sv = StepViewer(interactive=False)
+    # the __sv.* calls are just for debug logging
+    __sv = StepViewer(active=step_debug)
 
     try:
         # First time through, handle the 'isA' properties
@@ -137,8 +138,6 @@ def authorship_tree_to_dblp_repr(root: Node) -> DblpRepr:
                     __sv.ran_op(op)
 
             __sv.render_output()
-
-        __sv.done()
 
         assert (root_entry := get_repr(root)) is not None
 

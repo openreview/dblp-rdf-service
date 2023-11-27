@@ -23,7 +23,7 @@ def query():
 @click.option('--show-tree', is_flag=True, default=False)
 @click.option('--show-repr', is_flag=True, default=False)
 @click.option('--show-tuples', is_flag=True, default=False)
-@click.option('--step', is_flag=True, default=False)
+@click.option('--step-debug', is_flag=True, default=False)
 @click.option('--pub-index', type=int, default=-1)
 def show_authorship(
     author_uri: str,
@@ -31,7 +31,7 @@ def show_authorship(
     show_tree: bool,
     show_repr: bool,
     show_tuples: bool,
-    step: bool,
+    step_debug: bool,
     pub_index: int,
 ):
     tree = get_author_publication_tree(author_uri)
@@ -59,7 +59,7 @@ def show_authorship(
         print_tree(tree, all_attrs=True)
         print('\n\n')
 
-    dblp_repr = all_authorship_trees_to_reprs(tree)
+    dblp_repr = all_authorship_trees_to_reprs(tree, step_debug)
 
     if show_repr:
         pprint(dblp_repr)

@@ -10,7 +10,7 @@ from rich.style import Style
 
 from bigtree.node.node import Node
 from rich.console import ConsoleRenderable
-from dblp_service.pub_formats.rdf_tuples.dblp_repr import UpdateOperation
+from dblp_service.pub_formats.rdf_tuples.dblp_repr import HandlerType, UpdateOperation
 
 from copy import deepcopy
 
@@ -20,16 +20,18 @@ P = t.ParamSpec('P')
 
 
 class StepViewer:
-    interactive: bool
+    active: bool
     renderables: t.Dict[str, ConsoleRenderable]
     messages: t.List[Text]
 
     subj: Node
     rel: Node
     obj: Node
+    update_op: UpdateOperation | None
+    handler_func: HandlerType | None
 
-    def __init__(self, interactive: bool) -> None:
-        self.interactive = interactive
+    def __init__(self, active: bool) -> None:
+        self.active = active
         self.console = Console()
         self.reset()
 
@@ -37,6 +39,8 @@ class StepViewer:
         self.subj = Node('unset')
         self.rel = Node('unset')
         self.obj = Node('unset')
+        self.update_op = None
+        self.handler_func = None
         self.renderables = defaultdict(Text)
         self.messages = []
 
@@ -59,10 +63,8 @@ class StepViewer:
         self.messages.append(message)
         self.renderables['before'] = make_rich_tree(obj)
 
-    def handler(self, fn: t.Callable[P, t.Any]):
-        message = Text('Handler function: ').append(Text.from_markup(f'[bold]{fn.__qualname__}'))
-
-        self.messages.append(message)
+    def handler(self, fn: HandlerType | None):
+        self.handler_func = fn
 
     def render_messages(self):
         msgs = Table.grid()
@@ -78,29 +80,43 @@ class StepViewer:
 
         return trees
 
+    def render_before_tree(self):
+        trees = Table(show_edge=False, show_footer=False)
+        trees.add_column('Tree (unchanged)', header_style='green bold')
+        trees.add_row(self.renderables['before'])
+
+        return trees
+
     def render_output(self):
+        if not self.active:
+            return
+
+        if self.handler_func:
+            fname = self.handler_func.__qualname__
+            self.messages.append(Text('Handler function: ').append(Text.from_markup(f'[bold]{fname}')))
+        else:
+            self.messages.append(Text('No handler function found'))
+
+        if self.update_op:
+            message = Text('Update Operation: ').append(Text.from_markup(f'[bold blue]{str(self.update_op)}'))
+            self.messages.append(message)
+        else:
+            self.messages.append(Text('No update operation'))
+
         frame = Table(padding=1, show_edge=False)
         frame.add_row(self.render_messages())
-        frame.add_row(self.render_before_and_after_trees())
+        if self.update_op:
+            frame.add_row(self.render_before_and_after_trees())
+        else:
+            frame.add_row(self.render_before_tree())
 
-        console = Console()
-        console.print('')
-        console.print(frame)
+        self.console.print('')
+        self.console.print(frame)
         self.reset()
 
     def ran_op(self, op: UpdateOperation):
+        self.update_op = op
         self.renderables['after'] = make_rich_tree(self.obj)
-        message = Text('Update Operation: ').append(Text.from_markup(f'[bold blue]{str(op)}'))
-        self.messages.append(message)
-
-    def done(self):
-        pass
-
-    def msg(self, str):
-        pass
-
-    def show_tree(self, node: Node, pane: int):
-        pass
 
 
 def make_rich_tree(leaf: Node) -> ConsoleRenderable:
