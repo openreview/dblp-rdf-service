@@ -35,6 +35,7 @@ def get_isA_handler(node: Node, handlers: AuthorPropertyHandlers) -> t.Optional[
     """
     rel = simplify_urlname(node.node_name)
     handler = f'isA_{rel}'
+    func: HandlerType | None = None
     if hasattr(handlers, handler) and callable(func := getattr(handlers, handler)):
         return func
 
@@ -54,6 +55,7 @@ def get_hasA_handler(node: Node, handlers: AuthorPropertyHandlers) -> t.Optional
     """
     rel = simplify_urlname(node.node_name)
     handler = f'hasA_{rel}'
+    func: HandlerType | None = None
     if hasattr(handlers, handler) and callable(func := getattr(handlers, handler)):
         return func
 

@@ -14,12 +14,14 @@ from dblp_service.pub_formats.rdf_tuples.dblp_repr import HandlerType, UpdateOpe
 
 from copy import deepcopy
 
-from dblp_service.pub_formats.rdf_tuples.trees import get_repr, simplify_urlname  # type: ignore
+from dblp_service.pub_formats.rdf_tuples.trees import get_repr, simplify_urlname
 
 P = t.ParamSpec('P')
 
 
 class StepViewer:
+    """Debug Viewer to trace the transformation of an authorship tree into bibtex/XML."""
+
     active: bool
     renderables: t.Dict[str, ConsoleRenderable]
     messages: t.List[Text]

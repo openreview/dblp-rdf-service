@@ -45,7 +45,8 @@ def match_attr_value(node: Node, keypat: str, valpat: str) -> bool:
 
 
 def get_elem(n: Node) -> t.Optional[ET.Element]:
-    return n.get_attr('element')
+    elem: t.Optional[ET.Element] = n.get_attr('element')
+    return elem
 
 
 def set_elem(n: Node, elem: ET.Element) -> None:
@@ -57,12 +58,15 @@ def has_elem(n: Node) -> bool:
 
 
 def get_repr(n: Node) -> t.Optional[DblpRepr]:
-    return n.get_attr('repr')
+    repr: t.Optional[DblpRepr] = n.get_attr('repr')
+    return repr
+
 
 def remove_repr(n: Node) -> t.Optional[DblpRepr]:
     repr = get_repr(n)
     delattr(n, 'repr')
     return repr
+
 
 def set_repr(n: Node, repr: DblpRepr) -> None:
     n.set_attrs(dict(repr=repr))

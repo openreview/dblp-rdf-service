@@ -73,7 +73,7 @@ class FileStash:
         self.dblp_file_fetcher = DblpOrgFileFetcher()
 
     def write_index(self, stash_index: StashIndex) -> None:
-        content = StashIndex.Schema().dumps(stash_index)  # type: ignore
+        content = StashIndex.Schema().dumps(stash_index)
         with open(self.index_file, 'w') as f:
             f.write(content)
 
@@ -84,7 +84,7 @@ class FileStash:
         self.log.debug(f'loading index {self.index_file}')
         with open(self.index_file, 'r') as f:
             content = f.read()
-            sindex: StashIndex = StashIndex.Schema().loads(content)  # type: ignore
+            sindex: StashIndex = StashIndex.Schema().loads(content)
             return sindex
 
     def ensure_dirs(self):
@@ -102,7 +102,7 @@ class FileStash:
             new_index,
             base_version=old_index.base_version,
             head_version=old_index.head_version,
-        )  # type: ignore
+        )
 
     def base_or_head(self, *, set_base: bool = False, set_head: bool = False) -> t.Optional[str]:
         exactly_one_set = set_base ^ set_head
@@ -160,10 +160,10 @@ class FileStash:
         if not md5:
             if set_head:
                 md5 = catalog.latest_release.md5
-                return replace(stash_index, head_version=md5)  # type: ignore
+                return replace(stash_index, head_version=md5)
             else:
                 md5 = catalog.most_recent_archived_rdf().md5
-                return replace(stash_index, base_version=md5)  # type: ignore
+                return replace(stash_index, base_version=md5)
 
         # md5_matches = [v.md5 for v in catalog.get_archived_releases() if v.md5.startswith(md5)]
         md5_matches = [stashed_md5 for stashed_md5 in self.get_all_stashed_md5s() if stashed_md5.startswith(md5)]
@@ -182,9 +182,9 @@ class FileStash:
         md5 = md5_matches[0]
 
         if set_head:
-            return replace(stash_index, head_version=md5)  # type: ignore
+            return replace(stash_index, head_version=md5)
         else:
-            return replace(stash_index, base_version=md5)  # type: ignore
+            return replace(stash_index, base_version=md5)
 
     def get_base_and_head_id(self) -> t.Tuple[t.Optional[str], t.Optional[str]]:
         if sindex := self.read_index():

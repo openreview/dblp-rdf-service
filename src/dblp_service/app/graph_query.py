@@ -13,11 +13,12 @@ log = create_logger(__file__)
 
 
 @cli.group()
-def query():
-    """Query Jena (RDF DB)"""
+def graph_query():
+    """Query Jena RDF GraphDB"""
 
 
-@query.command()
+
+@graph_query.command()
 @click.argument('author-uri', type=str)
 @click.option('--format', type=click.Choice(['xml', 'bibtex'], case_sensitive=True), default='bibtex')
 @click.option('--show-tree', is_flag=True, default=False)
@@ -74,7 +75,7 @@ def show_authorship(
     print('TODO')
 
 
-@query.command()
+@graph_query.command()
 @click.argument('author-uri', type=str)
 @click.option('--pub-num', type=int, default=0)
 def show_authorship_tree(author_uri: str, pub_num: int):
@@ -87,7 +88,7 @@ def show_authorship_tree(author_uri: str, pub_num: int):
     print_tree(tree, all_attrs=True)
 
 
-@query.command()
+@graph_query.command()
 @click.argument('author-uri', type=str)
 @click.option('--abbrev', is_flag=True)
 def show_authorship_tuples(author_uri: str, abbrev: bool):

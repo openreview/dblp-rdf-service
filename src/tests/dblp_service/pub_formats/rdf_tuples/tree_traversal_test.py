@@ -11,7 +11,7 @@ def test_traverse_has_signature():
 
     tree = get_author_tree_from_string(tuples)
 
-    output = authorship_tree_to_dblp_repr(tree)
+    output = authorship_tree_to_dblp_repr(tree, step_debug=False)
 
     expected = {"author": [{"name_type": "author", "fullname": "Gregory Druck", "ordinal": 1}]}
 
@@ -25,7 +25,7 @@ def test_traverse_has_multiple_signature():
     """
 
     tree = get_author_tree_from_string(tuples)
-    output = authorship_tree_to_dblp_repr(tree)
+    output = authorship_tree_to_dblp_repr(tree, step_debug=False)
 
     expected = {
         "author": [
@@ -43,7 +43,7 @@ def test_traverse_resource_ids():
 
     tree = get_author_tree_from_string(tuples)
 
-    output = authorship_tree_to_dblp_repr(tree)
+    output = authorship_tree_to_dblp_repr(tree, step_debug=False)
     expected = {'key': 'DBLP:conf/acl/DruckGG11'}
 
     assert output == expected
@@ -56,7 +56,7 @@ def test_traverse_publication_type():
     tree = get_author_tree_from_string(tuples)
     print_tree(tree, all_attrs=True)
 
-    output = authorship_tree_to_dblp_repr(tree)
+    output = authorship_tree_to_dblp_repr(tree, step_debug=False)
     pp(output)
     # expected = {'key': 'DBLP:conf/acl/DruckGG11'}
 

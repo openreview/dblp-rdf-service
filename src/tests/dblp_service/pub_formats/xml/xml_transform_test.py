@@ -1,5 +1,3 @@
-
-
 from bigtree.tree.export import print_tree
 
 
@@ -21,6 +19,7 @@ from tests.helpers import (
     get_author_tree_from_string,
 )
 
+
 def test_xml_full():
     tuples = f"""
     {PUBLICATION_ID_TUPLES}
@@ -34,6 +33,6 @@ def test_xml_full():
 
     tree = get_author_tree_from_string(tuples)
     print_tree(tree)
-    repr = authorship_tree_to_dblp_repr(tree)
+    repr = authorship_tree_to_dblp_repr(tree, False)
     as_xml = dblp_repr_to_xml(repr)
     print_xml(as_xml)

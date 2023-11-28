@@ -7,10 +7,7 @@ from bigtree.node.node import Node
 from bibtexparser import Library, write_string  # type: ignore
 from bibtexparser.middlewares import LatexEncodingMiddleware  # type: ignore
 from bibtexparser.middlewares.names import MergeCoAuthors  # type: ignore
-from bibtexparser.model import (
-    Entry,
-    Field,
-)  # type: ignore
+from bibtexparser.model import (Entry, Field)  # type: ignore
 
 from dblp_service.pub_formats.rdf_tuples.dblp_repr import DblpRepr, Publication
 from dblp_service.pub_formats.rdf_tuples.tree_traversal import all_authorship_trees_to_reprs
@@ -70,7 +67,7 @@ def dblp_reprs_to_bibtex_library(reprs: t.List[DblpRepr]) -> Library:
 
 def authorship_tree_to_bibtex(root: Node) -> Library:
     """ """
-    dblp_reprs = all_authorship_trees_to_reprs(root)
+    dblp_reprs = all_authorship_trees_to_reprs(root, False)
     library = Library()
     for repr in dblp_reprs:
         entry = dblp_repr_to_bibtex(repr)

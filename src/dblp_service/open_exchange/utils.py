@@ -1,15 +1,16 @@
 import re
-from typing import Any, Optional, List, Dict
-from bibtexparser import Library
+from typing import Any, Optional, List, Dict, cast
+from bibtexparser import Library # type: ignore
 from dblp_service.lib.log import create_logger
 
 from dblp_service.lib.utils import to_int
 
 # from bibtexparser
 
-TILDE_ID_RE = re.compile("^~.+\\d$")
+TILDE_ID_RE = re.compile('^~.+\\d$')
 
 log = create_logger(__file__)
+
 
 def is_tildeid(id: str) -> bool:
     return TILDE_ID_RE.match(id) is not None
@@ -28,7 +29,7 @@ def opt_entry(key: str, content: Any, bibdb: Optional[Library]) -> Optional[Any]
 def req_entry(key: str, content: Any, bibdb: Optional[Library]) -> Any:
     value = opt_entry(key, content, bibdb)
     if value is None:
-        raise Exception(f"Required field {key} missing")
+        raise Exception(f'Required field {key} missing')
 
     return value
 
@@ -42,11 +43,11 @@ def optint_entry(key: str, content: Any, bibdb: Optional[Library]) -> Optional[i
 
 
 def str_entry(key: str, content: Any, bibdb: Optional[Library]) -> str:
-    return req_entry(key, content, bibdb)
+    return cast(str, req_entry(key, content, bibdb))
 
 
 def list_entry(key: str, content: Any, bibdb: Optional[Library] = None) -> List[str]:
-    return req_entry(key, content, bibdb)
+    return cast(List[str], req_entry(key, content, bibdb))
 
 
 def clean_string_data(data: Dict[str, Any], **keyspec: bool):
@@ -73,14 +74,13 @@ def clean_string_data(data: Dict[str, Any], **keyspec: bool):
             continue
 
         if not is_present:
-            warn(key, "required but missing")
+            warn(key, 'required but missing')
         elif not is_correct_type:
-            warn(key, "required but wrong type")
+            warn(key, 'required but wrong type')
         elif is_empty_str:
-            warn(key, "required, present, but only whitespace")
+            warn(key, 'required, present, but only whitespace')
 
         sub(key, None)
-
 
 
 def clean_int_data(data: Dict[str, Any], **keyspec: bool):
@@ -98,9 +98,7 @@ def clean_int_data(data: Dict[str, Any], **keyspec: bool):
         # TODO give context if this fails
         as_int = to_int(value)
         if as_int is None:
-            print(f"Failed to coerce data['{key}']={value} to int")
             continue
-
 
         if is_present:
             sub(key, as_int)
@@ -110,7 +108,7 @@ def clean_int_data(data: Dict[str, Any], **keyspec: bool):
             sub(key, None)
             continue
 
-        warn(key, "wrong type")
+        warn(key, 'wrong type')
         sub(key, None)
 
 

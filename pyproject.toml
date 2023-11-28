@@ -1,3 +1,7 @@
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
 [tool.poetry]
 name = "dblp-service"
 version = "0.1.0"
@@ -5,10 +9,6 @@ description = ""
 authors = ["Adam C. Saunders <saunders@cs.umass.edu>"]
 readme = "readme.md"
 packages = [{include = "dblp_service", from = "src"},]
-
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
 
 
 [tool.poetry.dependencies]
@@ -26,6 +26,7 @@ beautifulsoup4 = "^4.12.2"
 marshmallow-dataclass = "^8.6.0"
 structlog = "^23.2.0"
 vulture = "^2.10"
+
 
 [tool.poetry.group.test.dependencies]
 pytest = "^7.4.2"
@@ -52,14 +53,38 @@ asyncio_mode = "auto"
 [tool.ruff]
 line-length = 120
 builtins = ["ic"]
+src = ["src"]
+# include = ["src/**"]
 
 [tool.ruff.format]
 quote-style = "single"
 indent-style = "space"
 
+[tool.mypy]
+pretty = false
+# strict = true
+# The following are all enabled by --strict
+warn_unused_configs = true
+disallow_any_generics = false
+disallow_subclassing_any = true
+disallow_untyped_calls = false
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+check_untyped_defs = true
+disallow_untyped_decorators = false
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_return_any = true
+no_implicit_reexport = true
+strict_equality = true
+extra_checks = true
+
 [tool.pyright]
 useLibraryCodeForTypes = true
 typeCheckingMode = "strict" # strict/none
+include = [
+    "src/**"
+]
 exclude = [
     "submodules/**"
 ]

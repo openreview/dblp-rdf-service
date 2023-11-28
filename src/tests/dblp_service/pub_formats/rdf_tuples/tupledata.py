@@ -2,6 +2,10 @@
 """
 
 from textwrap import dedent
+from dblp_service.pub_formats.rdf_tuples.dblp_repr import DblpRepr
+from dblp_service.pub_formats.rdf_tuples.tree_traversal import authorship_tree_to_dblp_repr
+
+from tests.helpers import get_author_tree_from_string
 
 DRUCK_BIBTEX_ENTRY = dedent(
     """
@@ -131,3 +135,17 @@ AUTHOR_1_TREE = dedent(
         └── https://dblp.org/rdf/schema#Publication
 """
 )
+
+def load_repr_sample() -> DblpRepr:
+    tuples = f"""
+    {PUBLICATION_ID_TUPLES}
+    {RESOURCE_IDENTIFIER_TUPLES}
+    {TITLE_VENUE_TUPLES}
+    {AUTHOR_1_TUPLES}
+    {AUTHOR_2_TUPLES}
+    {AUTHOR_3_TUPLES}
+    {AUTHOR_ID_TUPLES}
+    """
+
+    tree = get_author_tree_from_string(tuples)
+    return authorship_tree_to_dblp_repr(tree, step_debug=False)

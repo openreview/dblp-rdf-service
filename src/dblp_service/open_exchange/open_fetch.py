@@ -1,6 +1,4 @@
 from concurrent.futures import Future
-from dataclasses import asdict
-from pprint import pprint
 from typing import Any, Iterator, TypeVar, cast
 from typing import Optional, List, TypeAlias
 
@@ -21,6 +19,7 @@ from ..lib.utils import is_valid_email
 from .profile_schemas import Profile, load_profile
 from .note_schemas import Note, load_notes
 
+
 logger = create_logger(__file__)
 
 Session: TypeAlias = FuturesSession
@@ -36,6 +35,7 @@ def get_client() -> op.Client:
         password = config.openreview.restPassword
         cached_client = op.Client(baseurl=baseurl, username=username, password=password)
 
+    assert cached_client is not None
     return cached_client
 
 
@@ -55,9 +55,8 @@ def resolve_api_url(urlpath: str) -> str:
     return f'{baseurl}/{urlpath}'
 
 
-
-def profiles_search_url() -> str:
-    return resolve_api_url('profiles/search')
+def profiles_with_dblp_url() -> str:
+    return resolve_api_url('profiles')
 
 
 def notes_url() -> str:
@@ -91,7 +90,7 @@ QueryParms = Any
 
 def _note_fetcher(**params: QueryParms) -> List[Note]:
     with get_session() as s:
-        future: Future[Response] = cast(Future[Response], s.get(notes_url(), params=params))  # type: ignore
+        future: Future[Response] = cast(Future[Response], s.get(notes_url(), params=params))
         rawresponse = future.result()
         response = _handle_response(rawresponse)
         notes = load_notes(response.json())
@@ -128,7 +127,7 @@ def fetch_notes_for_author(authorid: str, invitation: Optional[str] = None) -> I
 
 def profile_fetcher(**params: QueryParms) -> List[Profile]:
     with get_session() as s:
-        future: Future[Response] = cast(Future[Response], s.get(profiles_search_url(), params=params))  # type: ignore
+        future: Future[Response] = cast(Future[Response], s.get(profiles_with_dblp_url(), params=params))
         rawresponse: Response = future.result()
         response = _handle_response(rawresponse)
         profiles = [load_profile(p) for p in response.json()['profiles']]
@@ -141,8 +140,7 @@ def fetch_profile(user_id: str) -> Optional[Profile]:
 
     return list_to_optional(profile_fetcher(id=user_id))
 
+
 def fetch_profile_with_dblp_pid(dblp_pid: str) -> Optional[Profile]:
-    profiles = profile_fetcher(content=dict(dblp=dblp_pid))
-    for p in profiles:
-        pprint(asdict(p))
+    profiles = profile_fetcher(dblp=dblp_pid)
     return list_to_optional(profiles)

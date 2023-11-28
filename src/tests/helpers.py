@@ -44,7 +44,7 @@ def rdf_to_bibtex(tuplestr: str) -> BibtexOutput:
     tree = get_author_tree_from_string(tuplestr)
     print_tree(tree, all_attrs=True)
 
-    dblp_repr = authorship_tree_to_dblp_repr(tree)
+    dblp_repr = authorship_tree_to_dblp_repr(tree, step_debug=False)
     pprint(dblp_repr)
     # bibtex_str = repr_to_bibtex_str(dblp_repr)
     # entry = dblp_repr_to_bibtex(dblp_repr)

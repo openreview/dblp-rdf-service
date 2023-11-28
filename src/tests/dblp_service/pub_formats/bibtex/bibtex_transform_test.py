@@ -57,7 +57,7 @@ def test_bibtex_full():
 
     tree = get_author_tree_from_string(tuples)
 
-    bibtex_entry = authorship_tree_to_dblp_repr(tree)
+    bibtex_entry = authorship_tree_to_dblp_repr(tree, step_debug=False)
     pp(bibtex_entry)
     entry = dblp_repr_to_bibtex(bibtex_entry)
     pp(entry)
