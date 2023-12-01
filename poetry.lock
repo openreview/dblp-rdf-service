@@ -232,6 +232,17 @@ files = [
 graph = ["objgraph (>=1.7.2)"]
 
 [[package]]
+name = "disjoint-set"
+version = "0.7.4"
+description = "Disjoint set data structure implementation for Python"
+optional = false
+python-versions = "*"
+files = [
+    {file = "disjoint_set-0.7.4-py3-none-any.whl", hash = "sha256:04225e87af9c05c8e6c8815311e1dc82f262cd89daa23655fc10c11727f1be57"},
+    {file = "disjoint_set-0.7.4.tar.gz", hash = "sha256:ae8b04828b2dd5112399a5deebb3fc1b257bf52d95c5e3d0ac2952610a3f7ec5"},
+]
+
+[[package]]
 name = "dnspython"
 version = "2.4.2"
 description = "DNS toolkit"
@@ -669,13 +680,13 @@ diagrams = ["jinja2", "railroad-diagrams"]
 
 [[package]]
 name = "pyright"
-version = "1.1.337"
+version = "1.1.338"
 description = "Command line wrapper for pyright"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "pyright-1.1.337-py3-none-any.whl", hash = "sha256:8cbd4ef71797258f816a8393a758c9c91213479f472082d0e3a735ef7ab5f65a"},
-    {file = "pyright-1.1.337.tar.gz", hash = "sha256:81d81f839d1750385390c4c4a7b84b062ece2f9a078f87055d4d2a5914ef2a08"},
+    {file = "pyright-1.1.338-py3-none-any.whl", hash = "sha256:28231a3c81ec738b3e1b02489eea5b67fb425a9be0717a32b2e075984623b3ff"},
+    {file = "pyright-1.1.338.tar.gz", hash = "sha256:132aa74d2d58d4d27a5b922672b5b4d2be7f3931e7276a2b231d15af6e45daad"},
 ]
 
 [package.dependencies]
@@ -1052,4 +1063,4 @@ toml = "*"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "3cf10c3f4cd84fca0f4c17f08d0062a55baec7183bbf0cabf2bf7c0a25a4e8bd"
+content-hash = "01c6a9717fec8305e1d73148f54ea816af294273397d77d657da17f1e5d1c1f2"

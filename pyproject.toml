@@ -26,6 +26,7 @@ beautifulsoup4 = "^4.12.2"
 marshmallow-dataclass = "^8.6.0"
 structlog = "^23.2.0"
 vulture = "^2.10"
+disjoint-set = "^0.7.4"
 
 
 [tool.poetry.group.test.dependencies]
