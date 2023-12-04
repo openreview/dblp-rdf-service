@@ -136,11 +136,30 @@ AUTHOR_1_TREE = dedent(
 """
 )
 
+
 def load_repr_sample() -> DblpRepr:
     tuples = f"""
     {PUBLICATION_ID_TUPLES}
     {RESOURCE_IDENTIFIER_TUPLES}
     {TITLE_VENUE_TUPLES}
+    {AUTHOR_1_TUPLES}
+    {AUTHOR_2_TUPLES}
+    {AUTHOR_3_TUPLES}
+    {AUTHOR_ID_TUPLES}
+    """
+
+    tree = get_author_tree_from_string(tuples)
+    return authorship_tree_to_dblp_repr(tree, step_debug=False)
+
+
+def create_dblp(*, title: str) -> DblpRepr:
+    title_tuples = (
+        f""" ('https://dblp.org/rec/conf/acl/DruckGG11', 'https://dblp.org/rdf/schema#title', '{title}', None, None) """
+    )
+    tuples = f"""
+    {PUBLICATION_ID_TUPLES}
+    {RESOURCE_IDENTIFIER_TUPLES}
+    {title_tuples}
     {AUTHOR_1_TUPLES}
     {AUTHOR_2_TUPLES}
     {AUTHOR_3_TUPLES}

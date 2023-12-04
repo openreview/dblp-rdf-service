@@ -5,7 +5,13 @@ from dblp_service.local_storage.file_stash_manager import FileStash
 from dblp_service.local_storage.jena_db import JenaDB
 from textwrap import dedent
 
-from dblp_service.local_storage.graph_naming import DblpGraphName, DiffGraphName, GraphName, md5_to_graph_name
+from dblp_service.local_storage.graph_naming import (
+    DblpGraphName,
+    DiffGraphName,
+    GraphName,
+    md5_to_graph_name,
+)
+
 
 class DiffEngine:
     """Compute and manage the changes between dblp.org data exports."""

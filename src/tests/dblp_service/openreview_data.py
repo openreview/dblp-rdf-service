@@ -1,5 +1,6 @@
 import json
-from dblp_service.open_exchange.note_schemas import Notes, load_notes
+from dblp_service.open_exchange.note_schemas import Note, NoteContent, Notes, load_notes
+import dataclasses as dc
 
 
 note_samples = {
@@ -69,6 +70,7 @@ note_samples = {
     },
 }
 
+
 def load_note_samples() -> Notes:
     note_list = [v for k, v in note_samples.items()]
     sample_notes = {'count': 0, 'notes': note_list}
@@ -76,3 +78,22 @@ def load_note_samples() -> Notes:
     notes_data = json.loads(notes_str)
     notes: Notes = load_notes(notes_data)
     return notes
+
+
+def create_note_sample(*, title: str) -> Note:
+    content_template = NoteContent(
+        title='',
+        authors=[],
+        authorids=[],
+        abstract=None,
+        html=None,
+        venue=None,
+        venueid=None,
+        _bibtex=None,
+        paperhash=None,
+        errors=None,
+    )
+    template = Note(id='', forum='', invitation='', number=0, signatures=[], content=content_template)
+    content = dc.replace(content_template, title=title)
+    note = dc.replace(template, content=content)
+    return note
