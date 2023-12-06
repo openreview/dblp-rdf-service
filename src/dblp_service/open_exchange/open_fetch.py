@@ -1,4 +1,6 @@
 from concurrent.futures import Future
+import json
+import pprint
 from typing import Any, Iterator, TypeVar, cast
 from typing import Optional, List, TypeAlias
 
@@ -18,7 +20,7 @@ from ..lib.utils import is_valid_email
 
 from .profile_schemas import Profile, load_profile
 from .note_schemas import Note, load_notes
-
+from os import path
 
 logger = create_logger(__file__)
 
@@ -52,15 +54,7 @@ def get_session() -> Session:
 def resolve_api_url(urlpath: str) -> str:
     config = get_config()
     baseurl = config.openreview.restApi
-    return f'{baseurl}/{urlpath}'
-
-
-def profiles_with_dblp_url() -> str:
-    return resolve_api_url('profiles')
-
-
-def notes_url() -> str:
-    return resolve_api_url('notes')
+    return path.join(baseurl, urlpath)
 
 
 def _handle_response(response: Response) -> Response:
@@ -76,32 +70,63 @@ T = TypeVar('T')
 
 
 def list_to_optional(ts: List[T]) -> Optional[T]:
-    match ts:
-        case []:
-            return None
-        case [h]:
-            return h
-        case _:
-            raise Exception(f'Expected 0 or 1 items, got {len(ts)}')
+    if not ts:
+        return None
+    if len(ts) > 1:
+        raise Exception(f'Expected 0 or 1 items, got {len(ts)}')
+    return ts[0]
 
 
 QueryParms = Any
 
 
-def _note_fetcher(**params: QueryParms) -> List[Note]:
+def _get_path(urlpath: str, **params: QueryParms) -> Response:
+    url = resolve_api_url(urlpath)
     with get_session() as s:
-        future: Future[Response] = cast(Future[Response], s.get(notes_url(), params=params))
+        future: Future[Response] = cast(Future[Response], s.get(url, params=params))
         rawresponse = future.result()
-        response = _handle_response(rawresponse)
-        notes = load_notes(response.json())
-        return notes.notes
+
+        return _handle_response(rawresponse)
 
 
-def _fetch_notes(*, slice: Optional[Slice], **initparams: QueryParms) -> Iterator[Note]:
-    def _fetcher(**params: QueryParms) -> List[Note]:
-        return _note_fetcher(**params)
+def _post_path(urlpath: str, payload: QueryParms) -> Response:
+    url = resolve_api_url(urlpath)
+    data = json.dumps(payload)
+    with get_session() as s:
+        future: Future[Response] = cast(Future[Response], s.post(url, data=data))
+        rawresponse = future.result()
 
-    iter = IterGet(_fetcher, **initparams)
+        pprint.pp(rawresponse)
+        return _handle_response(rawresponse)
+
+
+def _get_profile(**params: QueryParms) -> List[Profile]:
+    response = _get_path('profiles', **params)
+    profiles = [load_profile(p) for p in response.json()['profiles']]
+    return profiles
+
+
+def _get_notes(**params: QueryParms) -> List[Note]:
+    response = _get_path('notes', **params)
+    notes = load_notes(response.json())
+    return notes.notes
+
+
+def _get_note_search(**params: QueryParms) -> List[Note]:
+    response = _get_path('notes/search', **params)
+    notes = load_notes(response.json())
+    return notes.notes
+
+
+def _post_note_search(qparams: QueryParms) -> List[Note]:
+    print(qparams)
+    response = _post_path('notes/search', qparams)
+    notes = load_notes(response.json())
+    return notes.notes
+
+
+def _get_note_iterator(*, slice: Optional[Slice], **initparams: QueryParms) -> Iterator[Note]:
+    iter = IterGet(_get_notes, **initparams)
 
     if slice:
         iter = iter.withSlice(slice)
@@ -109,38 +134,25 @@ def _fetch_notes(*, slice: Optional[Slice], **initparams: QueryParms) -> Iterato
     return iter
 
 
-def fetch_note(id: str) -> Optional[Note]:
-    notes = _note_fetcher(id=id)
-    return list_to_optional(notes)
-
-
-def fetch_notes_for_dblp_rec_invitation(*, slice: Optional[Slice], newestFirst: bool = True) -> Iterator[Note]:
-    sort = 'number:desc' if newestFirst else 'number:asc'
-    return _fetch_notes(slice=slice, invitation='dblp.org/-/record', sort=sort)
+def search_notes(*, title: str) -> List[Note]:
+    return _get_note_search(
+        **{'term': f'"{title}"', 'content': 'all', 'group': 'all', 'source': 'all'},
+    )
 
 
 def fetch_notes_for_author(authorid: str, invitation: Optional[str] = None) -> Iterator[Note]:
     if invitation:
-        return _fetch_notes(slice=None, invitation=invitation, **{'content.authorids': authorid})
-    return _fetch_notes(slice=None, **{'content.authorids': authorid})
-
-
-def profile_fetcher(**params: QueryParms) -> List[Profile]:
-    with get_session() as s:
-        future: Future[Response] = cast(Future[Response], s.get(profiles_with_dblp_url(), params=params))
-        rawresponse: Response = future.result()
-        response = _handle_response(rawresponse)
-        profiles = [load_profile(p) for p in response.json()['profiles']]
-        return profiles
+        return _get_note_iterator(slice=None, invitation=invitation, **{'content.authorids': authorid})
+    return _get_note_iterator(slice=None, **{'content.authorids': authorid})
 
 
 def fetch_profile(user_id: str) -> Optional[Profile]:
     if is_valid_email(user_id):
-        return list_to_optional(profile_fetcher(emails=user_id))
+        return list_to_optional(_get_profile(emails=user_id))
 
-    return list_to_optional(profile_fetcher(id=user_id))
+    return list_to_optional(_get_profile(id=user_id))
 
 
 def fetch_profile_with_dblp_pid(dblp_pid: str) -> Optional[Profile]:
-    profiles = profile_fetcher(dblp=dblp_pid)
+    profiles = _get_profile(dblp=dblp_pid)
     return list_to_optional(profiles)

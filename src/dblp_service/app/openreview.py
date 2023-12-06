@@ -3,8 +3,10 @@ import click
 from rich.pretty import pprint
 from dblp_service.lib.log import create_logger
 
-from dblp_service.open_exchange.open_fetch import fetch_notes_for_author, fetch_profile
-from dblp_service.services.author_alignment import AuthorPublicationAlignment, DblpAuthID, OpenRevAuthID, OpenreviewFetcher
+from dblp_service.open_exchange.open_fetch import fetch_notes_for_author, fetch_profile, search_notes
+from dblp_service.services.author_alignment import AuthorPublicationAlignment, OpenreviewFetcher
+from dblp_service.services.author_alignment_types import DblpAuthID, OpenRevAuthID
+# from dblp_service.services.author_alignment import AuthorPublicationAlignment, DblpAuthID, OpenRevAuthID, OpenreviewFetcher
 
 from .cli import cli
 
@@ -49,3 +51,11 @@ def align_author(id: DblpAuthID):
     align = AuthorPublicationAlignment()
 
     align.align_author(id)
+
+@openreview.command()
+@click.argument('title', type=str)
+def search_papers(title: str):
+    """"""
+    for note in search_notes(title=title):
+        print(note)
+

@@ -2,8 +2,9 @@
 
 """
 
-import dataclasses as dc
+from pprint import pprint
 import re
+from textwrap import dedent
 import typing as t
 
 from disjoint_set import DisjointSet
@@ -14,57 +15,23 @@ from rich.console import Console
 from dblp_service.lib.log import AppLogger, create_logger
 from dblp_service.lib.utils import pairs_to_multimap
 from dblp_service.open_exchange.note_schemas import Note
-from dblp_service.open_exchange.open_fetch import fetch_notes_for_author, fetch_profile_with_dblp_pid
-from os import path
+from dblp_service.open_exchange.open_fetch import fetch_notes_for_author, fetch_profile_with_dblp_pid, search_notes
 
 from dblp_service.open_exchange.profile_schemas import Profile
 from dblp_service.pub_formats.rdf_tuples.dblp_repr import DblpRepr
 from dblp_service.pub_formats.rdf_tuples.queries import get_author_publication_tree
 from dblp_service.pub_formats.rdf_tuples.tree_traversal import all_authorship_trees_to_reprs
 
-from icecream import ic  # type: ignore
 import functools as ft
 
-
-@dc.dataclass
-class DblpPubID:
-    id: str
-
-
-@dc.dataclass
-class DblpAuthID:
-    http_prefix = 'https://dblp.org/'
-    _pid: str
-
-    def __init__(self, s: str) -> None:
-        ic(s)
-        segments = [s for s in s.split('/') if len(s) > 0]
-        ic(segments)
-        if s.startswith(self.http_prefix):
-            suffix = s[len(self.http_prefix) :]
-            segments = [s for s in suffix.split('/') if len(s) > 0]
-        ic(segments)
-        match segments:
-            case ['pid', id1, id2]:
-                self._pid = path.join(id1, id2)
-                return
-            case [id1, id2]:
-                self._pid = path.join(id1, id2)
-                return
-            case _:
-                pass
-        raise Exception(f'invalid dblp pid: {s}')
-
-    def pid(self) -> str:
-        return self._pid
-
-    def uri(self) -> str:
-        return path.join(self.http_prefix, 'pid', self._pid)
-
-
-@dc.dataclass
-class OpenRevAuthID:
-    id: str
+from dblp_service.services.author_alignment_types import (
+    AlignedAuthorship,
+    AlignmentWarning,
+    Alignments,
+    DblpAuthID,
+    OpenRevAuthID,
+    PubKey,
+)
 
 
 class OpenreviewFetcher:
@@ -98,88 +65,29 @@ class DblpOrgFetcher:
 
 class AuthorPublicationAlignment:
     log: AppLogger
-    openr_fetch: OpenreviewFetcher
-    dblp_org_fetch: DblpOrgFetcher
+    open_fetch: OpenreviewFetcher
+    dblp_fetch: DblpOrgFetcher
 
     def __init__(self):
         self.log = create_logger(self.__class__.__name__)
-        self.openr_fetch = OpenreviewFetcher()
-        self.dblp_org_fetch = DblpOrgFetcher()
+        self.open_fetch = OpenreviewFetcher()
+        self.dblp_fetch = DblpOrgFetcher()
 
     def align_author(self, authorid: DblpAuthID):
-        profile = self.openr_fetch.fetch_profile(authorid)
+        profile = self.open_fetch.fetch_profile(authorid)
         if not profile:
             self.log.info(f'No profile found for author, {authorid}')
             return
 
         openrev_auth_id = OpenRevAuthID(profile.id)
-        openreview_pubs = self.openr_fetch.fetch_author_publications(openrev_auth_id)
-
-        def get_pub_title(note: Note) -> str:
-            return note.content.title
-
-        openreview_pubs.sort(key=get_pub_title)
-
-        ## Create keys for OpenReview notes
-        for note in openreview_pubs:
-            # title match
-            note.content.title
-            # doi from html
-            note.content.html
-            # dblp pid or doi from bibtex
-            note.content._bibtex
-
-        dblp_papers = self.dblp_org_fetch.fetch_author_publications(authorid)
-
-        aligned_pub_table = Table(show_edge=False, show_footer=False)
-        aligned_pub_table.add_column('OpenReview', header_style='green bold')
-        aligned_pub_table.add_column('https://dblp.org', header_style='green bold')
-
-        max_len = max(len(dblp_papers), len(openreview_pubs))
-        for i in range(max_len):
-            pub_title = openreview_pubs[i].content.title if i < len(openreview_pubs) else 'no more'
-            dblp_title = dblp_papers[i].get('title', '<no title>') if i < len(dblp_papers) else 'all done'
-            aligned_pub_table.add_row(pub_title, dblp_title)
-
-        console = Console()
-        console.print(aligned_pub_table)
-
-
-@dc.dataclass(frozen=True)
-class PubKey:
-    """Key derived from a publication used to match to other papers
-
-    Fields:
-        keytype : description of key e.g., title, dblp_key, doi, etc.
-        value : the derived key
-    """
-
-    keytype: str
-    value: str
-
-
-@dc.dataclass
-class Warning:
-    msg: str
-    ids: t.List[str]
-
-
-@dc.dataclass
-class Alignments:
-    note_map: t.Dict[PubKey, Note]
-    dblp_map: t.Dict[PubKey, DblpRepr]
-    matched_pubs: t.Set[PubKey]
-    unmatched_notes: t.Set[PubKey]
-    unmatched_dblps: t.Set[PubKey]
-    warnings: t.List[Warning]
-
-
-def repr_key(r: DblpRepr) -> str:
-    return r.get('key', '<?>')  # TODO will this <?> cause keys to falsely merge?
-
-
-def repr_title(r: DblpRepr) -> str:
-    return r.get('title', '<?>')
+        print(f'Fetching {profile.id} publications')
+        openreview_pubs = self.open_fetch.fetch_author_publications(openrev_auth_id)
+        print(f'Fetching dblp.org {profile.id} publications')
+        dblp_papers = self.dblp_fetch.fetch_author_publications(authorid)
+        alignments = align_publications(openreview_pubs, dblp_papers)
+        print_aligned(alignments)
+        aligned = AlignedAuthorship(open_auth_id=openrev_auth_id, dblp_auth_id=authorid, alignments=alignments)
+        suggest_alignment_corrections(aligned)
 
 
 def normalize_title_str(title: str) -> str:
@@ -218,26 +126,26 @@ def gen_note_key(note: Note) -> t.List[PubKey]:
 
 def print_aligned(aligned: Alignments):
     table = Table(show_edge=False, show_footer=False)
-    table.add_column('Key', header_style='bold')
+    table.add_column('Matched By', header_style='bold')
     table.add_column('OpenReview', header_style='blue bold')
     table.add_column('dblp.org', header_style='green bold')
     table.add_column('title')
 
     for key in aligned.matched_pubs:
-        ic(key)
         note, dblp = aligned.note_map[key], aligned.dblp_map[key]
         title = note.content.title
-        table.add_row(str(key), 'Y', 'Y', title)
+        table.add_row(key.keytype, 'Y', 'Y', title)
 
     for key in aligned.unmatched_notes:
         note = aligned.note_map[key]
         title = note.content.title
-        table.add_row(str(key), 'Y', 'N', title)
+        table.add_row(key.keytype, 'Y', 'N', title)
 
     for key in aligned.unmatched_dblps:
         dblp = aligned.dblp_map[key]
-        title = repr_title(dblp)
-        table.add_row(str(key), 'N', 'Y', title)
+        title = dblp.get('title', '<no title>')
+
+        table.add_row(key.keytype, 'N', 'Y', title)
 
     console = Console()
     console.print(table)
@@ -264,8 +172,6 @@ def align_publications(notes: t.List[Note], reprs: t.List[DblpRepr]) -> Alignmen
     add_keys = ft.partial(disjoint_add, pubkey_sets)
     canonical_key = ft.partial(disjoint_canonical, pubkey_sets)
 
-    #  Note      |   Dblp
-    #  [k1, k2]  |  [k2, k5]
     note_pubkeys = [(gen_note_key(note), note) for note in notes]
     for pkeys, _ in note_pubkeys:
         add_keys(pkeys)
@@ -275,11 +181,11 @@ def align_publications(notes: t.List[Note], reprs: t.List[DblpRepr]) -> Alignmen
         add_keys(pkeys)
 
     canonical_note_pubkeys = [(canonical_key(keys[0]), pub) for (keys, pub) in note_pubkeys if keys]
-    warnings: t.List[Warning] = []
+    warnings: t.List[AlignmentWarning] = []
     note_mmap = pairs_to_multimap(canonical_note_pubkeys)
     warnings.extend(
         [
-            Warning(f'Multiple notes produced the same key {k}', [v.id for v in vs])
+            AlignmentWarning(f'Multiple notes produced the same key {k}', [v.id for v in vs])
             for (k, vs) in note_mmap.items()
             if len(vs) > 1
         ]
@@ -289,7 +195,7 @@ def align_publications(notes: t.List[Note], reprs: t.List[DblpRepr]) -> Alignmen
     dblp_mmap = pairs_to_multimap(canonical_dblp_pubkeys)
     warnings.extend(
         [
-            Warning(f'Multiple dblp records produced the same key {k}', [repr_key(v) for v in vs])
+            AlignmentWarning(f'Multiple dblp records produced the same key {k}', [v.get('key', '<no key>') for v in vs])
             for (k, vs) in dblp_mmap.items()
             if len(vs) > 1
         ]
@@ -319,5 +225,30 @@ def align_publications(notes: t.List[Note], reprs: t.List[DblpRepr]) -> Alignmen
     return alignments
 
 
-def suggest_alignment_corrections():
-    """Produce a list of POST updates to OpenReview to add/update missing pub data."""
+def suggest_alignment_corrections(aligned: AlignedAuthorship):
+    """Produce a list of POST updates to OpenReview to add/update missing pub data.
+
+    If OpenReview is missing a dblp.org publication, add it, then link its authors.
+
+    """
+    unmatched_dblps = aligned.alignments.unmatched_dblps
+
+    print('Finding unmatched')
+    for pub_key in unmatched_dblps:
+        dblp = aligned.alignments.dblp_map[pub_key]
+
+        if not (title := dblp.get('title')):
+            print('no title, skipping')
+            continue
+
+        if not (notes_with_title := search_notes(title=title)):
+            print(f'no notes with title={title}, skipping')
+            continue
+
+        print(f'Found notes with title {title}')
+        for note in notes_with_title:
+            pub_info = f"""
+                {note.id}: {note.content.title}
+                    {note.content.authors}
+            """
+            print(dedent(pub_info))
