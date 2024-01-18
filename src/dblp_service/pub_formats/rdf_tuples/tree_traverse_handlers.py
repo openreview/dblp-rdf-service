@@ -157,6 +157,13 @@ class ResourceIdHandlers:
         """
         return InitFields(ResourceIdentifier())
 
+    def isA_Identifier(self, entity: Node, prop_val: Node):
+        """Identifier, e.g., doi, dblp record
+
+        Synonymous with isA_ResourceIdentifier
+        """
+        return InitFields(ResourceIdentifier())
+
     def hasA_type(self, rel: Node, prop_val: Node):
         """Specifies relationship http://www.w3.org/1999/02/22-rdf-syntax-ns#type
 
@@ -171,7 +178,7 @@ class ResourceIdHandlers:
 
     def hasA_usesIdentifierScheme(self, rel: Node, prop_val: Node):
         value = simplify_urlname(prop_val.node_name).lower()
-        known_schemas = ['dblp-record', 'doi', 'arxiv']
+        known_schemas = ['dblp-record', 'doi', 'arxiv', 'wikidata']
         if value not in known_schemas:
             raise Exception(f'Unknown Scheme `{value}` node={rel}')
 

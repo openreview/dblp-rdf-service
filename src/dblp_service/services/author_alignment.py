@@ -8,8 +8,10 @@ from textwrap import dedent
 import typing as t
 
 from disjoint_set import DisjointSet
+from rich.style import Style
 
 from rich.table import Table
+from rich.text import Text
 from rich.console import Console
 
 from dblp_service.lib.log import AppLogger, create_logger
@@ -124,31 +126,54 @@ def gen_note_key(note: Note) -> t.List[PubKey]:
     return keys
 
 
-def print_aligned(aligned: Alignments):
-    table = Table(show_edge=False, show_footer=False)
-    table.add_column('Matched By', header_style='bold')
-    table.add_column('OpenReview', header_style='blue bold')
-    table.add_column('dblp.org', header_style='green bold')
-    table.add_column('title')
+WarningStyle1 = Style(color='red')
+WarningStyle2 = Style(color='yellow')
 
+
+def print_aligned(aligned: Alignments):
+    console = Console()
+
+    def init_table(table_title: str) -> Table:
+        table = Table(
+            show_footer=False,
+            show_header=True,
+            show_edge=False
+        )
+        table.title = Text(table_title, Style(bgcolor='rgb(0, 0, 128)'))
+        table.caption = Text(f'End {table_title}', Style(bgcolor='cyan'))
+        table.add_column('Matched By', header_style='bold')
+        table.add_column('OpenReview', header_style='blue bold')
+        table.add_column('dblp.org', header_style='green bold')
+        table.add_column('title')
+        return table
+
+    table = init_table('Publications in both OpenReview and dblp.org')
     for key in aligned.matched_pubs:
         note, dblp = aligned.note_map[key], aligned.dblp_map[key]
         title = note.content.title
         table.add_row(key.keytype, 'Y', 'Y', title)
 
+    console.print(table)
+    console.print('\n\n')
+
+    table = init_table('Publications only in OpenReview')
     for key in aligned.unmatched_notes:
         note = aligned.note_map[key]
         title = note.content.title
-        table.add_row(key.keytype, 'Y', 'N', title)
+        table.add_row(key.keytype, 'Y', 'N', Text(title, style=WarningStyle1))
 
+    console.print(table)
+    console.print('\n\n')
+
+    table = init_table('Publications only in dblp.org')
     for key in aligned.unmatched_dblps:
         dblp = aligned.dblp_map[key]
         title = dblp.get('title', '<no title>')
+        table.add_row(key.keytype, 'N', 'Y', Text(title, style=WarningStyle2))
 
-        table.add_row(key.keytype, 'N', 'Y', title)
-
-    console = Console()
     console.print(table)
+    console.print('\n\n')
+
     for w in aligned.warnings:
         console.print(w)
 

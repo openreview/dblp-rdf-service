@@ -65,6 +65,11 @@ class AlignmentWarning:
     msg: str
     ids: t.List[str]
 
+@dc.dataclass
+class DuplicateKeyWarning:
+    msg: str
+    ids: t.List[str]
+
 
 @dc.dataclass
 class Alignments:

@@ -4,6 +4,7 @@
 import typing as t
 
 from bigtree.node.node import Node
+from bigtree.tree.export import print_tree
 from dblp_service.pub_formats.rdf_tuples.dblp_repr import (
     AppendField,
     DblpRepr,
@@ -66,7 +67,11 @@ def run_op(op: UpdateOperation, nsubj: Node):
     subj_repr = get_repr(nsubj)
     match op:
         case SetField(field, value, overwrite=do_overwrite):
-            assert subj_repr is not None
+            if subj_repr is None:
+                print('Subject dblp_repr should be defined. Subject is')
+                print_tree(nsubj, all_attrs=True)
+                raise Exception('Subject dblp_repr should be defined.')
+
             if field not in subj_repr or do_overwrite:
                 subj_repr[field] = value
 

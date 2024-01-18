@@ -1,4 +1,5 @@
-# File Stash
+# Components
+## File Stash
 
 The file stash component is responsible for maintaining the downloaded DBLP RDF files.
 
